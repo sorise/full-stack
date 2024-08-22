@@ -4,7 +4,7 @@
 -----
 * [1. doctype 标签](#1-doctype-标签)
 * [2. html5 文档结构](#2-html5-文档结构)
-* [3. html 注释](#3-html-注释)
+* [3. link 与 html注释](#3-link与-html注释)
 * [4. meta 标签](#4-meta-标签)
 * [5. HTML中块级元素和行内元素的总结和区分](#5-HTML中块级元素和行内元素的总结和区分)
 * [6. css盒模型](#6-css盒模型)
@@ -42,6 +42,8 @@ Doctype 声明影响浏览器的渲染模式。如果没有正确声明，浏览
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="styles/style.css" rel="stylesheet" />
+    <script src="scripts/main.js" defer></script>
     <title>Document</title>
 </head>
 <body>
@@ -58,7 +60,67 @@ Doctype 声明影响浏览器的渲染模式。如果没有正确声明，浏览
 * `<title></title>` ——`<title\>` 元素。该元素设置页面的标题，显示在浏览器标签页上，也作为收藏网页的描述文字。
 * `<body></body>` ——`<body\>` 元素。该元素包含期望让用户在访问页面时看到的全部内容，包括文本、图像、视频、游戏、可播放的音轨或其他内容。
 
-### 3. html 注释
+### [3. link 与 html注释](#)
+
+#### 3.1 link 标签
+指定当前文档与外部资源的关系。该元素最常用于链接 CSS，此外也可以被用来创建站点图标（比如“favicon”样式图标和移动设备上用以显示在主屏幕的图标）。
+该标签位于head标签内部。详情可以查看[MDN link](https://developer.mozilla.org/zh-CN/docs/Web/HTML/Element/link)
+```html
+<link href="styles/style.css" rel="stylesheet" />
+
+<link rel="icon" href="favicon.ico" type="image/x-icon" />
+
+sizes 属性表示图标大小，type 属性包含了链接资源的 MIME 类型。这些属性为浏览器选择最合适的图标提供了有用的提示。
+<link rel="apple-touch-icon" sizes="114x114"  href="apple-icon-114.png" type="image/png" />
+
+你也可以在 media 属性中提供媒体类型或查询；这种资源将只在满足媒体条件的情况下才会加载。
+<link href="mobile.css" rel="stylesheet" media="screen and (max-width: 600px)" />
+
+crossorigin 属性表示该资源是否应该使用一个 CORS 请求来获取。
+<link rel="preload" href="myFont.woff2" as="font" type="font/woff2" crossorigin="anonymous" />
+```
+
+1. **通过媒体查询有条件地加载资源** 你可以在media属性中提供媒体类型或查询; 然后，只有在媒体条件为 true 时，才会加载此资源。例如：
+```html
+<link href="print.css" rel="stylesheet" media="print" />
+<link href="mobile.css" rel="stylesheet" media="all" />
+<link
+        href="desktop.css"
+        rel="stylesheet"
+        media="screen and (min-width: 600px)" />
+<link
+        href="highres.css"
+        rel="stylesheet"
+        media="screen and (min-resolution: 300dpi)" />
+```
+2. **样式表加载事件** 你能够通过监听发生在样式表上的 load 事件知道什么时候样式表加载完毕。同样的，你能够通过监听 error 事件检测到是否在加载样式表的过程中出现错误。
+```html
+<script>
+  const stylesheet = document.querySelector("#my-stylesheet");
+
+  stylesheet.onload = () => {
+    // 做点有意思的事情，样式表已经加载了
+  };
+
+  stylesheet.onerror = () => {
+    console.log("加载样式表时发生错误！");
+  };
+</script>
+
+<link rel="stylesheet" href="mystylesheet.css" id="my-stylesheet" />
+```
+
+3. **在获取资源前阻止渲染** 可以在 blocking 属性中包含 render 标记；页面的渲染将被阻止，直到资源被获取。例如：
+```html
+<link
+  blocking="render"
+  rel="preload"
+  href="critical-font.woff2"
+  as="font"
+  crossorigin />
+```
+
+#### 3.2 html 注释
 ```html
 <!-- 注释内容 -->
 ```
@@ -101,7 +163,8 @@ meta标签通常放置在 <head> 标签内，不直接显示在页面上。
 实例9 - 指定页面内容过期的时间。浏览器会在该时间之后认为页面内容已过期，需要从服务器获取新版本。
 <meta http-equiv="expires" content="Wed, 21 Oct 2025 07:28:00 GMT">
 
-实例10 -  指定 Internet Explorer 应该使用何种模式渲染页面。IE=edge 指示使用最新版本的渲染引擎，而不是兼容模式。这个设置在需要兼容旧版 IE 时特别有用。
+实例10 -  指定 Internet Explorer 应该使用何种模式渲染页面。IE=edge 指示使用最新版本的渲染
+引擎，而不是兼容模式。这个设置在需要兼容旧版 IE 时特别有用。
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
 实例11 - 设置内容安全策略，控制哪些资源可以加载和执行。CSP 可以防止 XSS 攻击，增强网页的安全性。
