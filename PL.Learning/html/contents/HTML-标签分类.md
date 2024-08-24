@@ -278,10 +278,114 @@ HTML `<s>` 元素 使用删除线来渲染文本。使用 `<s>` 元素来表示�
 <p>Regular text. <samp>This is sample text.</samp> Regular text.</p>
 
 ### [3. 媒体元素标签](#)
-
 在HTML 5中，还新增vedio、audio、embed元素
 
+#### [3.1 vedio](#)
+video元素用于定义视频，比如电影片段或其他视频流。
+
+```html
+<video controls>
+  <source src="myVideo.mp4" type="video/mp4" />
+  <source src="myVideo.webm" type="video/webm" />
+  <p>
+    你的浏览器不支持 HTML5 视频。这里有一个<a href="myVideo.mp4" download="myVideo.mp4">视频</a
+  >链接。
+  </p>
+</video>
+```
+**html属性**:
+* **autoplay** 一个布尔属性；声明该属性后，视频会尽快自动开始播放，不会停下来等待数据全部加载完成。
+* **controls** 如果存在该属性，浏览器会在视频底部提供一个控制面板，允许用户控制视频的播放，包括音量、拖动进度、暂停或恢复播放。
+* **height** 视频显示区域的高度，单位是 CSS 像素
+* **width** 视频显示区域的宽度
+* **loop** 一个布尔属性；指定后会在视频播放结束的时候，自动返回视频开始的地方，继续播放。
+* **muted** 一个布尔属性，指明在视频中音频的默认设置。设置后，音频会初始化为静音。默认值是 false, 意味着视频播放的时候音频也会播放。
+* **poster** 海报帧图片 URL，用于在视频处于下载中的状态时显示。如果未指定该属性，则在视频第一帧可用之前不会显示任何内容，然后将视频的第一帧会作为海报（poster）帧来显示。
+* **preload** 该枚举属性旨在提示浏览器，作者认为在播放视频之前，加载哪些内容会达到最佳的用户体验。可能是下列值之一：
+  * none: 表示不应该预加载视频。
+  * metadata: 表示仅预先获取视频的元数据（例如长度）。
+  * auto: 表示可以下载整个视频文件，即使用户不希望使用它。
+* **src** 要嵌到页面的视频的 URL。可选；你也可以使用 video 块内的 `<source>` 元素来指定需要嵌到页面的视频。
+
+**javascript 事件属性** 
+* [链接查看](https://developer.mozilla.org/zh-CN/docs/Web/HTML/Element/video#事件)
+
 ### [4. 表格标签](#)
+表格标签几乎是必然要使用的内容
+
+#### [4.x col](#)
+`<col>` HTML 元素在其父 `<colgroup>` 元素所代表的列组中定义一列或多列。
+
+**span** : 指定 `<col>` 元素跨越的连续列数。该值必须是大于 0 的正整数。如果不存在，其默认值为 1。
+
+```html
+<style>
+    table {
+        border-collapse: collapse;
+        border: 2px solid rgb(140 140 140);
+    }
+    caption {
+        caption-side: bottom;
+        padding: 10px;
+    }
+    th, td {
+        border: 1px solid rgb(160 160 160);
+        padding: 8px 6px;
+        text-align: center;
+    }
+    .weekdays {
+        background-color: #d7d9f2;
+    }
+    .weekend {
+        background-color: #ffe8d4;
+    }
+</style>
+
+<table>
+  <caption>
+    个人每周活动
+  </caption>
+  <colgroup>
+    <col />
+    <col span="5" class="weekdays" />
+    <col span="2" class="weekend" />
+  </colgroup>
+  <tr>
+    <th>时段</th>
+    <th>周一</th>
+    <th>周二</th>
+    <th>周三</th>
+    <th>周四</th>
+    <th>周五</th>
+    <th>周六</th>
+    <th>周日</th>
+  </tr>
+  <tr>
+    <th>上午</th>
+    <td>打扫房间</td>
+    <td>足球训练</td>
+    <td>舞蹈课</td>
+    <td>历史课</td>
+    <td>买饮料</td>
+    <td>自习</td>
+    <td>自由时间</td>
+  </tr>
+  <tr>
+    <th>下午</th>
+    <td>瑜伽</td>
+    <td>棋类俱乐部</td>
+    <td>见朋友</td>
+    <td>体操</td>
+    <td>生日派对</td>
+    <td>钓鱼之旅</td>
+    <td>自由时间</td>
+  </tr>
+</table>
+```
+
+#### [4.x colgroup](#)
+`<colgroup>` 标签用于在 HTML 表格中定义列的分组，并可以为这些列设置样式或属性。通常与 `<col>` 标签结合使用，以指定表格中某些列的样式或行为，例如宽度、背景颜色等。
+* **colgroup** 用于对表格的列进行分组，这样可以统一应用样式或属性。
 
 ### [5. 表单标签](#)
 
@@ -374,8 +478,12 @@ HTML 中的 `<map>` 标签是一种用于制作交互式图片地图的元素。
 
 ```html
 <map name="primary">
-  <area shape="circle" coords="75,75,75" href="https://developer.mozilla.org/docs/Web/JavaScript" target="_blank" alt="JavaScript" />
-  <area shape="circle" coords="275,75,75" href="https://developer.mozilla.org/docs/Web/CSS" target="_blank" alt="CSS" />
+  <area shape="circle" coords="75,75,75" 
+        href="https://developer.mozilla.org/docs/Web/JavaScript"
+        target="_blank" alt="JavaScript" />
+  <area shape="circle" coords="275,75,75" 
+        href="https://developer.mozilla.org/docs/Web/CSS" 
+        target="_blank" alt="CSS" />
 </map>
 <img usemap="#primary" src="parrots.jpg" alt="两只鹦鹉的照片，大小为 350 x 150" />
 ```
