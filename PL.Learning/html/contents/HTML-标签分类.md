@@ -2,23 +2,380 @@
 > **介绍**：HTML文本标签
 
 -----
-* [1. HTML文本标签](#1-html文本标签)
+* [1. 排版标签](#1-排版标签)
+* [2. 文本标签](#2-文本标签)
+* [3. 媒体元素标签](#3-媒体元素标签)
+* [4. 表格标签](#4-表格标签)
+* [5. 表单标签](#5-表单标签)
+* [6. 链接标签](#6-链接标签)
 
 -----
-### [1. HTML文本标签](#)
+### [1. 排版标签](#)
+
+
+#### [1.1 div 块级元素](#)
+`<div>` HTML 元素是流式内容的通用容器。它对内容或布局没有影响。除非以某种方式使用 CSS 对其进行样式设置（例如，直接应用样式，或者对其父元素应用某种布局模型，如弹性盒子），否则它对内容或布局没有影响。
+* 这个元素包含全局属性。
+
+```html
+<div class="warning">
+  <img src="/media/examples/leopard.jpg" alt="An intimidating leopard." />
+  <p>Beware of the leopard</p>
+</div>
+
+<div class="shadowbox">
+    <p>这是一张非常有趣的说明，陈列在一个可爱的影盒里。</p>
+</div>
+```
+只有当没有其他合适的语义元素（例如 `<article>` 或 `<nav>`）时，才应使用 `<div>` 元素。
+
+#### [1.x html5语义标签](#)
+
+```html
+<body>
+    <header></header>
+    <nav></nav>
+    <main>
+        <article>
+            <section></section>
+            <section>
+                <figure>
+                    <figcaption>RPC</figcaption>
+                    <p>Remote Process Call</p>
+                </figure>
+            </section>
+        </article>
+        <aside></aside>
+    </main>
+    <footer>
+        <address></address>
+    </footer>
+</body>
+```
+
+只允许`“<br/>”`的书写形式
+
+#### [1.x header](#)
+header元素表示页面中一个内容区块或整个页面的标题。
+
+#### [1.x nav](#)
+nav元素表示页面中导航链接的部分。
+
+#### [1.x article](#)
+article元素article元素表示页面中的一块与上下文不相关的独立内容，譬如博客中的一篇文章或报纸中的一篇文章。
+
+```html
+<article>一篇文章</article>
+```
+
+#### [1.x main](#)
+main元素表示网页中的主要内容。主内容区域意指与网页标题或应用程序中本页面主要功能直接相关或进行扩展的内容。
+
+```html
+<main></main>
+```
+
+#### [1.x section](#)
+**section元素语义表示** 页面中的一个内容区块，比如章节、页眉、页脚或页面中的其他部分。它可以与h1、h2、h3、h4、h5、h6元素结合使用，标示文档结构。
+
+```html
+<section>一个章节</section>
+```
+
+#### [1.x footer](#)
+footer元素表示整个页面或页面中一个内容区块的脚注。一般来说，它会包含创作者的姓名、创作日期以及创作者联系信息。
+
+```html
+<footer></footer>
+```
+
+#### [1.x figure、figcaption](#)
+元素代表一段独立的内容，可能包含 `<figcaption>` 元素定义的说明元素。该插图、标题和其中的内容通常作为一个独立的引用单元。
+
+```html
+<figure>
+  <img src="favicon-192x192.png" alt="The beautiful LTC logo." />
+  <figcaption>My Logo</figcaption>
+</figure>
+
+<figure>
+    <figcaption><b>Edsger Dijkstra:</b></figcaption>
+    <blockquote>
+        If debugging is the process of removing software bugs, then programming must
+        be the process of putting them in.
+    </blockquote>
+</figure>
+
+<figure>
+    <p style="white-space:pre">
+        Bid me discourse, I will enchant thine ear, Or like a fairy trip upon the
+        green, Or, like a nymph, with long dishevelled hair, Dance on the sands, and
+        yet no footing seen: Love is a spirit all compact of fire, Not gross to
+        sink, but light, and will aspire.
+    </p>
+    <figcaption><cite>Venus and Adonis</cite>, by William Shakespeare</figcaption>
+</figure>
+```
+
+#### [1.x address](#)
+`<address>` HTML 元素表示其包含的 HTML 内容提供了与个人、团体或组织联系的信息。
+
+```html
+<address>
+  你可以通过
+  <a href="http://www.example.com/contact">www.example.com</a>
+  <br />
+  与作者联系。如果你发现了任何错误，请<a href="mailto:webmaster@example.com">联系网站管理员</a>。
+  <br />
+  你也可以前来访问：美国加利福尼亚州山景城伊芙琳大道东 331 号 Mozilla 基金会，邮编：94041
+</address>
+```
+
+### [2. 文本标签](#)
 HTML 的主要工作之一是赋予文本结构，使浏览器能够按照开发者的意图显示 HTML 文档。本文解释了 HTML 如何通过添加标题和段落、强调单词、创建列表等方式来构造文本。
 
 学习如何用标记（段落、标题、列表、强调、引用等）来建立页面的基本文本结构和文本内容。
 
-| 标签 | 介绍 | 备注 |
-|:---|:---|:---|
-|    |    |    |
+| 标签 | 介绍        | 备注        |
+|:---|:----------|:----------|
+| p  | 段落标签、块级元素 | 语义为一个文字段落 |
 
-#### [1.1 段落标签 p](#)
-在 HTML 中，每个段落是通过 <p> 元素标签进行定义的，比如下面这样：
+#### [2.1 段落标签 p、div](#)
+在 HTML 中，每个段落是通过 <p> 元素标签进行定义的，比如下面这样, 
 ```html
 <p>我是一个段落，可以放下一段文字。</p>
+<div>我是一个段落，可以放下一段文字。</div>
 ```
 段落是块级元素，如果在关闭的`</p>` 标签之前解析了另一个块级元素，则该标签将自动关闭, html5之后这个元素仅包含全局属性。
 
 > 备注：`<p>` 标签的 align 属性已被弃用，请不要使用。
+
+p标签本身和div标签几乎没有什么区别，指示p更具有语义，表示一个段落，而div表示表示一个盒子。
+
+`<div>` HTML 元素是流式内容的通用容器。它对内容或布局没有影响,它内部还可以存放一个p标签。
+```html
+<div>
+  <p>这里可以是任何内容。例如 &lt;p&gt;、&lt;table&gt;。你说什么就是什么！</p>
+</div>
+```
+#### [2.2 标题标签 h](#) 
+每个标题（Heading）都必须被包裹在一个标题元素中：
+
+一共有六种标题元素标签——h1、h2、h3、h4、h5 和 h6。每个元素代表文档中不同级别的内容：
+```html
+<h1>这是一个一级标题</h1>
+<h2>这是一个二级标题</h2>
+<h3>这是一个三级标题</h3>
+<h4>这是一个四级标题</h4>
+<h5>这是一个五级标题</h5>
+<h6>这是一个六级标题</h6>
+```
+hi 元素也是一个语义元素，它所包裹的文本具有“页面上的顶级标题”的作用（或意义）。
+
+
+#### [2.3 em、strong、span、del、ins、sub、sup、mark、addr、dfn](#)
+
+| 标签     | 介绍        | 备注                                                  |
+|:-------|:----------|:----------------------------------------------------|
+| em     | 文字修饰，行内元素 | 着重阅读，效果为**斜体**                                      |
+| strong | 文字修饰，行内元素 | 十分重要的内容，效果为**加粗**                                   |
+| span   | 文字修饰，行内元素 | 没有语义，通用包谷内容的容器                                      |
+| del    | 文字修饰，行内元素 | 没有语义，文件增加中划线                                        |
+| ins    | 文字修饰，行内元素 | 没有语义，文件增加下划线                                        |
+| sub    | 文字修饰，行内元素 | 下标内容 水为：H<sub>2</sub>O                              |
+| sup    | 文字修饰，行内元素 | 上标内容 一共要2 <sup>12</sup> 升水。                         |
+| mark    | 文字修饰，行内元素 | 表示为引用或符号目的而标记或突出显示的文本，这是由于标记的段落在封闭上下文中的相关性或重要性造成的。。 |
+|abbr| 文字修饰，行内元素  | 元素表示一个缩写词或首字母缩略词,一般配合 **title** 属性使用。               |
+|dfn|文字修饰，行内元素|表示术语的一个定义。<dfn> 元素有一个 title 属性，那么该术语的值就是该属性的值。|
+```html
+<p>
+    <span>无修饰内容</span> 
+    <em>斜体</em>
+    <strong>内容加粗</strong>
+</p>
+<p>
+    <span>商品原价为</span> <del>999</del>, 限时秒杀：<ins>199</ins>
+</p>
+<P>
+    水为：H<sub>2</sub>O, 一共要2 <sup>12</sup> 升水。
+</P>
+<p>
+    &lt;mark&gt; 元素用于 <mark>高亮</mark> 文本
+</p>
+<p>
+    <p>你可以用 <abbr title="邮政特快专递服务">EMS</abbr> 把这个包裹寄给我。</p>
+</p>
+<dl>
+    <!-- Define "World-Wide Web" and reference definition for "the Internet" -->
+    <dt>
+        <dfn>
+            <abbr title="World-Wide Web">WWW</abbr>
+        </dfn>
+    </dt>
+    <dd>
+        The World-Wide Web (WWW) is a system of interlinked hypertext documents
+        accessed on <a href="#def-internet">the Internet</a>.
+    </dd>
+</dl>
+```
+**显示效果**：
+<p>
+    <span>无修饰内容</span> 
+    <em>斜体</em>
+    <strong>内容加粗</strong>
+</p>
+<p>
+    <span>商品原价为</span> <del>999</del>, 限时秒杀：<ins>199</ins>
+</p>
+<P>
+    水为：H<sub>2</sub>O, 一共要2 <sup>12</sup> 升水。
+</P>
+<p>&lt;mark&gt; 元素用于 <mark>高亮</mark> 文本</p>
+<p>
+    <p>你可以用 <abbr title="邮政特快专递服务">EMS</abbr> 把这个包裹寄给我。
+</p>
+<dl>
+  <!-- Define "World-Wide Web" and reference definition for "the Internet" -->
+  <dt>
+    <dfn>
+      <abbr title="World-Wide Web">WWW</abbr>
+    </dfn>
+  </dt>
+  <dd>
+    The World-Wide Web (WWW) is a system of interlinked hypertext documents
+    accessed on <a href="#def-internet">the Internet</a>.
+  </dd>
+</dl>
+
+
+#### [2.4 不再推荐的标签](#)
+HTML `<s>` 元素 使用删除线来渲染文本。使用 `<s>` 元素来表示不再相关，或者不再准确的事情。但是当表示文档编辑时，不提倡使用 `<s>` ；为此，提倡使用 `<del>` 和 `<ins>` 元素。
+
+```html
+<s>Today's Special: Salmon</s> SOLD OUT<br>
+```
+**显示效果**：
+
+<s>Today's Special: Salmon</s> SOLD OUT<br>
+
+#### [2.5 code、kbd、samp](#)
+
+| 标签     | 介绍        | 备注                          |
+|:-------|:----------|:----------------------------|
+| code   | 文字修饰，行内元素 | 表示内容为一段代码。                  |
+| kbd   | 文字修饰，行内元素 | 用于表示用户输入。                  |
+| samp   | 文字修饰，行内元素 |  元素用于标识计算机程序输出。                  |
+```html
+<p><code>console.assert(me.age > 18);</code></p>
+<p>Save the document by pressing <kbd>Ctrl</kbd> + <kbd>S</kbd></p>
+
+<p>Regular text. <samp>This is sample text.</samp> Regular text.</p>
+```
+**显示效果**：
+
+<p><code>console.assert(me.age > 18);</code></p>
+<p>Save the document by pressing <kbd>Ctrl</kbd> + <kbd>S</kbd></p>
+<p>Regular text. <samp>This is sample text.</samp> Regular text.</p>
+
+### [3. 媒体元素标签](#)
+
+在HTML 5中，还新增vedio、audio、embed元素
+
+### [4. 表格标签](#)
+
+### [5. 表单标签](#)
+
+#### [5.x datalist](#)
+HTML `<datalist>` 元素包含了一组 `<option>` 元素，这些元素表示其他表单控件可选值,DOM 接口HTMLDataListElement。
+
+```html
+<label
+  >Choose a browser from this list: <input list="browsers" name="myBrowser"
+/></label>
+<datalist id="browsers">
+  <option value="Chrome"></option>
+  <option value="Firefox"></option>
+  <option value="Internet Explorer"></option>
+  <option value="Opera"></option>
+  <option value="Safari"></option>
+</datalist>
+```
+
+#### [5.x progress](#)
+HTML中的 `<progress>` 元素用来显示一项任务的完成进度。虽然规范中没有规定该元素具体如何显示，浏览器开发商可以自己决定，但通常情况下，该元素都显示为一个进度条形式。
+
+**属性**：
+* **max** 该属性描述了这个progress元素所表示的任务一共需要完成多少工作。
+* **value** 该属性用来指定该进度条已完成的工作量。如果没有value 属性,则该进度条的进度为"不确定",也就是说
+，进度条不会显示任何进度，你无法估计当前的工作会在何时完成 (比如在下载一个未知大小的文件时，下载对话框中的进度条就是这样的).
+
+该元素实现了HTMLProgressElement接口。
+```html
+<progress value="70" max="100">70 %</progress>
+```
+<progress value="70" max="100">70 %</progress>
+
+
+### [6. 链接标签](#)
+链接、跳转到其他页面。
+
+#### [6.1 a 标签](#)
+`<a>` 元素（或称锚元素）可以通过它的 href 属性创建通向其他网页、文件、电子邮件地址、同一页面内的位置或任何其他 URL 的超链接。
+
+```html
+<a href="//example.com">相对于协议的 URL</a>
+<a href="/zh-CN/docs/Web/HTML">相对于源的 URL</a>
+<a href="./p">相对于路径的 URL</a>
+```
+
+**属性**:
+* **download** : 导致浏览器将链接的 URL 视为下载资源。可以使用或不使用 filename 值：
+* **href**: 超链接所指向的 URL。链接不限于基于 HTTP 的 URL——它们可以使用浏览器支持的任何 URL 协议：
+  * 使用 tel: URL 链接到一个电话号码
+  * 使用 mailto: URL 链接到一个邮箱地址
+* **target**:该属性指定在何处显示链接的 URL，作为浏览上下文的名称（标签、窗口或 `<iframe>`）。
+  * _self：当前页面加载。（默认）
+  * _blank：通常在新标签页打开，但用户可以通过配置选择在新窗口打开。
+  * _parent：当前浏览环境的父级浏览上下文。如果没有父级框架，行为与 _self 相同。
+  * _top：最顶级的浏览上下文（当前浏览上下文中最“高”的祖先）。如果没有祖先，行为与 _self 相同。
+
+#### [6.2 map 标签](#)
+HTML 中的 `<map>` 标签是一种用于制作交互式图片地图的元素。图片地图是一种将图片分割成多个区域，并在每个区域内添加超链接或 JavaScript 事件来实现交互功能的技术。
+
+`<map>` 元素与 `<area>` 元素一起使用来定义一个图像映射（一个可点击的链接区域）。
+
+**name 属性** ，map必需。为 image-map 规定的名称。
+```html
+<h1>Image Map Example</h1>
+<img src="world-map.jpg" alt="World Map" usemap="#worldmap">
+<map name="worldmap">
+    <area shape="circle" coords="300,150,30" href="https://en.wikipedia.org/wiki/Paris" target="_blank">
+    <area shape="rect" coords="100,200,200,300" href="https://en.wikipedia.org/wiki/New_York_City" target="_blank">
+    <area shape="poly" coords="400,350,450,300,500,400" href="https://en.wikipedia.org/wiki/Tokyo" target="_blank">
+</map>
+```
+#### [6.3 area 标签](#)
+`<area>` 元素 在图片上定义一个热点区域，可以关联一个超链接。`<area>`元素仅在<map>元素内部使用。
+
+* **coords** 给热点区域设定具体的坐标值。这个值的数值和意义取决于这个值所描述的形状属性。
+对于矩形或长方形，这个 coords 值为两个 X,Y 对：左上、右下。
+  * 对于圆形，这个值是 x,y,r， 这里的 x,y 是一对确定圆的中心的坐标而 r 则表示的是半径值。
+  * 对于多边和多边形，这个值是用 x,y 对表示的多边形的每一个点：x1,y1,x2,y2,x3,y3 等等。
+  * HTML4 里，coords 值可能是像素 数量或者百分比 HTML5 里，只可能是像素值。
+* **shape** 相关联的热点的形状。HTML 5 和 HTML 4 的规范定义了值 rect，它定义了一个矩形区域。
+  * 常见的值有 rect（矩形）、circle（圆形）、poly（多边形）。
+* **href** 属性定义点击该热点区域时链接到的目标 URL。
+* **target**:该属性指定在何处显示链接的 URL，作为浏览上下文的名称（标签、窗口或 `<iframe>`）。
+  * _self：当前页面加载。（默认）
+  * _blank：通常在新标签页打开，但用户可以通过配置选择在新窗口打开。
+  * _parent：当前浏览环境的父级浏览上下文。如果没有父级框架，行为与 _self 相同。
+  * _top：最顶级的浏览上下文（当前浏览上下文中最“高”的祖先）。如果没有祖先，行为与 _self 相同。
+* **alt** ，在未显示图像的浏览器上显示代替的文本字符串。
+
+```html
+<map name="primary">
+  <area shape="circle" coords="75,75,75" href="https://developer.mozilla.org/docs/Web/JavaScript" target="_blank" alt="JavaScript" />
+  <area shape="circle" coords="275,75,75" href="https://developer.mozilla.org/docs/Web/CSS" target="_blank" alt="CSS" />
+</map>
+<img usemap="#primary" src="parrots.jpg" alt="两只鹦鹉的照片，大小为 350 x 150" />
+```
