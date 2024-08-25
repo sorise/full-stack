@@ -77,7 +77,11 @@ HTML 语义标签（Semantic HTML Tags）是指那些不仅用于布局或样式
 只允许`“<br/>”`的书写形式
 
 #### [1.1 main](#)
-main元素表示页面中主要内容区域,**本质上等同于div**。
+main元素表示网页中的主要内容。主内容区域意指与网页标题或应用程序中本页面主要功能直接相关或进行扩展的内容,**本质上等同于div**。
+
+```html
+<main></main>
+```
 
 #### [1.2 header](#)
 header元素表示页面中一个内容区块或整个页面的标题,**本质上等同于div**。
@@ -85,35 +89,27 @@ header元素表示页面中一个内容区块或整个页面的标题,**本质�
 #### [1.3 nav](#)
 nav元素表示页面中导航链接的部分,**本质上等同于div**。
 
-#### [1.x article](#)
+#### [1.4 article](#)
 article元素article元素表示页面中的一块与上下文不相关的独立内容，譬如博客中的一篇文章或报纸中的一篇文章,**本质上等同于div**。
 
 ```html
 <article>一篇文章</article>
 ```
-
-#### [1.x main](#)
-main元素表示网页中的主要内容。主内容区域意指与网页标题或应用程序中本页面主要功能直接相关或进行扩展的内容,**本质上等同于div**。
-
-```html
-<main></main>
-```
-
-#### [1.x section](#)
+#### [1.5 section](#)
 **section元素语义表示** 页面中的一个内容区块，比如章节、页眉、页脚或页面中的其他部分。
 它可以与h1、h2、h3、h4、h5、h6元素结合使用，标示文档结构,**本质上等同于div**。 
 ```html
 <section>一个章节</section>
 ```
 
-#### [1.x footer](#)
+#### [1.6 footer](#)
 footer元素表示整个页面或页面中一个内容区块的脚注。一般来说，它会包含创作者的姓名、创作日期以及创作者联系信息。
 
 ```html
 <footer></footer>
 ```
 
-#### [1.x figure、figcaption](#)
+#### [1.7 figure、figcaption](#)
 元素代表一段独立的内容，可能包含 `<figcaption>` 元素定义的说明元素。该插图、标题和其中的内容通常作为一个独立的引用单元。
 
 ```html
@@ -141,7 +137,7 @@ footer元素表示整个页面或页面中一个内容区块的脚注。一般�
 </figure>
 ```
 
-#### [1.x address](#)
+#### [1.8 address](#)
 `<address>` HTML 元素表示其包含的 HTML 内容提供了与个人、团体或组织联系的信息,**本质上等同于div**。
 
 ```html
@@ -155,7 +151,7 @@ footer元素表示整个页面或页面中一个内容区块的脚注。一般�
 </address>
 ```
 
-#### [1.x aside](#)
+#### [1.9 aside](#)
 HTML `<aside>` 元素表示一个和其余页面内容几乎无关的部分，被认为是独立于该内容的一部分并且可以被单独的拆分
 出来而不会使整体受影响。其通常表现为侧边栏或者标注框（call-out boxes）,**本质上等同于div**。
 
@@ -165,7 +161,7 @@ HTML `<aside>` 元素表示一个和其余页面内容几乎无关的部分，�
 </aside>
 ```
 
-#### [1.x hgroup](#)
+#### [1.10 hgroup](#)
 `<hgroup>` HTML 元素代表文档标题和与标题相关联的内容，它将一个 `<h1>–<h6>` 元素与一个或多个 `<p>` 元素组合在一起。
 
 ```html
@@ -175,13 +171,8 @@ HTML `<aside>` 元素表示一个和其余页面内容几乎无关的部分，�
     padding-right: 16px;
     border-right: 10px solid #00c8d7;
   }
-  hgroup h1 {
-    margin-bottom: 0;
-  }
-  hgroup p {
-    margin: 0;
-    font-weight: bold;
-  }
+  hgroup h1 { margin-bottom: 0; }
+  hgroup p { margin: 0;font-weight: bold;}
 </style>
 
 <hgroup>
@@ -193,9 +184,7 @@ HTML `<aside>` 元素表示一个和其余页面内容几乎无关的部分，�
   stirs, he realizes he has made a monster. A monster which, abandoned by his master and shunned by everyone who sees
   it, follows Dr Frankenstein to the very ends of the earth.
 </p>
-
 ```
-
 
 ### [2. 文本标签](#)
 HTML 的主要工作之一是赋予文本结构，使浏览器能够按照开发者的意图显示 HTML 文档。本文解释了 HTML 如何通过添加标题和段落、强调单词、创建列表等方式来构造文本。
@@ -239,20 +228,21 @@ p标签本身和div标签几乎没有什么区别，指示p更具有语义，表
 hi 元素也是一个语义元素，它所包裹的文本具有“页面上的顶级标题”的作用（或意义）。
 
 
-#### [2.3 em、strong、span、del、ins、sub、sup、mark、addr、dfn](#)
+#### [2.3 em、strong、small、span、del、ins、sub、sup、mark、addr、dfn](#)
 
-| 标签     | 介绍        | 备注                                                  |
-|:-------|:----------|:----------------------------------------------------|
-| em     | 文字修饰，行内元素 | 着重阅读，效果为**斜体**                                      |
-| strong | 文字修饰，行内元素 | 十分重要的内容，效果为**加粗**                                   |
-| span   | 文字修饰，行内元素 | 没有语义，通用包谷内容的容器                                      |
-| del    | 文字修饰，行内元素 | 没有语义，文件增加中划线                                        |
-| ins    | 文字修饰，行内元素 | 没有语义，文件增加下划线                                        |
-| sub    | 文字修饰，行内元素 | 下标内容 水为：H<sub>2</sub>O                              |
-| sup    | 文字修饰，行内元素 | 上标内容 一共要2 <sup>12</sup> 升水。                         |
-| mark    | 文字修饰，行内元素 | 表示为引用或符号目的而标记或突出显示的文本，这是由于标记的段落在封闭上下文中的相关性或重要性造成的。。 |
-|abbr| 文字修饰，行内元素  | 元素表示一个缩写词或首字母缩略词,一般配合 **title** 属性使用。               |
-|dfn|文字修饰，行内元素|表示术语的一个定义。<dfn> 元素有一个 title 属性，那么该术语的值就是该属性的值。|
+| 标签     | 介绍        | 备注                                                 |
+|:-------|:----------|:---------------------------------------------------|
+| em     | 文字修饰，行内元素 | 着重阅读，效果为**斜体**                                     |
+| strong | 文字修饰，行内元素 | 十分重要的内容，效果为**加粗**                                  |
+| small | 文字修饰，行内元素 | 十分重要的内容，效果为**变细小**                                 |
+| span   | 文字修饰，行内元素 | 没有语义，通用包谷内容的容器                                     |
+| del    | 文字修饰，行内元素 | 没有语义，文件增加中划线                                       |
+| ins    | 文字修饰，行内元素 | 没有语义，文件增加下划线                                       |
+| sub    | 文字修饰，行内元素 | 下标内容 水为：H<sub>2</sub>O                             |
+| sup    | 文字修饰，行内元素 | 上标内容 一共要2 <sup>12</sup> 升水。                        |
+| mark    | 文字修饰，行内元素 | 表示为引用或符号目的而标记或突出显示的文本，这是由于标记的段落在封闭上下文中的相关性或重要性造成的。 |
+|abbr| 文字修饰，行内元素  | 元素表示一个缩写词或首字母缩略词,一般配合 **title** 属性使用。              |
+|dfn|文字修饰，行内元素| 表示术语的一个定义。<dfn> 元素有一个 title 属性，那么该术语的值就是该属性的值。     |
 ```html
 <p>
     <span>无修饰内容</span> 
@@ -321,6 +311,7 @@ hi 元素也是一个语义元素，它所包裹的文本具有“页面上的�
 | s  | 文字修饰，行内元素 | 使用删除线来渲染文本。 |
 | b  | 文字修饰，行内元素 | 仍然以粗体显示文本。  |
 | i  | 文字修饰，行内元素 | 仍然以斜体显示文本。 |
+| u  | 文字修饰，行内元素 | 默认情况下渲染为一个实线下划线，可以用 CSS 替换。 |
 
 HTML `<s>` 元素 使用删除线来渲染文本。使用 `<s>` 元素来表示不再相关，或者不再准确的事情。但是当表示文档编辑时，不提倡使用 `<s>` ；为此，提倡使用 `<del>` 和 `<ins>` 元素。
 
@@ -339,12 +330,14 @@ HTML `<b>` 元素用于吸引读者注意元素内容，而这些内容本身并
   The Latin phrase <i class="latin">Veni, vidi, vici</i> is often mentioned in
   music, art, and literature
 </p>
+<p>This paragraph includes a <u class="spelling">wrnogly</u> spelled word.</p>
 ```
 
 <p>
   The Latin phrase <i class="latin">Veni, vidi, vici</i> is often mentioned in
   music, art, and literature
 </p>
+<p>This paragraph includes a <u class="spelling">wrnogly</u> spelled word.</p>
 
 #### [2.5 code、kbd、samp、var](#)
 
@@ -447,13 +440,13 @@ HTML `<b>` 元素用于吸引读者注意元素内容，而这些内容本身并
       REUSE
       QUE TU
       PORTES
-    ET QUI T'
-    ORNE O CI
-     VILISÉ
+     ET QUI T'
+     ORNE O CI
+      VILISÉ
     OTE-  TU VEUX
      LA    BIEN
     SI      RESPI
-            RER       - Apollinaire
+              RER       - Apollinaire
 </pre>
 ```
 
@@ -626,9 +619,81 @@ track 元素 被当作媒体元素—`<audio>` 和 `<video>`的子元素来使�
 ### [4. 表格标签](#)
 表格标签几乎是必然要使用的内容,在 HTML 中一个很普通的任务是构建表格数据，有大量的元素和属性是来满足这种需求的。
 
-* **caption标签**  展示一个表格的标题，它常常作为 `<table>` 的第一个子元素出现，同时显示在表格内容的最前面，它同样可以出现在任何一个一个相对于表格的做任意位置。
+* **table** 元素表示表格数据——即在一个由包含数据的行和列组成的二维表格中呈现的信息。
+  * 一个可选的 `<caption>` 元素
+  *  零个或多个的 `<colgroup>` 元素
+  *  一个可选的 `<thead>` 元素
+  * 下列任意一个：
+  * 零个或多个 `<tbody>`
+  *  零个或多个 `<tr>`
+  *  一个可选的 `<tfoot>` 元素
+* **caption**  展示一个表格的标题，它常常作为 `<table>` 的第一个子元素出现，同时显示在表格内容的最前面，它同样可以出现在任何一个一个相对于表格的做任意位置。
 
-#### [4.x col](#)
+**例子**：
+```html
+<table border="1">
+    <caption>本科生</caption>
+    <thead>
+        <tr>
+            <th>序号</th> <th>学号</th> <th>姓名</th> <th>年龄</th> <th>性别</th> <th>状态</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>1</td> <td>2016110418</td> <td>Jx</td> <td>26</td> <td>男</td> <td>离校毕业</td>
+        </tr>
+        <tr>
+            <td>2</td> <td>2016110419</td> <td>LZM</td> <td>26</td> <td>男</td> <td>离校毕业</td>
+        </tr>
+    </tbody>
+    <tfoot>
+        <tr>
+            <td colspan="6">总数： 2 </td>
+        </tr>
+    </tfoot>
+</table>
+```
+
+#### [4.1 table](#)
+该标签除了全局属性，已经不存在其他属性，过往的属性都已经弃用了，推荐使用CSS来操作样式。
+
+```html
+<table>
+  <tr>
+    <td>John</td>
+    <td>Doe</td>
+  </tr>
+  <tr>
+    <td>Jane</td>
+    <td>Doe</td>
+  </tr>
+</table>
+```
+* **align** **已弃用** 这个枚举属性指定了包含在文档中的表格必须如何对齐。可能含有如下值：
+  * left：表格将在文档左侧显示；
+  * center：表格将在文档中央显示；
+  * right：表格将在文档右侧显示；
+* **bgcolor 已弃用** 为了实现相似的效果，可以使用 CSS 属性 background-color。
+* **border 已弃用** 为了实现相似的效果，可以使用 CSS 简写属性 border。
+* **cellpadding 已弃用** 这个属性定义了一个单元格的内容和它的边框之间的空间，无论显示与否。如果 cellpadding 的长度是用像素定义的，这个像素大小的空间将被应用到单元格内容的所有四边。
+  * 为了实现相似的效果，可以在 table元素上使用属性值为 collapse 的 border-collapse 属性，在 td元素上使用属性 padding。
+* **cellspacing 已弃用** 这个属性定义了水平和垂直方向上两个单元格之间空间的大小
+  * 为了实现相似的效果，可以在 table 元素上使用 CSS 属性 border-spacing。border-spacing 在 border-collapse 设置为 collapse 时将无效。
+* **width 已弃用** 该属性定义了表格的宽度。请使用 CSS width 属性代替。
+* **summary 已弃用** 该属性定义了概括表格内容的替代文本。请使用 <caption> 元素代替。
+
+#### [4.3 thead、tbody、tfoot](#)
+将表格分为三个部分
+
+* HTML 的 thead 元素定义了一组定义表格的列头的行。
+  * tr
+    * th 元素定义表格内的表头单元格。这部分特征是由 scope 和 headers 属性准确定义的。
+* tbody HTML 元素封装了一系列表格的行（tr 元素），代表了它们是表格（table）主要内容的组成部分。
+  * tr
+* HTML 元素 tfoot 定义了一组表格中各列的汇总行。
+  * tr
+
+#### [4.4 col](#)
 `<col>` HTML 元素在其父 `<colgroup>` 元素所代表的列组中定义一列或多列。
 
 **span** : 指定 `<col>` 元素跨越的连续列数。该值必须是大于 0 的正整数。如果不存在，其默认值为 1。
@@ -698,9 +763,10 @@ track 元素 被当作媒体元素—`<audio>` 和 `<video>`的子元素来使�
 </table>
 ```
 
-#### [4.x colgroup](#)
+#### [4.5 colgroup](#)
 `<colgroup>` 标签用于在 HTML 表格中定义列的分组，并可以为这些列设置样式或属性。通常与 `<col>` 标签结合使用，以指定表格中某些列的样式或行为，例如宽度、背景颜色等。
 * **colgroup** 用于对表格的列进行分组，这样可以统一应用样式或属性。
+
 
 ### [5. 表单标签](#)
 
