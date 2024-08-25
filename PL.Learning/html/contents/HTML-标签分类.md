@@ -491,18 +491,10 @@ HTML `<fieldset>` 元素用于对表单中的控制元素进行分组（也包�
   </fieldset>
 </form>
 ```
-<form>
-  <fieldset>
-    <legend>Choose your favorite monster</legend>
-    <input type="radio" id="kraken" name="monster" value="K">
-    <label for="kraken">Kraken</label><br />
-    <input type="radio" id="sasquatch" name="monster" value="S" />
-    <label for="sasquatch">Sasquatch</label><br />
-    <input type="radio" id="mothman" name="monster" value="M" />
-    <label for="mothman">Mothman</label>
-  </fieldset>
-</form>
-
+`<fieldset>` 元素将一个 HTML 表单的一部分组成一组，内置了一个 `<legend>` 元素作为 fieldset 的标题。
+这个元素有几个属性，最值得注意的是 form，其可以包含同一页面的 `<form>` 元素的 id，以使 `<fieldset>`
+成为这个 `<form>` 的一部分，即使 `<fieldset>` 不在其内。还有 disabled 属性，可将 `<fieldset>` 
+及其所有内容设置为不可用。
 
 ### [6. 链接标签](#)
 链接、跳转到其他页面。
