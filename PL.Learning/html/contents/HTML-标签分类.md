@@ -316,8 +316,98 @@ HTML `<b>` 元素用于吸引读者注意元素内容，而这些内容本身并
 <p>Save the document by pressing <kbd>Ctrl</kbd> + <kbd>S</kbd></p>
 <p>Regular text. <samp>This is sample text.</samp> Regular text.</p>
 
+#### [2.6 bdi、bdo](#)
+**bdi** 中用于双向文本隔离的标签。它的全称是 "Bidirectional Isolation"。
+
+具体来说，当你在一个方向为从左到右（LTR）的文本中插入一个方向为从右到左（RTL）的文本（例如阿拉伯语或希伯来语）时，如果
+不使用 `<bdi>` 标签，可能会导致混乱的显示。例如，标点符号和数字的位置可能会出现错位。使用 `<bdi>` 标签可以确保插
+入的文本在文档中按照其自然的书写方向显示，而不会影响周围的内容。
+
+| 标签  | 介绍        | 备注                                                                       |
+|:----|:----------|:-------------------------------------------------------------------------|
+| bdi | 文字修饰，行内元素 | 主要用于防止文本在不同书写方向的混合情况下出现显示问题。|
+| bdo | 文字修饰，行内元素 | 元素覆盖了当前文本的方向，使文本以不同的方向渲染出来。                                              |
+
+
+**bdo属性**: 
+* **dir** 文本在此元素内容中渲染的方向。可能的值有：
+  * ltr：指示文本应从左到右绘制。
+  * rtl：指示文本应从右到左绘制。
+```html
+<p>该文本应从左到右绘制。</p>
+<p><bdo dir="rtl">该文本应从右到左绘制。</bdo></p>
+```
+
+#### [2.6 q、blockquote、pre](#)
+语义标签罢了，实际效果完全可以使用div来实现。
+
+| 标签  | 介绍        | 备注  |
+|:----|:----------|:----------------------------------------------------|
+| q   | 行内元素 | 这个标签是用来引用短的文本，加双引号，对于长的文本的引用请使用 `<blockquote>` 替代。 |
+| blockquote | 块级元素      | 代表其中的文字是引用内容，通常在渲染时，这部分的内容会有一定的缩进。。                 |
+| cite  | 文字修饰，行内元素 | 表示一个作品的引用，且必须包含作品的标题。 |
+| pre | 块级元素 | 元素表示预定义格式文本。 |
+
+**q标签**:
+* **cite** 这个属性的值是 URL，意在指出被引用的文本的源文档或者源信息。这个属性重在解释这个引用的参考或者是上下文。
+```html
+<q cite="http://en.wikipedia.org/wiki/Kenny_McCormick#Cultural_impact">Oh my God, you/they killed Kenny! </q>.
+```
+**blockquote标签**:
+* **cite** 这个属性的值是 URL，意在指出被引用的文本的源文档或者源信息。这个属性重在解释这个引用的参考或者是上下文。
+```html
+<blockquote cite="https://www.huxley.net/bnw/four.html">
+  <p>Words can be like X-rays, if you use them properly—they’ll go through anything. You read and you’re pierced.</p>
+</blockquote>
+```
+
+```html
+<cite><a href="http://www.george-orwell.org/1984/0.html">Nineteen Eighty-Four</a></cite>
+```
+
+```html
+<pre>
+  L          TE
+    A       A
+      C    V
+       R A
+       DOU
+       LOU
+      REUSE
+      QUE TU
+      PORTES
+    ET QUI T'
+    ORNE O CI
+     VILISÉ
+    OTE-  TU VEUX
+     LA    BIEN
+    SI      RESPI
+            RER       - Apollinaire
+</pre>
+```
+
 ### [3. 媒体元素标签](#)
 在HTML 5中，还新增vedio、audio、embed元素
+
+**source** 标签，为 `<picture>`、`<audio>` 和 `<video>` 元素指定一个或多个媒体资源。
+
+```html
+<video controls width="250" height="200" muted>
+  <source src="/media/cc0-videos/flower.webm" type="video/webm" />
+  <source src="/media/cc0-videos/flower.mp4" type="video/mp4" />
+  Download the
+  <a href="/media/cc0-videos/flower.webm">WEBM</a>
+  or
+  <a href="/media/cc0-videos/flower.mp4">MP4</a>
+  video.
+</video>
+```
+此元素支持所有的全局属性，此外，还支持以下属性：
+* **type** 指定图像的 [MIME 媒体类型](https://developer.mozilla.org/zh-CN/docs/Web/Media/Formats/Image_types)或[其他媒体类型](https://developer.mozilla.org/zh-CN/docs/Web/Media/Formats/Containers)
+* **src** 指定媒体资源的 URL。如果 `<source>` 的父节点是 `<audio>` 或 `<video>`，则必须指定该属性。如果父元素是 `<picture>` 则不允许指定该属性。
+* **media** 为资源的预期媒体指定媒体查询。
+* **height、width** 以像素为单位指定图片的固有宽度。
+* **srcset** 指定由逗号分隔的一个或多个图片 URL 及其描述符的列表。如果 `<source>` 的父节点是 `<picture>`，则必须指定该属性。如果父节点为 `<audio>` 或 `<video>` 则不允许指定该属性。
 
 #### [3.1 vedio](#)
 video元素用于定义视频，比如电影片段或其他视频流。
@@ -345,13 +435,34 @@ video元素用于定义视频，比如电影片段或其他视频流。
   * metadata: 表示仅预先获取视频的元数据（例如长度）。
   * auto: 表示可以下载整个视频文件，即使用户不希望使用它。
 * **src** 要嵌到页面的视频的 URL。可选；你也可以使用 video 块内的 `<source>` 元素来指定需要嵌到页面的视频。
+* **crossorigin** 枚举属性 展示音频资源是否可以通过 CORS 加载。
+  * anonymous 在发送跨域请求时不携带验证信息。
+  * use-credentials 在发送跨域请求时携带验证信息。
+* **currentTime** 读取 currentTime 属性将返回一个双精度浮点值，用以标明以秒为单位的当前视频的播放位置。如果音频的元数据暂时无法访问——这意味着你无法的知道媒体的开始或持续时间。
 
 **javascript 事件属性** 
 * [链接查看](https://developer.mozilla.org/zh-CN/docs/Web/HTML/Element/video#事件)
 
 
 #### [3.2 audio](#)
+audio元素用于定义音频，比如音乐或其他音频流。
 
+`<audio>` HTML 元素用于在文档中嵌入音频内容。`<audio>` 元素可以包含一个或多个音频资源，这些音频资源可以使用 src 属
+性或者 `<source>` 元素来进行描述：浏览器将会选择最合适的一个来使用。也可以使用 MediaStream 将这个元素用于流式媒体。
+
+* **autoplay**；声明该属性，音频会尽快自动播放，不会等待整个音频文件下载完成。
+* **controls** 如果声明了该属性，浏览器将提供一个包含声音，播放进度，播放暂停的控制面板，让用户可以控制音频的播放。
+* **loop** 一个布尔属性；指定后会在音频播放结束的时候，自动返回视频开始的地方，继续播放。
+* **muted** 一个布尔属性，指明在视频中音频的默认设置。设置后，音频会初始化为静音。默认值是 false, 意味着视频播放的时候音频也会播放。
+* **preload** 该枚举属性旨在提示浏览器，作者认为在播放视频之前，加载哪些内容会达到最佳的用户体验。可能是下列值之一：
+  * none: 表示不应该预加载视频。
+  * metadata: 表示仅预先获取视频的元数据（例如长度）。
+  * auto: 表示可以下载整个视频文件，即使用户不希望使用它。
+* **src** 要嵌到页面的视频的 URL。可选；你也可以使用 video 块内的 `<source>` 元素来指定需要嵌到页面的音频资源。
+* **crossorigin** 枚举属性 展示音频资源是否可以通过 CORS 加载。
+  * anonymous 在发送跨域请求时不携带验证信息。
+  * use-credentials 在发送跨域请求时携带验证信息。
+* **currentTime** 读取 currentTime 属性将返回一个双精度浮点值，用以标明以秒为单位的当前音频的播放位置。如果音频的元数据暂时无法访问——这意味着你无法的知道媒体的开始或持续时间。
 
 #### [3.3 embed](#)
 HTML `<embed>` 元素将外部内容嵌入文档中的指定位置。此内容由外部应用程序或其他交互式内容源（如浏览器插件）提供。
@@ -364,8 +475,39 @@ HTML `<embed>` 元素将外部内容嵌入文档中的指定位置。此内容�
 <embed type="video/quicktime" src="movie.mov" width="640" height="480" />
 ```
 
+#### [3.4 picture](#)
+picture 元素在 HTML 中用于为不同的屏幕尺寸或分辨率提供不同版本的图像。
+
+它允许你根据设备的特性选择最合适的图像资源，比如在高分辨率设备上提供高清图片，在低分辨率设备上提供普通图片，从而优化性能和用户体验。
+
+**响应式图片**
+```html
+<picture>
+    <source srcset="small.jpg" media="(max-width: 600px)">
+    <source srcset="medium.jpg" media="(max-width: 1200px)">
+    <source srcset="large.jpg" media="(min-width: 1201px)">
+    <img src="default.jpg" alt="A beautiful landscape">
+</picture>
+```
+* `<source>` 标签：定义了不同条件下要使用的图片资源。它的 srcset 属性指定图片文件，media 属性用于设置媒体查询条件。当浏览器判断某个条件为真时，它会选择相应的图片。
+* `<img>` 标签：作为 `<picture>` 元素的后备选项（fallback），当浏览器不支持 `<picture>` 元素或不符合任何 `<source>` 条件时，使用此图像。
+
+**提供不同格式的图像（如 WebP 和 JPEG）：**
+```html
+<picture>
+  <source srcset="image.webp" type="image/webp">
+  <source srcset="image.jpg" type="image/jpeg">
+  <img src="image.jpg" alt="A beautiful image">
+</picture>
+```
+* 如果浏览器支持 WebP 格式，则使用 image.webp。
+* 如果浏览器不支持 WebP，则使用 JPEG 格式的 image.jpg。
+
 ### [4. 表格标签](#)
 表格标签几乎是必然要使用的内容
+
+* **caption标签**  展示一个表格的标题，它常常作为 <table> 的第一个子元素出现，同时显示在表格内容的最前面，它同样可以出现在任何一个一个相对于表格的做任意位置。
+* 
 
 #### [4.x col](#)
 `<col>` HTML 元素在其父 `<colgroup>` 元素所代表的列组中定义一列或多列。
@@ -496,6 +638,12 @@ HTML `<fieldset>` 元素用于对表单中的控制元素进行分组（也包�
 成为这个 `<form>` 的一部分，即使 `<fieldset>` 不在其内。还有 disabled 属性，可将 `<fieldset>` 
 及其所有内容设置为不可用。
 
+**属性**:
+* **disabled** 如果设置了这个 bool 值属性，`<fieldset>` 的所有子代表单控件也会继承这个属性。
+这意味着它们不可编辑，也不会随着 `<form>` 一起提交。它们也不会接收到任何浏览器事件，如鼠标点击或
+与聚焦相关的事件。默认情况下，浏览器会将这样的控件展示为灰色。注意，`<legend>` 中的表单元素不会被禁用。
+* **form** 将该值设为一个 `<form>` 元素的 id 属性值以将 `<fieldset>` 设置成这个 `<form>` 的一部分。
+* **name**  元素分组的名称
 ### [6. 链接标签](#)
 链接、跳转到其他页面。
 
@@ -564,6 +712,28 @@ HTML 中的 `<map>` 标签是一种用于制作交互式图片地图的元素。
 <img usemap="#primary" src="parrots.jpg" alt="两只鹦鹉的照片，大小为 350 x 150" />
 ```
 
+#### [6.4 base 标签](#)
+**文档根 URL 元素**, base规定的是页面上所有链接的默认URL，是所有！ 其包括src，href等所有URL。 使用到的链接都会与base里的href链接拼接。
+
+* **href** 属性定义点击该热点区域时链接到的目标 URL。
+* **target**:该属性指定在何处显示链接的 URL，作为浏览上下文的名称（标签、窗口或 `<iframe>`）。
+  * _self：当前页面加载。（默认）
+  * _blank：通常在新标签页打开，但用户可以通过配置选择在新窗口打开。
+  * _parent：当前浏览环境的父级浏览上下文。如果没有父级框架，行为与 _self 相同。
+  * _top：最顶级的浏览上下文（当前浏览上下文中最“高”的祖先）。如果没有祖先，行为与 _self 相同。
+
+```html
+<base target="_top" href="https://developer.mozilla.org/" />
+<a href="/zh-CN/docs/Web/HTML/Element/base">跳转到</a>
+<!-- 跳转到 https://developer.mozilla.org/zh-CN/docs/Web/HTML/Element/base -->
+
+<base href="http://www.w3cschool.cn" target="_blank">
+<link rel="stylesheet" type="text/css" href="CSS/first.css" > <!--链接外部资源-->
+```  
+
+* 例如：给定 `<base href="https://example.com">`
+* 以及此链接 `<a href="#anchor">Anker</a>`
+* 链接指向 `https://example.com/#anchor`
 
 ### [7. 面板标签](#)
 
@@ -711,3 +881,18 @@ HTML `<dd>` 元素（HTML 描述元素）用来指明一个描述列表 (`<dl>`)
   <dd>A giant owl-like creature.</dd>
 </dl>
 ```
+
+
+### [9. 功能标签](#)
+
+#### [9.1 br](#)
+br 元素在文本中生成一个换行（回车）符号。此元素在写诗和地址时很有用，这些地方的换行都非常重要。
+
+```html
+<p>
+  The birds are asleep in the trees:<br />
+  Wait, soon like these<br />
+  Thou too shalt rest.
+</p>
+```
+你可以给 `<br>` 元素设置 margin 从而增加文本行之间的间距，但这是一种糟糕的做法——你应该使用为此目的而设计的 line-height。
