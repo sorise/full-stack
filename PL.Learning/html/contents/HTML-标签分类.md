@@ -12,6 +12,7 @@
 * [8. 列表标签](#8-列表标签)
 * [9. 功能标签](#9-功能标签)
 * [10. 大内容 canvas](#10-大内容-canvas)
+* [11. iframs](#11-iframs)
 
 -----
 ### [1. 排版标签](#)
@@ -616,6 +617,41 @@ track 元素 被当作媒体元素—`<audio>` 和 `<video>`的子元素来使�
 </video>
 ```
 
+#### [3.6 img](#)
+img  元素将一张图像嵌入文档。
+
+Web 最常用的图像格式是：
+* APNG（动态可移植网络图形）——无损动画序列的不错选择（GIF 性能较差）。
+* AVIF（AV1 图像文件格式）——静态图像或动画的不错选择，其性能较好。
+* GIF（图像互换格式）——简单图像和动画的不错选择。
+* JPEG（联合图像专家组）——有损压缩静态图像的不错选择（目前最流行的格式）。
+* PNG（便携式网络图形）——对于无损压缩静态图像而言是不错的选择（质量略好于 JPEG）。
+* SVG（可缩放矢量图形）——矢量图像格式。用于必须以不同尺寸准确描绘的图像。
+* WebP（网络图片格式）——图像和动画的绝佳选择。
+
+```html
+<img src="favicon72.png" alt="MDN logo" srcset="favicon144.png 2x" />
+
+<img src="mdn.svg" alt="MDN logo" role="img" />
+```
+
+上面的例子展示了 `<img>` 元素的用法：
+
+* src 属性是必须的，它包含了你想嵌入的图片的路径。
+* alt 属性包含一条对图像的文本描述，这不是强制性的，但对无障碍而言，它难以置信地有用——屏幕阅读器会将这些描述读给需要使用阅读器的使用者听，让他们知道图像的含义。如果由于某种原因无法加载图像，普通浏览器也会在页面上显示 alt 属性中的备用文本：例如，网络错误、内容被屏蔽或链接过期。
+* **crossorigin** 枚举属性 展示音频资源是否可以通过 CORS 加载。
+  * anonymous 在发送跨域请求时不携带验证信息。
+  * use-credentials 在发送跨域请求时携带验证信息。
+* **decoding** 为浏览器提供图像解码方式上的提示。允许的值：
+  * sync 同步解码图像，实现与其他内容互斥的原子渲染。
+  * async 异步解码图像，以减少其他内容的渲染延迟。
+  * auto 默认值：不指定解码方式，由浏览器决定哪一种对用户来说是最合适的。
+* loading 指示浏览器应当如何加载该图像。允许的值：
+  * eager 立即加载图像，不管它是否在可视视口（visible viewport）之外（默认值）。
+  * lazy 延迟加载图像，直到它和视口接近到一个计算得到的距离（由浏览器定义）。
+* width、height
+* **border 已弃用** 图像周围的边框宽度。使用 CSS 属性 border 代替此废弃属性。
+* **align 已弃用** 图像相对于它周围上下文的对齐。使用 float 和/或 vertical-align 这两个 CSS 属性作为代替。允许的值：
 ### [4. 表格标签](#)
 表格标签几乎是必然要使用的内容,在 HTML 中一个很普通的任务是构建表格数据，有大量的元素和属性是来满足这种需求的。
 
@@ -1075,6 +1111,7 @@ HTML `<dialog>` 元素表示一个对话框或其他交互式组件，例如一�
 
 
 ### [8. 列表标签](#)
+一共有三类，自定义列表(Definition List)、有序列表(Ordered List)、无序列表(Unordered List)。
 
 #### [8.1 dl、dt、dd](#)
 HTML `<dl>` 元素 （或 HTML 描述列表元素）是一个包含术语定义以及描述的列表，通常用于展示词汇表或者元数据 (键 - 值对列表)。
@@ -1098,6 +1135,72 @@ HTML `<dd>` 元素（HTML 描述元素）用来指明一个描述列表 (`<dl>`)
   <dd>A giant owl-like creature.</dd>
 </dl>
 ```
+
+#### [8.2 ol li](#)
+元素表示有序列表，通常渲染为一个带编号的列表。
+
+**属性**
+* **reversed** 此布尔值属性指定列表中的条目是否是倒序排列的，即编号是否应从高到低反向标注。
+* **start** 一个整数值属性，指定了列表编号的起始值。此属性的值应为阿拉伯数字，尽管列表条目的编号类型 type 属性可能指定为了罗马数字编号等其他类型的编号。比如说，想要让元素的编号从英文字母 "d" 或者罗马数字 "iv" 开始，都应当使用 start="4"。
+* **type 设置编号的类型**：
+  * a 表示小写英文字母编号
+  * A 表示大写英文字母编号
+  * i 表示小写罗马数字编号
+  * I 表示大写罗马数字编号
+  * 1 表示数字编号（默认）编号类型适用于整个列表，除非在 <ol> 元素的 <li> 元素中使用不同的 type 属性。
+
+```html
+<ol type="I" start="2">
+  <li>Mix flour, baking powder, sugar, and salt.</li>
+  <li>In another bowl, mix eggs, milk, and oil.</li>
+  <li>Stir both mixtures together.</li>
+  <li>Fill muffin tray 3/4 full.</li>
+  <li>Bake for 20 minutes.</li>
+</ol>
+```
+
+<ol type="I" start="2">
+  <li>Mix flour, baking powder, sugar, and salt.</li>
+  <li>In another bowl, mix eggs, milk, and oil.</li>
+  <li>Stir both mixtures together.</li>
+  <li>Fill muffin tray 3/4 full.</li>
+  <li>Bake for 20 minutes.</li>
+</ol>
+
+#### [8.3 ul li](#)
+元素表示无序的项目列表，通常渲染为项目符号列表。
+
+**属性**
+* **compact 已弃用** 此布尔属性提示列表是否需要被渲染为更紧凑的样式。用户代理决定如何解释这个属性，且并非所有浏览器都支持它。
+  * 请不要使用这个属性，它已经被弃用了：请使用 CSS 来更改样式。如果想达到与 compact 属性相同的效果，将 CSS 属性 line-height 的值设为 80% 即可。
+* **type 已弃用** 用于设置列表的着重号样式，定义于 HTML3.2 和过渡版本 HTML 4.0/4.01 中的可用值有：
+  * circle
+  * disc
+  * square
+  * 如果未设置此 HTML 属性且没有 CSS `list-style-type`属性作用于这个元素，用户代理会决定使用哪种着重号样式，一般来说这也和嵌套的层级数有关。
+```html
+<ul>
+  <li>Milk</li>
+  <li>
+    Cheese
+    <ul>
+      <li>Blue cheese</li>
+      <li>Feta</li>
+    </ul>
+  </li>
+</ul>
+```
+
+<ul>
+  <li>Milk</li>
+  <li>
+    Cheese
+    <ul>
+      <li>Blue cheese</li>
+      <li>Feta</li>
+    </ul>
+  </li>
+</ul>
 
 ### [9. 功能标签](#)
 
@@ -1165,4 +1268,17 @@ time元素用于表示日期或时间，也可以同时表示两者,语义标签
   ctx.fillStyle = "green";
   ctx.fillRect(10, 10, 100, 100);
 </script>
+```
+
+### [11. iframe](#)
+HTML 内联框架元素 (`<iframe>`) 表示嵌套的browsing context。它能够将另一个 HTML 页面嵌入到当前页面中。
+
+```html
+<iframe
+  id="inlineFrameExample"
+  title="Inline Frame Example"
+  width="300"
+  height="200"
+  src="www.baidu.com">
+</iframe>
 ```
