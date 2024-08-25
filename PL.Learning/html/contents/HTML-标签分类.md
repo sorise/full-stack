@@ -1,5 +1,5 @@
 ## [HTML 标签](#)
-> **介绍**：HTML文本标签
+> **介绍**：HTML 5以HTML 4为基础，对HTML 4进行了大量修改。
 
 -----
 * [1. 排版标签](#1-排版标签)
@@ -11,6 +11,7 @@
 * [7. 面板标签](#7-面板标签)
 * [8. 列表标签](#8-列表标签)
 * [9. 功能标签](#9-功能标签)
+* [10. 大内容 canvas](#10-大内容-canvas)
 
 -----
 ### [1. 排版标签](#)
@@ -75,10 +76,13 @@ HTML 语义标签（Semantic HTML Tags）是指那些不仅用于布局或样式
 
 只允许`“<br/>”`的书写形式
 
-#### [1.x header](#)
+#### [1.1 main](#)
+main元素表示页面中主要内容区域,**本质上等同于div**。
+
+#### [1.2 header](#)
 header元素表示页面中一个内容区块或整个页面的标题,**本质上等同于div**。
 
-#### [1.x nav](#)
+#### [1.3 nav](#)
 nav元素表示页面中导航链接的部分,**本质上等同于div**。
 
 #### [1.x article](#)
@@ -161,6 +165,36 @@ HTML `<aside>` 元素表示一个和其余页面内容几乎无关的部分，�
 </aside>
 ```
 
+#### [1.x hgroup](#)
+`<hgroup>` HTML 元素代表文档标题和与标题相关联的内容，它将一个 `<h1>–<h6>` 元素与一个或多个 `<p>` 元素组合在一起。
+
+```html
+<style>
+  hgroup {
+    text-align: right;
+    padding-right: 16px;
+    border-right: 10px solid #00c8d7;
+  }
+  hgroup h1 {
+    margin-bottom: 0;
+  }
+  hgroup p {
+    margin: 0;
+    font-weight: bold;
+  }
+</style>
+
+<hgroup>
+  <h1>Frankenstein</h1>
+  <p>Or: The Modern Prometheus</p>
+</hgroup>
+<p>
+  Victor Frankenstein, a Swiss scientist, has a great ambition: to create intelligent life. But when his creature first
+  stirs, he realizes he has made a monster. A monster which, abandoned by his master and shunned by everyone who sees
+  it, follows Dr Frankenstein to the very ends of the earth.
+</p>
+
+```
 
 
 ### [2. 文本标签](#)
@@ -282,10 +316,11 @@ hi 元素也是一个语义元素，它所包裹的文本具有“页面上的�
 
 #### [2.4 不再推荐的标签](#)
 
-| 标签 | 介绍        | 备注                          |
-|:---|:----------|:----------------------------|
-| s  | 文字修饰，行内元素 | 使用删除线来渲染文本。                  |
-| b  | 文字修饰，行内元素 | 仍然以粗体显示文本。                  |
+| 标签 | 介绍        | 备注          |
+|:---|:----------|:------------|
+| s  | 文字修饰，行内元素 | 使用删除线来渲染文本。 |
+| b  | 文字修饰，行内元素 | 仍然以粗体显示文本。  |
+| i  | 文字修饰，行内元素 | 仍然以斜体显示文本。 |
 
 HTML `<s>` 元素 使用删除线来渲染文本。使用 `<s>` 元素来表示不再相关，或者不再准确的事情。但是当表示文档编辑时，不提倡使用 `<s>` ；为此，提倡使用 `<del>` 和 `<ins>` 元素。
 
@@ -299,18 +334,36 @@ HTML `<s>` 元素 使用删除线来渲染文本。使用 `<s>` 元素来表示�
 HTML `<b>` 元素用于吸引读者注意元素内容，而这些内容本身并不具有特别重要性。它以前被称为粗体元素，大多数浏览器
 仍然以粗体显示文本,应该使用 CSS font-weight 属性。
 
-#### [2.5 code、kbd、samp](#)
+```html
+<p>
+  The Latin phrase <i class="latin">Veni, vidi, vici</i> is often mentioned in
+  music, art, and literature
+</p>
+```
 
-| 标签     | 介绍        | 备注                          |
-|:-------|:----------|:----------------------------|
-| code   | 文字修饰，行内元素 | 表示内容为一段代码。                  |
-| kbd   | 文字修饰，行内元素 | 用于表示用户输入。                  |
-| samp   | 文字修饰，行内元素 |  元素用于标识计算机程序输出。                  |
+<p>
+  The Latin phrase <i class="latin">Veni, vidi, vici</i> is often mentioned in
+  music, art, and literature
+</p>
+
+#### [2.5 code、kbd、samp、var](#)
+
+| 标签     | 介绍        | 备注                        |
+|:-------|:----------|:--------------------------|
+| code   | 文字修饰，行内元素 | 表示内容为一段代码。                |
+| kbd   | 文字修饰，行内元素 | 用于表示用户输入。                 |
+| samp   | 文字修饰，行内元素 | 元素用于标识计算机程序输出。            |
+| var   | 文字修饰，行内元素 | 元素表示数学表达式或编程上下文中的变量名称，斜体。 |
 ```html
 <p><code>console.assert(me.age > 18);</code></p>
 <p>Save the document by pressing <kbd>Ctrl</kbd> + <kbd>S</kbd></p>
 
 <p>Regular text. <samp>This is sample text.</samp> Regular text.</p>
+
+<p>
+  The volume of a box is <var>l</var> × <var>w</var> × <var>h</var>, where <var>l</var> represents the length,
+  <var>w</var> the width and <var>h</var> the height of the box.
+</p>
 ```
 **显示效果**：
 
@@ -318,18 +371,25 @@ HTML `<b>` 元素用于吸引读者注意元素内容，而这些内容本身并
 <p>Save the document by pressing <kbd>Ctrl</kbd> + <kbd>S</kbd></p>
 <p>Regular text. <samp>This is sample text.</samp> Regular text.</p>
 
-#### [2.6 bdi、bdo](#)
-**bdi** 中用于双向文本隔离的标签。它的全称是 "Bidirectional Isolation"。
+<p>
+  The volume of a box is <var>l</var> × <var>w</var> × <var>h</var>, where <var>l</var> represents the length,
+  <var>w</var> the width and <var>h</var> the height of the box.
+</p>
 
-具体来说，当你在一个方向为从左到右（LTR）的文本中插入一个方向为从右到左（RTL）的文本（例如阿拉伯语或希伯来语）时，如果
-不使用 `<bdi>` 标签，可能会导致混乱的显示。例如，标点符号和数字的位置可能会出现错位。使用 `<bdi>` 标签可以确保插
-入的文本在文档中按照其自然的书写方向显示，而不会影响周围的内容。
+
+#### [2.6 bdi、bdo、wbr](#)
 
 | 标签  | 介绍        | 备注                                                                       |
 |:----|:----------|:-------------------------------------------------------------------------|
 | bdi | 文字修饰，行内元素 | 主要用于防止文本在不同书写方向的混合情况下出现显示问题。|
-| bdo | 文字修饰，行内元素 | 元素覆盖了当前文本的方向，使文本以不同的方向渲染出来。                                              |
+| bdo | 文字修饰，行内元素 | 元素覆盖了当前文本的方向，使文本以不同的方向渲染出来。  |
+| wbr | 文字修饰，行内元素 | 标签在 HTML 中用于在文本中添加可能的换行机会  |
 
+**bdi 标签** 中用于双向文本隔离的标签。它的全称是 "Bidirectional Isolation"。
+
+具体来说，当你在一个方向为从左到右（LTR）的文本中插入一个方向为从右到左（RTL）的文本（例如阿拉伯语或希伯来语）时，如果
+不使用 `<bdi>` 标签，可能会导致混乱的显示。例如，标点符号和数字的位置可能会出现错位。使用 `<bdi>` 标签可以确保插
+入的文本在文档中按照其自然的书写方向显示，而不会影响周围的内容。
 
 **bdo属性**: 
 * **dir** 文本在此元素内容中渲染的方向。可能的值有：
@@ -339,6 +399,15 @@ HTML `<b>` 元素用于吸引读者注意元素内容，而这些内容本身并
 <p>该文本应从左到右绘制。</p>
 <p><bdo dir="rtl">该文本应从右到左绘制。</bdo></p>
 ```
+
+**wbr** 标签在 HTML 中用于在文本中添加可能的换行机会。它的全称是 "Word Break Opportunity"。
+当浏览器遇到 `<wbr>` 标签时，如果文本需要换行，它会在这个位置进行断行；如果不需要换行，则忽略它。
+
+```html
+<p>这是一个非常长的单词：supercalifragilisticexpiali<wbr>docious。</p>
+```
+在上面的例子中，`<wbr>` 标签插入在单词 "supercalifragilisticexpialidocious" 的中间。
+如果该单词在某些屏幕上超出了容器的宽度，浏览器会在 `<wbr>` 标签所在的位置将其分成两行显示。
 
 #### [2.6 q、blockquote、pre](#)
 语义标签罢了，实际效果完全可以使用div来实现。
@@ -555,7 +624,7 @@ track 元素 被当作媒体元素—`<audio>` 和 `<video>`的子元素来使�
 ```
 
 ### [4. 表格标签](#)
-表格标签几乎是必然要使用的内容
+表格标签几乎是必然要使用的内容,在 HTML 中一个很普通的任务是构建表格数据，有大量的元素和属性是来满足这种需求的。
 
 * **caption标签**  展示一个表格的标题，它常常作为 `<table>` 的第一个子元素出现，同时显示在表格内容的最前面，它同样可以出现在任何一个一个相对于表格的做任意位置。
 
@@ -694,6 +763,39 @@ HTML `<fieldset>` 元素用于对表单中的控制元素进行分组（也包�
 与聚焦相关的事件。默认情况下，浏览器会将这样的控件展示为灰色。注意，`<legend>` 中的表单元素不会被禁用。
 * **form** 将该值设为一个 `<form>` 元素的 id 属性值以将 `<fieldset>` 设置成这个 `<form>` 的一部分。
 * **name**  元素分组的名称
+
+#### [5.x button](#)
+HTML `<button>` 元素表示一个可点击的按钮，可以用在表单或文档其他需要使用简单标准按钮的地方。默认情况下，HTML 按钮的显示样式接近于 user agent 所在的宿主系统平台（用户操作系统）的按钮，但你可以使用 CSS 来改变按钮的样貌。
+
+```html
+<button name="button">Click me</button>
+```
+* **autofocus** 一个布尔属性，用于指定当页面加载时按钮必须有输入焦点，除非用户重写，例如通过不同控件键入。只有一个表单关联元素可以指定该属性。
+* **type** button 的类型。可选值：
+  * submit: 此按钮将表单数据提交给服务器。如果未指定属性，或者属性动态更改为空值或无效值，则此值为默认值。
+  * reset: 此按钮重置所有组件为初始值。
+  * button: 此按钮没有默认行为。它可以有与元素事件相关的客户端脚本，当事件出现时可触发。
+* **value** button 的初始值。它定义的值与表单数据的提交按钮相关联。当表单中的数据被提交时，这个值便以参数的形式被递送至服务器。
+* **name** button 的名称，与表单数据一起提交。
+* **disabled** 此布尔属性表示用户不能与 button 交互。
+* **form** 表示 button 元素关联的 form 元素（它的表单拥有者）。此属性值必须为同一文档中的一个 `<form>` 元素的id属性。
+* **formaction** 表示程序处理 button 提交信息的 URI。如果指定了，将重写 button 表单拥有者的action属性。
+* **formenctype** 如果 button 是 submit 类型，此属性值指定提交表单到服务器的内容类型。可选值：
+  * `application/x-www-form-urlencoded`: 未指定时的默认值。
+  * `multipart/form-data`: 如果使用type属性的 `<input>` 元素设置文件，使用此值。
+  * `text/plain` 如果指定此属性，它将重写 button 的表单拥有者的enctype属性。
+* **formmethod** 如果 button 是 submit 类型，此属性指定浏览器提交表单使用的 HTTP 方法。可选值：
+  * post：来自表单的数据被包含在表单内容中，被发送到服务器。
+  * get：来自表单的数据以'?'作为分隔符被附加到 form 的URI属性中，得到的 URI 被发送到服务器。当表单没有副作用，且仅包含 ASCII 字符时使用这种方法。如果指定了，此属性会重写 button 拥有者的method属性。
+* **formnovalidate** 如果 button 是 submit 类型，此布尔属性指定当表单被提交时不需要验证。如果指定了，它会重写 button 拥有者的novalidate属性。
+* **formtarget** 如果 button 是 submit 类型，此属性指定一个名称或关键字，表示接收提交的表单后在哪里显示响应。这是一个浏览上下文（例如 tab，window 或内联框架）的名称或关键字。如果指定了，它会重写 button 拥有者的target 属性。关键字如下：
+  * _self: 在同一个浏览上下文中加载响应作为当前的。未指定时此值为默认值。
+  * _blank: 在一个新的不知名浏览上下文中加载响应。
+  * _parent: 在当前浏览上下文父级中加载响应。如果没有父级的，此选项将按_self 执行。
+  * _top: 在顶级浏览上下文（即当前浏览上下文的祖先，且没有父级）中架加载响应。如果没有顶级的，此选项将按_self 执行。
+
+
+
 ### [6. 链接标签](#)
 链接、跳转到其他页面。
 
@@ -787,7 +889,7 @@ HTML 中的 `<map>` 标签是一种用于制作交互式图片地图的元素。
 
 ### [7. 面板标签](#)
 
-#### [7.x details](#)
+#### [7.1 details](#)
 HTML `<details>` 元素可创建一个组件，仅在被切换成展开状态时，它才会显示内含的信息。`<summary>` 元素可为该部件提供概要或者标签。
 
 ```html
@@ -835,7 +937,7 @@ details.addEventListener("toggle", (event) => {
 });
 ```
 
-#### [7.x dialog](#)
+#### [7.2 dialog](#)
 HTML `<dialog>` 元素表示一个对话框或其他交互式组件，例如一个可关闭警告、检查器或者窗口。
 
 **属性**：
@@ -975,4 +1077,26 @@ time元素用于表示日期或时间，也可以同时表示两者,语义标签
 <p>演出于 <time datetime="2018-07-07T20:00:00">20:00</time> 开始。</p>
 
 <p>演出于 <time datetime="2001-05-15T19:00">5 月 15 日</time>开始。</p>
+```
+
+### [10. 大内容 canvas](#)
+**canvas** 元素可被用来通过 JavaScript（Canvas API 或 WebGL API）绘制图形及图形动画。
+
+属性: 本元素支持全局属性。
+* height 该元素占用空间的高度，以 CSS 像素（px）表示，默认为 150。
+* width 该元素占用空间的宽度，以 CSS 像素（px）表示，默认为 300。
+
+```html
+<canvas id="canvas" width="300" height="300">
+  抱歉，你的浏览器不支持 canvas 元素
+  （这些内容将会在不支持&lt;canvas%gt;元素的浏览器或是禁用了 JavaScript
+  的浏览器内渲染并展现）
+</canvas>
+
+<script>
+  var canvas = document.getElementById("canvas");
+  var ctx = canvas.getContext("2d");
+  ctx.fillStyle = "green";
+  ctx.fillRect(10, 10, 100, 100);
+</script>
 ```
