@@ -8,10 +8,12 @@
 * [4. 表格标签](#4-表格标签)
 * [5. 表单标签](#5-表单标签)
 * [6. 链接标签](#6-链接标签)
+* [7. 面板标签](#7-面板标签)
+* [8. 列表标签](#8-列表标签)
+* [9. 功能标签](#9-功能标签)
 
 -----
 ### [1. 排版标签](#)
-
 
 #### [1.1 div 块级元素](#)
 `<div>` HTML 元素是流式内容的通用容器。它对内容或布局没有影响。除非以某种方式使用 CSS 对其进行样式设置（例如，直接应用样式，或者对其父元素应用某种布局模型，如弹性盒子），否则它对内容或布局没有影响。
@@ -414,6 +416,7 @@ video元素用于定义视频，比如电影片段或其他视频流。
 
 ```html
 <video controls>
+  <track default kind="captions" srclang="en" src="/media/examples/friday.vtt" />
   <source src="myVideo.mp4" type="video/mp4" />
   <source src="myVideo.webm" type="video/webm" />
   <p>
@@ -503,11 +506,58 @@ picture 元素在 HTML 中用于为不同的屏幕尺寸或分辨率提供不同
 * 如果浏览器支持 WebP 格式，则使用 image.webp。
 * 如果浏览器不支持 WebP，则使用 JPEG 格式的 image.jpg。
 
+#### [3.5 track](#)
+track 元素 被当作媒体元素—`<audio>` 和 `<video>`的子元素来使用。它允许指定时序文本字幕（或者基于时间的数据），例如自动处理字幕。字幕格式有 WebVTT 格式（.vtt格式文件）— Web 视频文本字幕格式，以及指时序文本标记语言（TTML）格式。
+
+**字幕技术也不能仅仅靠track来实现**
+```html
+<video controls src="/media/cc0-videos/friday.mp4">
+  <track default kind="captions" srclang="en" src="/media/examples/friday.vtt" />
+  Download the
+  <a href="/media/cc0-videos/friday.mp4">MP4</a>
+  video, and
+  <a href="/media/examples/friday.vtt">subtitles</a>.
+</video>
+```
+
+* default 该属性定义了该 track 应该启用，除非用户首选项指定了更合适一个 track。每个媒体元素里面只有一个 track 元素可以有这个属性。
+* kind 定义了 text track 应该如何使用。如果省略了该属性，默认的 kind 值就是 subtitles。下面是允许的关键字：
+  * subtitles 字幕给观影者看不懂的内容提供了翻译。比如英文电影里非英文的对话框或者文字。 字幕可能包含额外的内容，通常有附加的背景信息。比如在电影星球大战开头的文字，或者某个场景的日期，时间，还有地点。
+  * captions 隐藏式字幕提供了音频的转录甚至是翻译。 可能包含重要的非言语的信息，比如音乐提示或者音效。可以指定提示音的源文件 (e.g. music, text, character). 适用于耳聋的用户或者当调成静音的时候。
+  * descriptions 视频内容的文本描述。 适用于失明用户或者当视频不可见的场景。
+  * chapters 章节标题用于用户浏览媒体资源的时候。
+  * metadata 脚本使用的 track。对用户不可见。
+  * label 当列出可用的 text tracks 时，给浏览器使用的 text track 的标题，这种标题是用户可读的。
+* src track 的地址。必须是合法的 URL。该属性必须定义。
+* srclang track 文本数据的语言。它必须是合法的 BCP 47 语言标签。如果 kind 属性被设为 subtitles, 那么 srclang 必须定义。
+
+```html
+<video controls poster="/images/sample.gif">
+   <source src="sample.mp4" type="video/mp4">
+   <source src="sample.ogv" type="video/ogv">
+   <track kind="captions" src="sampleCaptions.vtt" srclang="en">
+   <track kind="descriptions"
+     src="sampleDescriptions.vtt" srclang="en">
+   <track kind="chapters" src="sampleChapters.vtt" srclang="en">
+   <track kind="subtitles" src="sampleSubtitles_de.vtt" srclang="de">
+   <track kind="subtitles" src="sampleSubtitles_en.vtt" srclang="en">
+   <track kind="subtitles" src="sampleSubtitles_ja.vtt" srclang="ja">
+   <track kind="subtitles" src="sampleSubtitles_oz.vtt" srclang="oz">
+   <track kind="metadata" src="keyStage1.vtt" srclang="en"
+     label="Key Stage 1">
+   <track kind="metadata" src="keyStage2.vtt" srclang="en"
+     label="Key Stage 2">
+   <track kind="metadata" src="keyStage3.vtt" srclang="en"
+     label="Key Stage 3">
+   <!-- Fallback -->
+   ...
+</video>
+```
+
 ### [4. 表格标签](#)
 表格标签几乎是必然要使用的内容
 
-* **caption标签**  展示一个表格的标题，它常常作为 <table> 的第一个子元素出现，同时显示在表格内容的最前面，它同样可以出现在任何一个一个相对于表格的做任意位置。
-* 
+* **caption标签**  展示一个表格的标题，它常常作为 `<table>` 的第一个子元素出现，同时显示在表格内容的最前面，它同样可以出现在任何一个一个相对于表格的做任意位置。
 
 #### [4.x col](#)
 `<col>` HTML 元素在其父 `<colgroup>` 元素所代表的列组中定义一列或多列。
@@ -858,7 +908,6 @@ HTML `<dialog>` 元素表示一个对话框或其他交互式组件，例如一�
 
 ### [8. 列表标签](#)
 
-
 #### [8.1 dl、dt、dd](#)
 HTML `<dl>` 元素 （或 HTML 描述列表元素）是一个包含术语定义以及描述的列表，通常用于展示词汇表或者元数据 (键 - 值对列表)。
 
@@ -882,7 +931,6 @@ HTML `<dd>` 元素（HTML 描述元素）用来指明一个描述列表 (`<dl>`)
 </dl>
 ```
 
-
 ### [9. 功能标签](#)
 
 #### [9.1 br](#)
@@ -896,3 +944,35 @@ br 元素在文本中生成一个换行（回车）符号。此元素在写诗�
 </p>
 ```
 你可以给 `<br>` 元素设置 margin 从而增加文本行之间的间距，但这是一种糟糕的做法——你应该使用为此目的而设计的 line-height。
+
+#### [9.2 meter](#)
+meter元素表示度量衡，仅用于已知最大值和最小值的度量。必须定义度量的范围，既可以在元素的文本中，也可以在min/max属性中定义。
+
+此元素包含全局属性。
+
+* value 当前数值。如果指定了最小值和最大值（min 属性和 max 属性），则必须介于这两个值之间。如果未指定或格式错误，则值为 0。如果指定的值不在 min 属性和 max 属性给定的范围内，则该值等于范围的最近端。
+  * 备注：除非 value 属性介于 0 和 1 之间（包括 0 和 1），否则 min 和 max 属性应定义范围，以便 value 属性的值在该范围内。
+* min 测量范围的下限。如果指定，该值必须小于最大值（max 属性）。如果未指定，则最小值为 0。
+* max 测量范围的上限。如果指定，该值必须大于最小值（min 属性）。如果未指定，则最大值为 1。
+* low 测量范围低档部分的数值上限。该值必须大于最小值（min 属性），如果指定了高档值和最大值（分别为 high 属性和 max 属性），也必须小于高档值和最大值。如果未指定或小于最小值，low 值等于最小值。
+* high 测量范围高档部分的数值下限。该值必须小于最大值（max 属性），且必须大于低档值（low 属性）和最小值（min 属性），如果未指定或大于最大值，则 high 值等于最大值。
+* optimum 该属性表示最佳数值。必须在 min 属性和 max 属性定义的范围内。当与 low 属性和 high 属性一起使用时，它表示范围内哪个位置更合适。例如，如果值介于 min 属性和 low 属性之间，则认为首选低档范围的。浏览器可能会根据值是否小于或等于最佳值来为仪表条附着不同的颜色。
+* form 此可选属性用于显式设置 `<meter>` 元素的 `<form>` 所有者。如果省略，则 `<meter>` 元素将与其 `<form>` 父元素关联，或者与另一个父元素（例如 `<fieldset>`）上的 form 属性所设置的表单相关联（如果有的话）。如果包含，则该值必须是同一文档树中的 `<form>` 元素的 id。
+
+
+```html
+<label for="fuel">Fuel level:</label>
+
+<meter id="fuel" min="0" max="100" low="33" high="66" optimum="80" value="50">at 50/100</meter>
+```
+
+#### [9.3 time](#)
+time元素用于表示日期或时间，也可以同时表示两者,语义标签，[日期格式](https://developer.mozilla.org/zh-CN/docs/Web/HTML/Element/time)。
+
+**属性**
+* datetime 该属性表示此元素的时间和/或日期，并且属性值必须符合下文所描述的格式。
+```html
+<p>演出于 <time datetime="2018-07-07T20:00:00">20:00</time> 开始。</p>
+
+<p>演出于 <time datetime="2001-05-15T19:00">5 月 15 日</time>开始。</p>
+```
