@@ -29,7 +29,25 @@
 ```
 只有当没有其他合适的语义元素（例如 `<article>` 或 `<nav>`）时，才应使用 `<div>` 元素。
 
-#### [1.x html5语义标签](#)
+#### [1.2 html5语义标签](#)
+HTML 语义标签（Semantic HTML Tags）是指那些不仅用于布局或样式，还能传达文档内容含义的标签。这些标签有助于搜索引擎、屏幕阅读器和其他工具理解网页的结构和内容，增强可访问性和搜索引擎优化 (SEO)。
+
+以下是一些常见的 **HTML 语义标签**及其用途：
+* `<header>`：定义页面或区域的头部内容，通常包含导航链接、标志、标题等。
+* `<nav>`：定义导航链接的部分。
+* `<main>`：定义文档主体内容的主要部分，通常是页面中独一无二的主要内容。
+* `<article>`：定义独立的内容块，适用于博客文章、新闻报道等。
+* `<section>`：定义文档中的某个部分，通常包含一组主题相关的内容。
+* `<aside>`：定义与页面内容相关的附属内容，通常用于侧边栏或广告等。
+* `<footer>`：定义页面或区域的底部内容，通常包含版权信息、联系信息等。
+* `<figure>`：用于包含图像、图表、照片或其他媒体内容。通常与 `<figcaption>` 一起使用。
+* `<figcaption>`：为 `<figure>` 元素中的内容提供说明或标题。
+* `<mark>`：标记文本的一部分，表示重点或高亮内容。
+* `<time>`：表示时间或日期。
+* `<address>`：定义联系信息，通常用于提供作者或所有者的地址。
+* `<code>`：表示计算机代码片段。
+* `<summary>`：用于 `<details>` 元素中，为可展开的详细内容提供标题或概要。
+* `<details>`：定义用户可以展开或隐藏的额外细节。
 
 ```html
 <body>
@@ -56,28 +74,28 @@
 只允许`“<br/>”`的书写形式
 
 #### [1.x header](#)
-header元素表示页面中一个内容区块或整个页面的标题。
+header元素表示页面中一个内容区块或整个页面的标题,**本质上等同于div**。
 
 #### [1.x nav](#)
-nav元素表示页面中导航链接的部分。
+nav元素表示页面中导航链接的部分,**本质上等同于div**。
 
 #### [1.x article](#)
-article元素article元素表示页面中的一块与上下文不相关的独立内容，譬如博客中的一篇文章或报纸中的一篇文章。
+article元素article元素表示页面中的一块与上下文不相关的独立内容，譬如博客中的一篇文章或报纸中的一篇文章,**本质上等同于div**。
 
 ```html
 <article>一篇文章</article>
 ```
 
 #### [1.x main](#)
-main元素表示网页中的主要内容。主内容区域意指与网页标题或应用程序中本页面主要功能直接相关或进行扩展的内容。
+main元素表示网页中的主要内容。主内容区域意指与网页标题或应用程序中本页面主要功能直接相关或进行扩展的内容,**本质上等同于div**。
 
 ```html
 <main></main>
 ```
 
 #### [1.x section](#)
-**section元素语义表示** 页面中的一个内容区块，比如章节、页眉、页脚或页面中的其他部分。它可以与h1、h2、h3、h4、h5、h6元素结合使用，标示文档结构。
-
+**section元素语义表示** 页面中的一个内容区块，比如章节、页眉、页脚或页面中的其他部分。
+它可以与h1、h2、h3、h4、h5、h6元素结合使用，标示文档结构,**本质上等同于div**。 
 ```html
 <section>一个章节</section>
 ```
@@ -118,7 +136,7 @@ footer元素表示整个页面或页面中一个内容区块的脚注。一般�
 ```
 
 #### [1.x address](#)
-`<address>` HTML 元素表示其包含的 HTML 内容提供了与个人、团体或组织联系的信息。
+`<address>` HTML 元素表示其包含的 HTML 内容提供了与个人、团体或组织联系的信息,**本质上等同于div**。
 
 ```html
 <address>
@@ -130,6 +148,18 @@ footer元素表示整个页面或页面中一个内容区块的脚注。一般�
   你也可以前来访问：美国加利福尼亚州山景城伊芙琳大道东 331 号 Mozilla 基金会，邮编：94041
 </address>
 ```
+
+#### [1.x aside](#)
+HTML `<aside>` 元素表示一个和其余页面内容几乎无关的部分，被认为是独立于该内容的一部分并且可以被单独的拆分
+出来而不会使整体受影响。其通常表现为侧边栏或者标注框（call-out boxes）,**本质上等同于div**。
+
+```html
+<aside>
+  <p>The Rough-skinned Newt defends itself with a deadly neurotoxin.</p>
+</aside>
+```
+
+
 
 ### [2. 文本标签](#)
 HTML 的主要工作之一是赋予文本结构，使浏览器能够按照开发者的意图显示 HTML 文档。本文解释了 HTML 如何通过添加标题和段落、强调单词、创建列表等方式来构造文本。
@@ -249,6 +279,12 @@ hi 元素也是一个语义元素，它所包裹的文本具有“页面上的�
 
 
 #### [2.4 不再推荐的标签](#)
+
+| 标签 | 介绍        | 备注                          |
+|:---|:----------|:----------------------------|
+| s  | 文字修饰，行内元素 | 使用删除线来渲染文本。                  |
+| b  | 文字修饰，行内元素 | 仍然以粗体显示文本。                  |
+
 HTML `<s>` 元素 使用删除线来渲染文本。使用 `<s>` 元素来表示不再相关，或者不再准确的事情。但是当表示文档编辑时，不提倡使用 `<s>` ；为此，提倡使用 `<del>` 和 `<ins>` 元素。
 
 ```html
@@ -257,6 +293,9 @@ HTML `<s>` 元素 使用删除线来渲染文本。使用 `<s>` 元素来表示�
 **显示效果**：
 
 <s>Today's Special: Salmon</s> SOLD OUT<br>
+
+HTML `<b>` 元素用于吸引读者注意元素内容，而这些内容本身并不具有特别重要性。它以前被称为粗体元素，大多数浏览器
+仍然以粗体显示文本,应该使用 CSS font-weight 属性。
 
 #### [2.5 code、kbd、samp](#)
 
@@ -309,6 +348,21 @@ video元素用于定义视频，比如电影片段或其他视频流。
 
 **javascript 事件属性** 
 * [链接查看](https://developer.mozilla.org/zh-CN/docs/Web/HTML/Element/video#事件)
+
+
+#### [3.2 audio](#)
+
+
+#### [3.3 embed](#)
+HTML `<embed>` 元素将外部内容嵌入文档中的指定位置。此内容由外部应用程序或其他交互式内容源（如浏览器插件）提供。
+* height 资源显示的高度，in CSS pixels. — (Absolute values only. NO percentages)
+* src 被嵌套的资源的 URL。
+* type 用于选择插件实例化的 MIME 类型。
+* width 资源显示的宽度，in CSS pixels. — (Absolute values only. NO percentages)
+
+```html
+<embed type="video/quicktime" src="movie.mov" width="640" height="480" />
+```
 
 ### [4. 表格标签](#)
 表格标签几乎是必然要使用的内容
@@ -417,7 +471,37 @@ HTML中的 `<progress>` 元素用来显示一项任务的完成进度。虽然�
 ```html
 <progress value="70" max="100">70 %</progress>
 ```
-<progress value="70" max="100">70 %</progress>
+
+#### [5.x fieldset](#)
+HTML `<fieldset>` 元素用于对表单中的控制元素进行分组（也包括 label 元素）。
+
+```html
+<form>
+  <fieldset>
+    <legend>Choose your favorite monster</legend>
+
+    <input type="radio" id="kraken" name="monster" value="K" />
+    <label for="kraken">Kraken</label><br />
+
+    <input type="radio" id="sasquatch" name="monster" value="S" />
+    <label for="sasquatch">Sasquatch</label><br />
+
+    <input type="radio" id="mothman" name="monster" value="M" />
+    <label for="mothman">Mothman</label>
+  </fieldset>
+</form>
+```
+<form>
+  <fieldset>
+    <legend>Choose your favorite monster</legend>
+    <input type="radio" id="kraken" name="monster" value="K">
+    <label for="kraken">Kraken</label><br />
+    <input type="radio" id="sasquatch" name="monster" value="S" />
+    <label for="sasquatch">Sasquatch</label><br />
+    <input type="radio" id="mothman" name="monster" value="M" />
+    <label for="mothman">Mothman</label>
+  </fieldset>
+</form>
 
 
 ### [6. 链接标签](#)
@@ -486,4 +570,152 @@ HTML 中的 `<map>` 标签是一种用于制作交互式图片地图的元素。
         target="_blank" alt="CSS" />
 </map>
 <img usemap="#primary" src="parrots.jpg" alt="两只鹦鹉的照片，大小为 350 x 150" />
+```
+
+
+### [7. 面板标签](#)
+
+#### [7.x details](#)
+HTML `<details>` 元素可创建一个组件，仅在被切换成展开状态时，它才会显示内含的信息。`<summary>` 元素可为该部件提供概要或者标签。
+
+```html
+<style>
+  details {
+    width: 500px;
+    border: 1px solid #aaa;
+    border-radius: 4px;
+    padding: 0.5em 0.5em 0;
+  }
+  summary {
+    font-weight: bold;
+    margin: -0.5em -0.5em 0;
+    padding: 0.5em;
+  }
+  details[open] {
+    padding: 0.5em;
+  }
+  details[open] summary {
+    border-bottom: 1px solid #aaa;
+    margin-bottom: 0.5em;
+  }
+</style>
+
+<details>
+  <summary>Details</summary>
+  Something small enough to escape casual notice.
+</details>
+```
+<details>
+  <summary>Details</summary>
+  Something small enough to escape casual notice.
+</details>
+
+`<details>` 元素还支持 **toggle** 事件，当 `<details>` 元素的状态在打开和关闭之间变化时，该事件会被派发到该元素。
+该事件是在状态发生变化后发送的，不过如果状态在浏览器派发该事件之前发生了多次变化，那么这些事件就会被合并，从而只发
+送一个。
+```javascript
+details.addEventListener("toggle", (event) => {
+  if (details.open) {
+    /* 元素切换至打开状态 */
+  } else {
+    /* 元素切换至关闭状态 */
+  }
+});
+```
+
+#### [7.x dialog](#)
+HTML `<dialog>` 元素表示一个对话框或其他交互式组件，例如一个可关闭警告、检查器或者窗口。
+
+**属性**：
+* **open** 指示这个对话框是激活的和能互动的。当没有设置 open 属性时，对话框不应该显示给用户。推荐使用 .show() 或 .showModal() 方法来渲染对话框，而不是使用 open 属性。
+
+```html
+<!-- Simple modal dialog containing a form -->
+<dialog id="favDialog">
+  <form method="dialog">
+    <p>
+      <label
+      >Favorite animal:
+        <select>
+          <option value="default">Choose…</option>
+          <option>Brine shrimp</option>
+          <option>Red panda</option>
+          <option>Spider monkey</option>
+        </select>
+      </label>
+    </p>
+    <div>
+      <button value="cancel">Cancel</button>
+      <button id="confirmBtn" value="default">Confirm</button>
+    </div>
+  </form>
+</dialog>
+<p>
+  <button id="updateDetails">Update details</button>
+</p>
+<output></output>
+
+<script>
+  const updateButton = document.getElementById("updateDetails");
+  const favDialog = document.getElementById("favDialog");
+  const outputBox = document.querySelector("output");
+  const selectEl = favDialog.querySelector("select");
+  const confirmBtn = favDialog.querySelector("#confirmBtn");
+
+  // If a browser doesn't support the dialog, then hide the
+  // dialog contents by default.
+  if (typeof favDialog.showModal !== "function") {
+    favDialog.hidden = true;
+    /* a fallback script to allow this dialog/form to function
+       for legacy browsers that do not support <dialog>
+       could be provided here.
+    */
+  }
+  // "Update details" button opens the <dialog> modally
+  updateButton.addEventListener("click", () => {
+    if (typeof favDialog.showModal === "function") {
+      favDialog.showModal();
+    } else {
+      outputBox.value =
+              "Sorry, the <dialog> API is not supported by this browser.";
+    }
+  });
+  // "Favorite animal" input sets the value of the submit button
+  selectEl.addEventListener("change", (e) => {
+    confirmBtn.value = selectEl.value;
+  });
+  // "Confirm" button of form triggers "close" on dialog because of [method="dialog"]
+  favDialog.addEventListener("close", () => {
+    outputBox.value = `${
+            favDialog.returnValue
+    } button clicked - ${new Date().toString()}`;
+  });
+</script>
+```
+
+
+### [8. 列表标签](#)
+
+
+#### [8.1 dl、dt、dd](#)
+HTML `<dl>` 元素 （或 HTML 描述列表元素）是一个包含术语定义以及描述的列表，通常用于展示词汇表或者元数据 (键 - 值对列表)。
+
+HTML `<dt>` 元素 （或 HTML 术语定义元素）用于在一个定义列表中声明一个术语。
+
+HTML `<dd>` 元素（HTML 描述元素）用来指明一个描述列表 (`<dl>`) 元素中一个术语的描述。这个元素只能作为描述列表元素的子元素出现，并且必须跟着一个 `<dt>` 元素。
+* nowrap 非标准,如果这个属性的值为 yes，那么定义的描述文字将不会包裹。默认值为 no。
+* 该元素需要出现在 `<dt>` 元素和 `<dd>` 元素之后，并且在一个 `<dl>` 元素里。
+```html
+<p>Cryptids of Cornwall:</p>
+
+<dl>
+  <dt>Beast of Bodmin</dt>
+  <dd>A large feline inhabiting Bodmin Moor.</dd>
+
+  <dt>Morgawr</dt>
+  <dd>A sea serpent.</dd>
+
+  <dt>Owlman</dt>
+  <dd>A giant owl-like creature.</dd>
+</dl>
 ```
