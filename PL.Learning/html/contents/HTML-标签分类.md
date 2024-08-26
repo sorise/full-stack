@@ -663,7 +663,6 @@ Web 最常用的图像格式是：
   * 零个或多个 `<tbody>`
   *  零个或多个 `<tr>`
   *  一个可选的 `<tfoot>` 元素
-* **caption**  展示一个表格的标题，它常常作为 `<table>` 的第一个子元素出现，同时显示在表格内容的最前面，它同样可以出现在任何一个一个相对于表格的做任意位置。
 
 **例子**：
 ```html
@@ -729,7 +728,7 @@ Web 最常用的图像格式是：
 * HTML 元素 tfoot 定义了一组表格中各列的汇总行。
   * tr
 
-#### [4.4 col](#)
+#### [4.4 col 标签](#)
 `<col>` HTML 元素在其父 `<colgroup>` 元素所代表的列组中定义一列或多列。
 
 **span** : 指定 `<col>` 元素跨越的连续列数。该值必须是大于 0 的正整数。如果不存在，其默认值为 1。
@@ -801,12 +800,157 @@ Web 最常用的图像格式是：
 
 #### [4.5 colgroup](#)
 `<colgroup>` 标签用于在 HTML 表格中定义列的分组，并可以为这些列设置样式或属性。通常与 `<col>` 标签结合使用，以指定表格中某些列的样式或行为，例如宽度、背景颜色等。
-* **colgroup** 用于对表格的列进行分组，这样可以统一应用样式或属性。
+* **colgroup** ：定义表格的列组。可以包含一个或多个 `<col>` 标签，或通过 span 属性来定义一组列的样式或属性。
+* **col**：定义列的样式或属性。通过 span 属性可以指定对多少列生效。
 
+```html
+<table>
+  <colgroup>
+    <col span="2" style="background-color: #f2f2f2;">
+    <col style="background-color: #cccccc;">
+  </colgroup>
+  <tr>
+    <th>Column 1</th>
+    <th>Column 2</th>
+    <th>Column 3</th>
+  </tr>
+  <tr>
+    <td>Row 1, Cell 1</td>
+    <td>Row 1, Cell 2</td>
+    <td>Row 1, Cell 3</td>
+  </tr>
+  <tr>
+    <td>Row 2, Cell 1</td>
+    <td>Row 2, Cell 2</td>
+    <td>Row 2, Cell 3</td>
+  </tr>
+</table>
+```
+
+在上面的示例中，`<colgroup>` 标签包含了两个 <col> 标签。
+第一个 `<col>` 标签使用了 span="2"，表示它将作用于前两列。这两列的背景颜色被设置为 #f2f2f2。
+第二个 `<col>` 标签则仅作用于第三列，其背景颜色设置为 #cccccc。
+这样，通过使用 <colgroup> 和 <col> 标签，可以方便地控制表格列的样式，而无需在每个 <td> 或 <th> 元素中重复定义样式。
+
+#### [4.6 tr 标签](#)
+元素定义了表格中的一行单元格。然后可以使用 `<td>`（数据单元格）和 `<th>`（标题单元格）元素的组合来建立该行的单元格。
+
+`<tr>` 可以作为其 `<table>` 父元素的直接子元素，但前提是 `<table>` 没有 `<tbody>` 子元素，并且只能位于任何 <caption>、<colgroup> 和 <thead> 元素之后。否则，父元素必须是 `<thead>`、`<tbody>` 或 `<tfoot>` 元素。
+CSS 伪类 :nth-of-type、:first-of-type 和 :last-of-type 通常用于选择所需的行集及其数据和标题单元格（`<td>` 和 `<th>` 元素）。
+
+```html
+<style>
+  tr:nth-of-type(odd) {
+    background-color: #eee;
+  }
+
+  tr th[scope="row"] {
+    background-color: #d6ecd4;
+  }
+</style>
+<table>
+  <tr>
+    <th scope="row">A</th>
+    <td>Alfa</td>
+    <td>AL fah</td>
+  </tr>
+  <tr>
+    <th scope="row">B</th>
+    <td>Bravo</td>
+    <td>BRAH voh</td>
+  </tr>
+  <tr>
+    <th scope="row">C</th>
+    <td>Charlie</td>
+    <td>CHAR lee</td>
+  </tr>
+  <tr>
+    <th scope="row">D</th>
+    <td>Delta</td>
+    <td>DELL tah</td>
+  </tr>
+</table>
+```
+
+#### [4.7 th 标签](#)
+th 元素定义表格内的表头单元格。这部分特征是由 scope 和 headers 属性准确定义的。
+
+```html
+<table>
+  <caption>
+    Alien football stars
+  </caption>
+  <tr>
+    <th scope="col">Player</th>
+    <th scope="col">Gloobles</th>
+    <th scope="col">Za'taak</th>
+  </tr>
+  <tr>
+    <th scope="row">TR-7</th>
+    <td>7</td>
+    <td>4,569</td>
+  </tr>
+  <tr>
+    <th scope="row">Khiresh Odo</th>
+    <td>7</td>
+    <td>7,223</td>
+  </tr>
+  <tr>
+    <th scope="row">Mia Oolong</th>
+    <td>9</td>
+    <td>6,219</td>
+  </tr>
+</table>
+```
+
+* abbr 一个简短的描述，作为对表头单元格内容的替代标签，用于在其他上下文中引用该单元格。一些用户代理（如语音阅读器）可能会在内容本身之前呈现此描述。
+* colspan 一个非负整数值，指示表头单元格跨越或扩展多少列。默认值为 1。用户代理会将大于 1000 的值视为不正确，而默认将其设置为 1。
+* headers 包含了一个空格分隔的字符串（对应于为此表头单元格提供标题的 `<th>` 元素的 id 属性）的列表。
+* rowspan 一个非负整数值，指示表头单元格跨越或扩展多少行。默认值为 1。如果该值被设置为 0，这个单元格就被扩展到 <th> 所属的表格分组部分（`<thead>`、`<tbody>` 或 `<tfoot>`）的最后一个单元。比 65534 大的值被会被裁剪到 65534。
+* scope 定义了表头元素（在 `<th>` 中定义）关联的单元格。可能的枚举值如下：
+  * row：表头关联所属的行中所有的单元格。
+  * col：表头关联所属的列中所有的单元格。
+  * rowgroup：表头属于一个行组并与其中所有单元格相关联。
+  * colgroup：表头属于一个列组并与其中所有单元格相关联。
+  * 如果未指定 scope 属性，或其值不是 row、col、rowgroup 或 colgroup，则浏览器会自动选择标题单元格适用的单元格集。
+
+#### [4.8 td 标签](#)
+标签定义 HTML 表格中的标准数据单元格。
+```html
+<table>
+  <caption>
+    Alien football stars
+  </caption>
+  <tr>
+    <th scope="col">Player</th>
+    <th scope="col">Gloobles</th>
+    <th scope="col">Za'taak</th>
+  </tr>
+  <tr>
+    <th scope="row">TR-7</th>
+    <td>7</td>
+    <td>4,569</td>
+  </tr>
+  <tr>
+    <th scope="row">Khiresh Odo</th>
+    <td>7</td>
+    <td>7,223</td>
+  </tr>
+  <tr>
+    <th scope="row">Mia Oolong</th>
+    <td>9</td>
+    <td>6,219</td>
+  </tr>
+</table>
+```
+
+* colspan 一个非负整数值，指示表头单元格跨越或扩展多少列。默认值为 1。用户代理会将大于 1000 的值视为不正确，而默认将其设置为 1。
+* headers 包含了一个空格分隔的字符串（对应于为此表头单元格提供标题的 `<th>` 元素的 id 属性）的列表。
+* rowspan 一个非负整数值，指示表头单元格跨越或扩展多少行。默认值为 1。如果该值被设置为 0，这个单元格就被扩展到 <th> 所属的表格分组部分（`<thead>`、`<tbody>` 或 `<tfoot>`）的最后一个单元。比 65534 大的值被会被裁剪到 65534。
 
 ### [5. 表单标签](#)
 
-#### [5.x datalist](#)
+#### [5.1 datalist](#)
 HTML `<datalist>` 元素包含了一组 `<option>` 元素，这些元素表示其他表单控件可选值,DOM 接口HTMLDataListElement。
 
 ```html
@@ -822,7 +966,7 @@ HTML `<datalist>` 元素包含了一组 `<option>` 元素，这些元素表示�
 </datalist>
 ```
 
-#### [5.x progress](#)
+#### [5.2 progress](#)
 HTML中的 `<progress>` 元素用来显示一项任务的完成进度。虽然规范中没有规定该元素具体如何显示，浏览器开发商可以自己决定，但通常情况下，该元素都显示为一个进度条形式。
 
 **属性**：
@@ -835,7 +979,7 @@ HTML中的 `<progress>` 元素用来显示一项任务的完成进度。虽然�
 <progress value="70" max="100">70 %</progress>
 ```
 
-#### [5.x fieldset](#)
+#### [5.3 fieldset](#)
 HTML `<fieldset>` 元素用于对表单中的控制元素进行分组（也包括 label 元素）。
 
 ```html
@@ -865,38 +1009,6 @@ HTML `<fieldset>` 元素用于对表单中的控制元素进行分组（也包�
 与聚焦相关的事件。默认情况下，浏览器会将这样的控件展示为灰色。注意，`<legend>` 中的表单元素不会被禁用。
 * **form** 将该值设为一个 `<form>` 元素的 id 属性值以将 `<fieldset>` 设置成这个 `<form>` 的一部分。
 * **name**  元素分组的名称
-
-#### [5.x button](#)
-HTML `<button>` 元素表示一个可点击的按钮，可以用在表单或文档其他需要使用简单标准按钮的地方。默认情况下，HTML 按钮的显示样式接近于 user agent 所在的宿主系统平台（用户操作系统）的按钮，但你可以使用 CSS 来改变按钮的样貌。
-
-```html
-<button name="button">Click me</button>
-```
-* **autofocus** 一个布尔属性，用于指定当页面加载时按钮必须有输入焦点，除非用户重写，例如通过不同控件键入。只有一个表单关联元素可以指定该属性。
-* **type** button 的类型。可选值：
-  * submit: 此按钮将表单数据提交给服务器。如果未指定属性，或者属性动态更改为空值或无效值，则此值为默认值。
-  * reset: 此按钮重置所有组件为初始值。
-  * button: 此按钮没有默认行为。它可以有与元素事件相关的客户端脚本，当事件出现时可触发。
-* **value** button 的初始值。它定义的值与表单数据的提交按钮相关联。当表单中的数据被提交时，这个值便以参数的形式被递送至服务器。
-* **name** button 的名称，与表单数据一起提交。
-* **disabled** 此布尔属性表示用户不能与 button 交互。
-* **form** 表示 button 元素关联的 form 元素（它的表单拥有者）。此属性值必须为同一文档中的一个 `<form>` 元素的id属性。
-* **formaction** 表示程序处理 button 提交信息的 URI。如果指定了，将重写 button 表单拥有者的action属性。
-* **formenctype** 如果 button 是 submit 类型，此属性值指定提交表单到服务器的内容类型。可选值：
-  * `application/x-www-form-urlencoded`: 未指定时的默认值。
-  * `multipart/form-data`: 如果使用type属性的 `<input>` 元素设置文件，使用此值。
-  * `text/plain` 如果指定此属性，它将重写 button 的表单拥有者的enctype属性。
-* **formmethod** 如果 button 是 submit 类型，此属性指定浏览器提交表单使用的 HTTP 方法。可选值：
-  * post：来自表单的数据被包含在表单内容中，被发送到服务器。
-  * get：来自表单的数据以'?'作为分隔符被附加到 form 的URI属性中，得到的 URI 被发送到服务器。当表单没有副作用，且仅包含 ASCII 字符时使用这种方法。如果指定了，此属性会重写 button 拥有者的method属性。
-* **formnovalidate** 如果 button 是 submit 类型，此布尔属性指定当表单被提交时不需要验证。如果指定了，它会重写 button 拥有者的novalidate属性。
-* **formtarget** 如果 button 是 submit 类型，此属性指定一个名称或关键字，表示接收提交的表单后在哪里显示响应。这是一个浏览上下文（例如 tab，window 或内联框架）的名称或关键字。如果指定了，它会重写 button 拥有者的target 属性。关键字如下：
-  * _self: 在同一个浏览上下文中加载响应作为当前的。未指定时此值为默认值。
-  * _blank: 在一个新的不知名浏览上下文中加载响应。
-  * _parent: 在当前浏览上下文父级中加载响应。如果没有父级的，此选项将按_self 执行。
-  * _top: 在顶级浏览上下文（即当前浏览上下文的祖先，且没有父级）中架加载响应。如果没有顶级的，此选项将按_self 执行。
-
-
 
 ### [6. 链接标签](#)
 链接、跳转到其他页面。
