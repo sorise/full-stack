@@ -717,6 +717,86 @@ Web 最常用的图像格式是：
 * **width 已弃用** 该属性定义了表格的宽度。请使用 CSS width 属性代替。
 * **summary 已弃用** 该属性定义了概括表格内容的替代文本。请使用 <caption> 元素代替。
 
+```css
+table{
+    border: 1px solid black;
+    border-collapse: separate;
+    border-spacing: 0px;
+}
+table td, th{
+    border: 1px solid gainsboro;
+    padding: 10px;
+}
+```
+
+
+**cellspacing** 设置单元格之间的距离。
+```html
+<h4>没有单元格间距:</h4>
+<table border="1">
+<tr>
+  <td>First</td>
+  <td>Row</td>
+</tr>
+<tr>
+  <td>Second</td>
+  <td>Row</td>
+</tr>
+</table>
+
+<h4>单元格间距="0":</h4>
+<table border="1" cellspacing="0">
+<tr>
+  <td>First</td>
+  <td>Row</td>
+</tr>
+<tr>
+  <td>Second</td>
+  <td>Row</td>
+</tr>
+</table>
+
+<h4>单元格间距="10":</h4>
+<table border="1" cellspacing="10">
+<tr>
+  <td>First</td>
+  <td>Row</td>
+</tr>
+<tr>
+  <td>Second</td>
+  <td>Row</td>
+</tr>
+</table>
+```
+
+**cellpadding**  创建单元格内容与其边框之间的空白
+```html
+<h4>没有单元格边距:</h4>
+<table border="1">
+<tr>
+  <td>First</td>
+  <td>Row</td>
+</tr>   
+<tr>
+  <td>Second</td>
+  <td>Row</td>
+</tr>
+</table>
+
+<h4>有单元格边距:</h4>
+<table border="1" 
+cellpadding="10">
+<tr>
+  <td>First</td>
+  <td>Row</td>
+</tr>   
+<tr>
+  <td>Second</td>
+  <td>Row</td>
+</tr>
+</table>
+```
+
 #### [4.3 thead、tbody、tfoot](#)
 将表格分为三个部分
 
