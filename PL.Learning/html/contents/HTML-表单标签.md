@@ -3,10 +3,11 @@
 
 -----
 
-- [1. form](#1-form)
+- [1. form 标签](#1-form-标签)
+- [1. input 标签](#1-input-标签)
 
 ----
-### [1. form](#)
+### [1. form 标签](#)
 HTML **form** 元素表示文档中的一个区域，此区域包含交互控件，用于向 Web 服务器提交信息，**HTML 表单用于收集用户的输入信息**。
 
 **FORM** 标签用于定义表单域，以实现用户信息的收集和传递，会把它范围内的表单元素信息提交给服务器
@@ -70,14 +71,14 @@ HTML **form** 元素表示文档中的一个区域，此区域包含交互控件
 
 | 属性               | 	值              |	描述|
 |:-----------------|:----------------|:---|
-| onblur	| script function | 当元素失去焦点时运行脚本                  |
+| onblur	          | script function | 当元素失去焦点时运行脚本                  |
 | onchange         | cript function          | 	当元素改变时运行脚本             |
-| oncontextmenuNew | cript function          | 	当触发上下文菜单时运行脚本          |
+| oncontextmenu | cript function          | 	当触发上下文菜单时运行脚本          |
 | onfocus          | cript function          | 	当元素获得焦点时运行脚本           |
-| onformchangeNew  | 	cript function         | 	当表单改变时运行脚本            |
-| onforminputNew   | 	cript function         | 	当表单获得用户输入时运行脚本        |
-| oninputNew	      | cript function          | 	当元素获得用户输入时运行脚本         |
-| oninvalidNew     | 	cript function         | 	当元素无效时运行脚本            |
+| onformchange  | 	cript function         | 	当表单改变时运行脚本            |
+| onforminput  | 	cript function         | 	当表单获得用户输入时运行脚本        |
+| oninput	     | cript function          | 	当元素获得用户输入时运行脚本         |
+| oninvalid    | 	cript function         | 	当元素无效时运行脚本            |
 | onreset	         | cript function          | 	当表单重置时运行脚本。HTML 5 不支持。 |
 | onselect	        | cript function          | 	当选取元素时运行脚本             |
 | onsubmit	        | cript function          | 	当提交表单时运行脚本             |
@@ -144,8 +145,9 @@ HTML **form** 元素表示文档中的一个区域，此区域包含交互控件
 * maxlength	属性规定 `<input>` 元素中允许的最大字符数。
 * **list**	datalist_id	属性引用 `<datalist>` 元素，其中包含 `<input>` 元素的预定义选项。
 * **maxlength、minlength**	属性规定 `<input>` 元素中允许的最大、最小字符数。
-  
-  
+* spellcheck 是一个全局属性，用于指示是否启用元素的拼写检查。它可以用于任何可编辑的内容，但是这里我们考虑在 `<input>` 元素上使用 spellcheck 的细节。 spellcheck 的允许值为：
+  * false 禁用此元素的拼写检查。
+  * true 对此元素启用拼写检查。
 #### [2.2 input:file](#)
 上传文件的html标签。
 ```html
@@ -172,16 +174,70 @@ HTML **form** 元素表示文档中的一个区域，此区域包含交互控件
 
 #### [2.4 input:text](#)
 
-* 支持的公共属性	autocomplete、list、maxlength、minlength、pattern、placeholder、readonly、required 和 size
+* 支持的公共属性 autocomplete、list、maxlength、minlength、pattern、placeholder、readonly、required 和 size
   * list 列表属性的值是位于同一文档中的 `<datalist>` 元素的 id。`<datalist>` 提供了一个预定义的值列表，向用户建议这个输入。列表中任何与 type 不兼容的值都不包括在建议选项中。所提供的值是建议，不是要求：用户可以从这个预定义的列表中选择，或者提供不同的值。
-* 事件	change 和 input
+* 事件: change 和input
 ```html
 <label for="username">Username:</label>
 <input id="username" type="text" placeholder="请输入姓名" value="默认值">
 ```
 #### [2.5 input:password](#) 
+**password** 类型的 `<input>` 元素可以让用户更加安全的输入密码。
 
+* 支持的通用属性：autocomplete、inputmode、maxlength、minlength、pattern、placeholder、readonly、required 和 size
+* 事件属性：change 和 input
+```html
+<div>
+  <label for="pass">Password (8 characters minimum):</label>
+  <input type="password" id="pass" name="password" minlength="8" required />
+</div>
+<div>
+  <input type="password" id="ssn" inputmode="numeric" minlength="9" maxlength="12"
+    pattern="(?!000)([0-6]\d{2}|7([0-6]\d|7[012]))([ -])?(?!00)\d\d\3(?!0000)\d{4}" required autocomplete="off" />
+</div>
+```
 #### [2.6 input:radio](#) 
+元素通常用于一个单选组中，其中包含一组描述一系列相关选项的单选按钮。在给定单选组中，同时只可以选择一个选项。单选按钮通常渲染为小圆圈，当选中该选项时，圆圈被填充或高亮。
+
+* 支持的通用属性: checked、value 和 required
+* 事件: change 和input
+```html
+<fieldset>
+  <legend>Select a maintenance drone:</legend>
+  <div>
+    <input type="radio" id="huey" name="drone" value="huey" checked />
+    <label for="huey">Huey</label>
+  </div>
+  <div>
+    <input type="radio" id="dewey" name="drone" value="dewey" />
+    <label for="dewey">Dewey</label>
+  </div>
+  <div>
+    <input type="radio" id="louie" name="drone" value="louie" />
+    <label for="louie">Louie</label>
+  </div>
+</fieldset>
+```
+
+<fieldset>
+  <legend>Select a maintenance drone:</legend>
+
+  <div>
+    <input type="radio" id="huey" name="drone" value="huey" checked />
+    <label for="huey">Huey</label>
+  </div>
+
+  <div>
+    <input type="radio" id="dewey" name="drone" value="dewey" />
+    <label for="dewey">Dewey</label>
+  </div>
+
+  <div>
+    <input type="radio" id="louie" name="drone" value="louie" />
+    <label for="louie">Louie</label>
+  </div>
+</fieldset>
+
 
 #### [2.7 input:checkbox](#) 
 
@@ -254,26 +310,148 @@ HTML **form** 元素表示文档中的一个区域，此区域包含交互控件
 * 如果选中了一项或两项，配方名称的复选框是 indeterminate（中间）状态。
 * 如果选中了全部三项，配方名称的复选框是 checked（已选中）状态。
 #### [2.8 input:number](#) 
+元素用于让用户输入一个数字，其包括内置验证以拒绝非数字输入。
+
+* 支持的公共属性: autocomplete、list、placeholder 和 readonly
+* 事件: change 和 input
+```html
+<label for="tentacles">Number of tentacles (10-100):</label>
+<input type="number" id="tentacles" name="tentacles" min="10" max="100" />
+```
+
+**附加属性**:
+* **list** 属性的值是位于同一文档中的 `<datalist>` 元素的 id。`<datalist>` 提供了可输入到当前输入框的一个预定义的值列表。列表中任何与 type 不兼容的值都不包括在建议选项中。所提供的值是建议，不是要求：用户可以从这个预定义的列表中选择，或者提供不同的值。
+* **max** 允许值范围内的最大值。如果输入到元素中的 value 超过此值，则元素将无法通过约束验证。如果 max 属性的值不是数字，则元素没有最大值。
+**此值必须大于或等于 min 属性的值**。
+* **min** 允许值范围内的最小值。如果元素的 value 小于此值，则该元素将无法通过约束验证。如果为 min 指定的值不是有效数字，则输入没有最小值。
+**该值必须小于或等于 max 属性的值**。
+* **placeholder** 属性是一个字符串，可向用户提供有关该字段中需要什么样的信息的简短提示。它应该是说明预期的数据类型的单词或短语，而不是说明性消息。文本中不得包含回车符或换行符。
+* **readonly** 如果该布尔属性存在，意味着用户将不能编辑此字段。然而其 value 值仍然可以直接通过 JavaScript 代码设置 HTMLInputElement 的 value 属性改变。
+* **step** 属性指定了值必须满足的粒度，或者是下文描述的特殊值 any。值必须满足基础的步进值，才有效。如果指定了 min 属性，则由 min 属性决定，否则，使用 value 属性的值，如果上述两个值都不存在，则提供适当的默认值。
 
 #### [2.9 input:search](#) 
+search 类型的 `<input>` 是专为用户输入查询文本而设计的字段。功能上与 text 输入相同，但是根据用户代理不同，可能会有不同的样式表现。
+
+* 支持的通用属性: autocomplete、list、maxlength、minlength、pattern、placeholder、required、size。
+* 事件: change 和 
+
+```html
+<input type="search" id="mySearch" name="q" />
+```
 
 #### [2.10 input:email](#) 
+能够让用户输入或编辑一个电子邮箱地址，如果指定了 multiple 属性，则可以输入多个电子邮箱地址。
+
+```html
+<label for="email">Enter your example.com email:</label>
+
+<input type="email" id="email" pattern=".+@example\.com" size="30" required />
+```
+额外属性：
+* **multiple** 一个布尔属性，如果存在，代表用户可以输入多个由逗号和可选空白字符分开的电子邮件地址。参见示例允许多个邮件地址，或 HTML 属性：multiple 一文以获取更多信息。
+
+```html
+<input type="email" size="40" list="defaultEmails" />
+
+<datalist id="defaultEmails">
+  <option value="jbond007@mi6.defence.gov.uk"></option>
+  <option value="jbourne@unknown.net"></option>
+  <option value="nfury@shield.org"></option>
+  <option value="tony@starkindustries.com"></option>
+  <option value="hulk@grrrrrrrr.arg"></option>
+</datalist>
+```
 
 #### [2.11 input:url](#) 
+元素用来让用户输入和编辑 URL。
+
+* 支持的通用属性	autocomplete、list、maxlength、minlength、pattern、placeholder、readonly、required 和 size
+* 事件: change 和 input
+```html
+<form>
+  <label for="url">Enter an https:// URL:</label>
+  <input type="url" name="url" id="url" placeholder="https://example.com" pattern="https://.*" size="30" required />
+</form>
+```
 
 #### [2.12 input:tel](#) 
 
 #### [2.13 input:date](#) 
+元素会创建一个让用户输入一个日期的输入区域，可以使用自动验证内容的文本框，也可以使用特殊的日期选择器界面。结果值包括年份，月份和日期，但不包括时间。
+
+* 支持的常用属性:	autocomplete、list、readonly 和 step
+* 事件: change 和 input
+```html
+<label for="start">Start date:</label>
+
+<input type="date" id="start" name="trip-start" value="2018-07-22" min="2018-01-01" max="2018-12-31" />
+
+<script>
+  const dateControl = document.querySelector('input[type="date"]');
+  dateControl.value = "2017-06-01";
+  console.log(dateControl.value); // prints "2017-06-01"
+  console.log(dateControl.valueAsNumber); // prints 1496275200000, a JavaScript timestamp (ms)
+</script>
+```
+
+**额外属性**
+* **max** 所接受最新的日期。如果输入到该元素中的 value 发生在此之后，则元素将无法通过约束验证。如果 max 属性的值不是格式为 yyyy-mm-dd 的有效日期星期字符串，则该元素没有最大日期值。
+  * 如果同时设置了 max 和 min 值，此值必须晚于或等于 min 属性指定的日期值。
+* **min** 所接受最早的日期。如果输入到该元素中的 value 发生在此之前，则元素将无法通过约束验证。如果 min 属性的值不是格式为 yyyy-mm-dd 的有效日期星期字符串，则该元素没有最小日期值。
+  * 如果同时设置了 max 和 min 值，此值必须早于或等于 max 属性指定的日期值。
+* **step** 属性指定了值必须满足的粒度，或者是下文描述的特殊值 any。值必须满足基础的步进值，才有效。如果指定了 min 属性，则由 min 属性决定，否则，使用 value 属性的值，如果上述两个值都不存在，则提供适当的默认值。
 
 #### [2.14 input:datetime-local](#) 
+类型创建让用户便捷输入日期和时间的输入控件，包括“年”、“月”、“日”，以及“时”和“分”。
+
+```html
+<label for="party">输入预订宴会的日期和时间：</label>
+<input
+  id="party"
+  type="datetime-local"
+  name="partydate"
+  value="2017-06-01T08:30" />
+```
+
+**额外属性**
+* **max** 所接受最新的日期。如果输入到该元素中的 value 发生在此之后，则元素将无法通过约束验证。如果 max 属性的值不是格式为 yyyy-mm-dd 的有效日期星期字符串，则该元素没有最大日期值。
+  * 如果同时设置了 max 和 min 值，此值必须晚于或等于 min 属性指定的日期值。
+* **min** 所接受最早的日期。如果输入到该元素中的 value 发生在此之前，则元素将无法通过约束验证。如果 min 属性的值不是格式为 yyyy-mm-dd 的有效日期星期字符串，则该元素没有最小日期值。
+  * 如果同时设置了 max 和 min 值，此值必须早于或等于 max 属性指定的日期值。
+* **step** 属性指定了值必须满足的粒度，或者是下文描述的特殊值 any。值必须满足基础的步进值，才有效。如果指定了 min 属性，则由 min 属性决定，否则，使用 value 属性的值，如果上述两个值都不存在，则提供适当的默认值。
 
 #### [2.15 input:month](#) 
+类型为 month 的 `<input>` 可以让你容易地创建一个方便输入年份或月份的一个 `<input>`。
+输入的值是一个经过“YYYY-MM”格式化的字符串，其中 YYYY 是四位数的年份，而 MM 是月份的数值表示。
+
+* 支持的共有属性：autocomplete、list、readonly 和 step
+* 事件：change 和 input
+```html
+<label for="start">Start month:</label>
+<input type="month" id="start" name="start" min="2018-03" value="2018-05" />
+```
 
 #### [2.16 input:week](#) 
+类型为 week 的元素会创建输入字段，以便轻松输入年份以及该年（即第 1 周到第 52 或 53 周）。
+
+```html
+<label for="camp-week">Choose a week in May or June:</label>
+<input type="week" name="week" id="camp-week" min="2018-W18" max="2018-W26" required />
+```
 
 #### [2.17 input:time](#) 
+元素，旨在让用户轻松输入时间（小时和分钟，以及可选的秒）。
+```html
+<label for="appt">Choose a time for your meeting:</label>
+<input type="time" id="appt" name="appt" min="09:00" max="18:00" required />
+```
 
-
+**额外属性**
+* **max** 所接受最新的日期。如果输入到该元素中的 value 发生在此之后，则元素将无法通过约束验证。如果 max 属性的值不是格式为 yyyy-mm-dd 的有效日期星期字符串，则该元素没有最大日期值。
+  * 如果同时设置了 max 和 min 值，此值必须晚于或等于 min 属性指定的日期值。
+* **min** 所接受最早的日期。如果输入到该元素中的 value 发生在此之前，则元素将无法通过约束验证。如果 min 属性的值不是格式为 yyyy-mm-dd 的有效日期星期字符串，则该元素没有最小日期值。
+  * 如果同时设置了 max 和 min 值，此值必须早于或等于 max 属性指定的日期值。
+* **step** 属性指定了值必须满足的粒度，或者是下文描述的特殊值 any。值必须满足基础的步进值，才有效。如果指定了 min 属性，则由 min 属性决定，否则，使用 value 属性的值，如果上述两个值都不存在，则提供适当的默认值。
 
 #### [2.18 input:range](#) 
 range 类型的 `<input>` 元素允许用户指定一个数值，该数值必须不小于给定值，并且不得大于另一个给定值。但是，其精确值并不重要。通常使用滑块或拨号控件而不是像 number 输入类型这样的文本输入框来表示。
@@ -343,6 +521,85 @@ reset 类型的 `<input>` 元素将渲染为按钮，且带有默认的 click �
     <input type="submit" value="Submit" />
   </div>
 </form>
+```
+
+### [3. select](#)
+元素是一种表单控件，可用于在表单中接受用户输入。
+
+
+|属性|值|描述|
+|:---|:---|:---|
+|autofocus|autofocus|规定在页面加载时下拉列表自动获得焦点。|
+|disabled|disabled|当该属性为 true 时，会禁用下拉列表。|
+|form|form_id|定义 select 字段所属的一个或多个表单。|
+|multiple|multiple|当该属性为 true 时，可选择多个选项。|
+|name|text|定义下拉列表的名称。|
+|required|required|规定用户在提交表单前必须选择一个下拉列表中的选项。|
+|size|number|规定下拉列表中可见选项的数目。|
+
+```html
+<label for="dino-select">Choose a dinosaur:</label>
+<select id="dino-select">
+  <optgroup label="Theropods">
+    <option>Tyrannosaurus</option>
+    <option>Velociraptor</option>
+    <option>Deinonychus</option>
+  </optgroup>
+  <optgroup label="Sauropods">
+    <option>Diplodocus</option>
+    <option>Saltasaurus</option>
+    <option>Apatosaurus</option>
+  </optgroup>
+</select>
+```
+
+#### [3.1 option](#)
+HTML 元素 `<option>` 用于定义在 `<select>`, `<optgroup>` 或 `<datalist>` 元素中包含的项。`<option>` 可以在弹出窗口和 HTML 文档中的其他项目列表中表示菜单项。
+
+此元素包括全局属性。
+* disabled 如果设置了这个布尔属性，则该选项不可选。浏览器通常会将这种控件显示为灰色，并且不再接受任何浏览器事件，例如鼠标点击或者焦点相关的事件。如果这个属性没有设置，而这个元素的其中一个父元素是被禁用的 <optgroup> 元素，则这个元素仍然是禁用的。
+* label 这个属性是用于表示选项含义的文本。如果 label 属性没有定义，它的值就是元素文本内容。
+* selected 这个布尔属性存在时表明这个选项是否一开始就被选中。如果 `<option>` 元素是 `<select>` 元素的子元素，并且 `<select>` 元素的 multiple 属性没有设置，则 `<select>` 元素中只有一个 `<option>` 元素可以拥有 selected 属性。
+* value 这个属性的值表示该选项被选中时提交给表单的值。如果省略了这个属性，值就从选项元素的文本内容中获取。
+
+```html
+<label for="pet-select">Choose a pet:</label>
+
+<select id="pet-select">
+  <option value="">--Please choose an option--</option>
+  <option value="dog">Dog</option>
+  <option value="cat">Cat</option>
+  <option value="hamster">Hamster</option>
+  <option value="parrot">Parrot</option>
+  <option value="spider">Spider</option>
+  <option value="goldfish">Goldfish</option>
+</select>
+```
+
+#### [3.2 optgroup](#)
+标签经常用于把相关的选项组合在一起。
+如果你有很多的选项组合, 你可以使用 `<optgroup>` 标签能够很简单的将相关选项组合在一起。
+
+|属性|值|描述|
+|:---|:---|:---|
+|disabled|disabled|规定禁用该选项组。|
+|label|text|为选项组规定描述。|
+
+```html
+<select>
+  <optgroup label="Group 1">
+    <option>Option 1.1</option>
+  </optgroup>
+  <optgroup label="Group 2">
+    <option>Option 2.1</option>
+    <option>Option 2.2</option>
+  </optgroup>
+  <optgroup label="Group 3" disabled>
+    <option>Option 3.1</option>
+    <option>Option 3.2</option>
+    <option>Option 3.3</option>
+  </optgroup>
+</select>
 ```
 
 ### [5. button](#)
