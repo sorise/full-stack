@@ -40,6 +40,8 @@ Doctype 声明影响浏览器的渲染模式。如果没有正确声明，浏览
 * `<meta charset="utf-8"\>`——该元素指明你的文档使用 UTF-8 字符编码，UTF-8 包括世界绝大多数书写语言的字符。它基本上可以处理任何文本内容。 以它为编码还可以避免以后出现某些问题，没有理由再选用其他编码。
 * `<title></title>` ——`<title\>` 元素。该元素设置页面的标题，显示在浏览器标签页上，也作为收藏网页的描述文字。
 * `<body></body>` ——`<body\>` 元素。该元素包含期望让用户在访问页面时看到的全部内容，包括文本、图像、视频、游戏、可播放的音轨或其他内容。
+* `<style></style>` 规定元素的行内样式（inline style）。
+* `<script></script>` 脚本插入或脚本语言区。
 
 **实例**：
 ```html
@@ -51,7 +53,15 @@ Doctype 声明影响浏览器的渲染模式。如果没有正确声明，浏览
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="styles/style.css" rel="stylesheet" />
     <script src="scripts/main.js" defer></script>
-    <title>Document</title>
+    <title>标题</title>
+    <style>
+       .example{
+          background-color: rebeccapurple;
+       }
+    </style>
+    <script>
+        let _tick = 15;  
+    </script>
 </head>
 <body>
     

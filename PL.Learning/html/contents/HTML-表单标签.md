@@ -87,6 +87,26 @@ HTML **form** 元素表示文档中的一个区域，此区域包含交互控件
 #### [1.3 发送表单数据](https://segmentfault.com/a/1190000007003981)
 点击，[发送表单数据](https://segmentfault.com/a/1190000007003981) 查看。
 
+#### [1.4 label 标签](#)
+标签为 input 元素定义标注（标记）, **标签在 HTML 中是一个行内元素inline element**。
+
+|属性	|值|	描述|
+|:---|:---|:---|
+|for|	element_id|	规定 label 与哪个表单元素绑定。|
+|form|	form_id|	规定 label 字段所属的一个或多个表单。|
+
+```html
+<div class="preference">
+  <label for="cheese">Do you like cheese?</label>
+  <input type="checkbox" name="cheese" id="cheese" />
+</div>
+
+<div class="preference">
+  <label for="peas">Do you like peas?</label>
+  <input type="checkbox" name="peas" id="peas" />
+</div>
+```
+
 ### [2 input 标签](#)
 标签规定了用户可以在其中输入数据的输入字段,输入字段可通过多种方式改变，取决于 **type** 属性。
 
@@ -526,7 +546,6 @@ reset 类型的 `<input>` 元素将渲染为按钮，且带有默认的 click �
 ### [3. select](#)
 元素是一种表单控件，可用于在表单中接受用户输入。
 
-
 |属性|值|描述|
 |:---|:---|:---|
 |autofocus|autofocus|规定在页面加载时下拉列表自动获得焦点。|
@@ -602,6 +621,29 @@ HTML 元素 `<option>` 用于定义在 `<select>`, `<optgroup>` 或 `<datalist>`
 </select>
 ```
 
+### [4. textarea](#)
+
+```html
+<textarea rows="10" cols="30">
+    我是一个文本框。 
+</textarea>
+```
+
+**属性:**
+* **cols** : number	规定文本区域内可见的宽度。
+* **disabled** : disabled	规定禁用文本区域。
+* **name**	text	规定文本区域的名称。
+* **rows**	number	规定文本区域内可见的行数。
+* **wrap** 规定当提交表单时，文本区域中的文本应该怎样换行。
+  * hard 在文本到达元素最大宽度的时候，浏览器自动插入换行符(CR+LF)。也就是提交表单时也提交来换行符。当使用 "hard" 时，需要指定 cols 属性。
+  * soft 默认，在到达元素最大宽度的时候，换行显示，但不会自动插入换行符，也就是提交表单时没有换行符。
+* form 定义文本区域所属的一个或多个表单。
+* autofocus	规定当页面加载时，文本区域自动获得焦点。
+* maxlength	number	规定文本区域允许的最大字符数。
+* placeholder text	规定一个简短的提示，描述文本区域期望的输入值。
+* readonly	规定文本区域为只读。
+* required	规定文本区域是必需的/必填的。
+
 ### [5. button](#)
 HTML `<button>` 元素表示一个可点击的按钮，可以用在表单或文档其他需要使用简单标准按钮的地方。默认情况下，HTML 按钮的显示样式接近于 user agent 所在的宿主系统平台（用户操作系统）的按钮，但你可以使用 CSS 来改变按钮的样貌。
 
@@ -632,3 +674,30 @@ HTML `<button>` 元素表示一个可点击的按钮，可以用在表单或文�
     * _parent: 在当前浏览上下文父级中加载响应。如果没有父级的，此选项将按_self 执行。
     * _top: 在顶级浏览上下文（即当前浏览上下文的祖先，且没有父级）中架加载响应。如果没有顶级的，此选项将按_self 执行。
 
+### [6. datalist](#)
+属于HTML5 中的新标签。标签被用来在为 `<input>` 元素提供"自动完成"的特性。用户能看到一个下拉列表，里边的选项是预先定义好的，将作为用户的输入数据。
+
+* 该元素除了公用的全局属性之外，没有其他属性。
+```html
+<form action="#" method="get">
+  <input list="browsers" type="search" name="browser">
+  <datalist id="browsers">
+    <option value="Internet Explorer">
+    <option value="Firefox">
+    <option value="Chrome">
+    <option value="Opera">
+    <option value="Safari">
+  </datalist>
+  <input type="submit">
+</form>
+```
+
+#### [6.1 option](#)
+HTML 元素 `<option>` 用于定义在 `<select>`,`<optgroup>` 或 `<datalist>` 元素中包含的项。`<option>` 可以在弹出
+窗口和 HTML 文档中的其他项目列表中表示菜单项。
+
+此元素包括全局属性。
+* **disabled** 如果设置了这个布尔属性，则该选项不可选。浏览器通常会将这种控件显示为灰色，并且不再接受任何浏览器事件，例如鼠标点击或者焦点相关的事件。如果这个属性没有设置，而这个元素的其中一个父元素是被禁用的 <optgroup> 元素，则这个元素仍然是禁用的。
+* **label** 这个属性是用于表示选项含义的文本。如果 label 属性没有定义，它的值就是元素文本内容。
+* **selected** 这个布尔属性存在时表明这个选项是否一开始就被选中。如果 `<option>` 元素是 `<select>` 元素的子元素，并且 `<select>` 元素的 multiple 属性没有设置，则 `<select>` 元素中只有一个 `<option>` 元素可以拥有 selected 属性。
+* **value** 这个属性的值表示该选项被选中时提交给表单的值。如果省略了这个属性，值就从选项元素的文本内容中获取。

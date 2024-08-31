@@ -13,6 +13,7 @@
 * [9. 功能标签](#9-功能标签)
 * [10. 大内容 canvas](#10-大内容-canvas)
 * [11. iframe](#11-iframe)
+* [12. template、slot](#12-template-slot)
 
 -----
 ### [1. 排版标签](#)
@@ -186,6 +187,21 @@ HTML `<aside>` 元素表示一个和其余页面内容几乎无关的部分，�
   it, follows Dr Frankenstein to the very ends of the earth.
 </p>
 ```
+
+#### [1.11 menu](#)
+**HTML5 不支持 `<frame>` 标签**, HTML 元素在 HTML 规范中被描述为 `<ul>` 的语义替代，但浏览器将其视为与 `<ul>` 没有区别（并通过无障碍树暴露）。
+它表示一个无序列表（由 `<li>` 元素表示）。
+
+```html
+<div class="news">
+  <a href="#">NASA’s Webb Delivers Deepest Infrared Image of Universe Yet</a>
+  <menu>
+    <li><button id="save">Save for later</button></li>
+    <li><button id="share">Share this news</button></li>
+  </menu>
+</div>
+```
+HTML5 不支持 `<frame>` 标签，HTML 4.01 支持 `<frame>` 标签。
 
 ### [2. 文本标签](#)
 HTML 的主要工作之一是赋予文本结构，使浏览器能够按照开发者的意图显示 HTML 文档。本文解释了 HTML 如何通过添加标题和段落、强调单词、创建列表等方式来构造文本。
@@ -1096,6 +1112,8 @@ HTML `<fieldset>` 元素用于对表单中的控制元素进行分组（也包�
 #### [6.1 a 标签](#)
 `<a>` 元素（或称锚元素）可以通过它的 href 属性创建通向其他网页、文件、电子邮件地址、同一页面内的位置或任何其他 URL 的超链接。
 
+是现在，也要切记，外链不信任的链接地址，只要是新窗口打开的，就一定要设置 **rel="noopener"**。
+
 ```html
 <a href="//example.com">相对于协议的 URL</a>
 <a href="/zh-CN/docs/Web/HTML">相对于源的 URL</a>
@@ -1473,4 +1491,143 @@ HTML 内联框架元素 (`<iframe>`) 表示嵌套的browsing context。它能够
   height="200"
   src="www.baidu.com">
 </iframe>
+```
+
+#### [11.1 属性](#)
+
+* **src** 被嵌套的页面的 URL 地址。使用 about:blank 值可以嵌入一个遵从同源策略的空白页。在 Firefox（version 65 及更高版本）、基于 Chromium 的浏览器、Safari/iOS 中使用代码移除 iframe 的 src 属性（例如通过 Element.removeAttribute() ）会导致 about:blank 被载入 frame。
+* **srcdoc** 该属性是一段 HTML 代码，这些代码会被渲染到 iframe 中。如果浏览器不支持 srcdoc 属性，则会渲染 src 属性表示的内容。
+* **width** 以 CSS 像素格式，或以像素格式，或以百分比格式指定的 frame 的宽度。默认值是300。
+* **width** 设置 iframe 的宽度，可以使用像素或百分比。
+* **name** 定义 iframe 的名称，可以用于在链接中指定 target，使链接的目标在这个 iframe 中打开。
+* **allowfullscreen** 允许 iframe 内容全屏显示。
+* **sandbox** 控制应用于嵌入在 `<iframe>` 中的内容的限制。该属性的值可以为空以应用所有限制，也可以为空格分隔的标记以解除特定的限制
+  * **allow-forms**: 允许嵌入的浏览上下文提交表单。如果没有使用该关键字，则无法提交表单。
+  * **allow-modals**: 允许嵌入的浏览上下文打开模态窗口。
+  * **allow-orientation-lock**: 允许嵌入的浏览上下文锁定屏幕方向（译者注：比如智能手机、平板电脑的水平朝向或垂直朝向）。
+  * **allow-top-navigation**: 允许嵌入的浏览上下文导航（加载）内容到顶级的浏览上下文。
+  * **allow-scripts**: 允许嵌入的浏览上下文运行脚本（但不能创建弹窗）。如果没有使用该关键字，就无法运行脚本。
+  * **allow-top-navigation-by-user-activation**: 允许嵌入的浏览上下文在经过用户允许后导航（加载）内容到顶级的浏览上下文。
+* **loading** 设置 iframe 的加载行为。lazy 表示延迟加载（当用户滚动到接近 iframe 位置时再加载），eager 表示立即加载。
+
+### [12. template、slot](#)
+内容模板（`<template>`）元素是一种用于保存客户端内容机制，该内容在加载页面时不会呈现，但随后可以 (原文为 may be) 在运行时使用 JavaScript 实例化。
+
+DOM接口为 **HTMLTemplateElement** 
+* HTMLTemplateElement 有个属性`content`, 这个属性是只读的DocumentFragment 包含了模板所表示的 DOM 树。
+
+```html
+<table id="producttable">
+  <thead>
+    <tr>
+      <td>UPC_Code</td>
+      <td>Product_Name</td>
+    </tr>
+  </thead>
+  <tbody>
+    <!-- 现有数据可以可选地包括在这里 -->
+  </tbody>
+</table>
+
+<template id="productrow">
+  <tr>
+    <td class="record"></td>
+    <td></td>
+  </tr>
+</template>
+```
+首先，我们有一个表，稍后我们将使用 JavaScript 代码在其中插入内容。然后是模板，它描述了表示单个表行的 HTML 片段的结构。
+```javascript
+// 通过检查来测试浏览器是否支持 HTML 模板元素
+// 用于保存模板元素的内容属性。
+if ("content" in document.createElement("template")) {
+  // 使用现有的 HTML tbody 实例化表和该行与模板
+  let t = document.querySelector("#productrow"),
+    td = t.content.querySelectorAll("td");
+  td[0].textContent = "1235646565";
+  td[1].textContent = "Stuff";
+
+  // 克隆新行并将其插入表中
+  let tb = document.getElementsByTagName("tbody");
+  let clone = document.importNode(t.content, true);
+  tb[0].appendChild(clone);
+
+  // 创建一个新行
+  td[0].textContent = "0384928528";
+  td[1].textContent = "Acme Kidney Beans";
+
+  // 克隆新行并将其插入表中
+  let clone2 = document.importNode(t.content, true);
+  tb[0].appendChild(clone2);
+} else {
+  // 找到另一种方法来添加行到表，因为不支持 HTML 模板元素。
+}
+```
+**结果是原始的 HTML 表格，通过 JavaScript 添加了两行新内容** 。
+
+
+#### [12.1 slot](#)
+Web 组件技术套件的一部分——它是一个在 web 组件内部的占位符，你可以使用自己的标记来填充该占位符，从而创建单独的 DOM 树并将其一起呈现。
+
+此元素仅包含全局属性。
+* name 插槽名称。 具名插槽是具有 name 属性的 `<slot>` 元素。
+
+专门用于在自定义元素（Custom Elements）中定义插槽（slots）。插槽允许开发者将内容从外部传递到自定义组件的特定位置，提供了一种机制来控制和分发子内容。
+```html
+<template id="my-template">
+  <style>
+    /* 样式规则 */
+  </style>
+  <div class="header">
+    <slot name="header"></slot>
+  </div>
+  <div class="content">
+    <slot></slot>
+  </div>
+</template>
+
+<script>
+  class MyElement extends HTMLElement {
+    constructor() {
+      super();
+      const template = document.getElementById('my-template').content;
+      const shadowRoot = this.attachShadow({ mode: 'open' });
+      shadowRoot.appendChild(template.cloneNode(true));
+    }
+  }
+  customElements.define('my-element', MyElement);
+</script>
+```
+
+在这个例子中，有两个插槽：
+* `<slot name="header"></slot>`：这是一个具名插槽。内容将被插入到这个插槽中，前提是这些内容指定了相应的 slot="header" 属性。
+* `<slot></slot>`：这是一个默认插槽，未具名的内容将插入到这里。
+
+#### [12.2 插入内容](#)
+当你使用自定义组件时，可以将内容插入到指定的插槽中：
+
+```html
+<my-element>
+  <h1 slot="header">这是标题</h1>
+  <p>这是主要内容。</p>
+</my-element>
+```
+在这个例子中：
+* `<h1>` 元素会被插入到 header 插槽中。
+* `<p>` 元素会被插入到默认插槽中。
+
+### [13. svg](#)
+HTML5 支持内联 SVG。
+
+* **SVG** 指可伸缩矢量图形 (Scalable Vector Graphics)
+* **SVG** 用于定义用于网络的基于矢量的图形
+* **SVG** 使用 XML 格式定义图形
+* **SVG** 图像在放大或改变尺寸的情况下其图形质量不会有损失
+* **SVG** 是万维网联盟的标准
+
+```html
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="190">
+  <polygon points="100,10 40,180 190,60 10,60 160,180"
+  style="fill:lime;stroke:purple;stroke-width:5;fill-rule:evenodd;" />
+</svg>
 ```
