@@ -14,6 +14,7 @@
 * [10. 大内容 canvas](#10-大内容-canvas)
 * [11. iframe](#11-iframe)
 * [12. template、slot](#12-template-slot)
+* [13. svg](#13-svg)
 
 -----
 ### [1. 排版标签](#)
@@ -1617,17 +1618,45 @@ Web 组件技术套件的一部分——它是一个在 web 组件内部的占�
 * `<p>` 元素会被插入到默认插槽中。
 
 ### [13. svg](#)
-HTML5 支持内联 SVG。
+在HTML中，`<svg>` 标签用于定义一个SVG（Scalable Vector Graphics，可伸缩矢量图形）容器。SVG 是一种用于描述二维矢量图形的XML语言，可以用于在网页中显示图像、图标、图表、动画等。
 
 * **SVG** 指可伸缩矢量图形 (Scalable Vector Graphics)
-* **SVG** 用于定义用于网络的基于矢量的图形
-* **SVG** 使用 XML 格式定义图形
+* **SVG** 用于定义用于网络的基于矢量的图形,SVG图像是纯文本，可以通过代码直接编辑和操控。
+* **SVG** 使用 XML 格式定义图形,可以通过JavaScript操控SVG中的元素，实现动态交互效果。
 * **SVG** 图像在放大或改变尺寸的情况下其图形质量不会有损失
-* **SVG** 是万维网联盟的标准
+* **SVG** 可以通过CSS控制SVG的样式，例如颜色、大小、透明度等。 
 
 ```html
 <svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="190">
   <polygon points="100,10 40,180 190,60 10,60 160,180"
   style="fill:lime;stroke:purple;stroke-width:5;fill-rule:evenodd;" />
 </svg>
+
+<svg width="100" height="100">
+  <circle cx="50" cy="50" r="40" stroke="black" stroke-width="3" fill="red" />
+</svg>
 ```
+
+常用元素
+* `<rect>`：绘制矩形
+* `<circle>`：绘制圆形
+* `<ellipse>`：绘制椭圆形
+* `<line>`：绘制直线
+* `<polyline>`：绘制一组连接的直线
+* `<polygon>`：绘制多边形
+* `<path>`：绘制复杂路径
+
+```html
+<svg width="200" height="200">
+    <!-- 绘制一个蓝色矩形 -->
+    <rect x="10" y="10" width="100" height="100" fill="blue" />
+
+    <!-- 绘制一个绿色的圆 -->
+    <circle cx="150" cy="150" r="50" fill="green" />
+
+    <!-- 绘制一个红色的直线 -->
+    <line x1="0" y1="0" x2="200" y2="200" stroke="red" stroke-width="2" />
+</svg>
+```
+
+细节请参考 [MDN SVG 教程](https://developer.mozilla.org/zh-CN/docs/Web/SVG/Tutorial) 。
