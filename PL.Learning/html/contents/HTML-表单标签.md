@@ -547,6 +547,31 @@ reset 类型的 `<input>` 元素将渲染为按钮，且带有默认的 click �
 </form>
 ```
 
+#### [2.22 input:hidden](#)
+**表单隐藏域** hidden 类型的 `<input>` 元素允许 Web 开发者包含用户不可见、不可改的数据，在用户提交表单时，这些数据会一并发送出。比如，正被请求或编辑的内容的 ID，或是一个唯一的安全令牌。这些隐藏的 input 元素在渲染完成的页面中完全不可见，而且没有方法可以使它重新变为可见。
+
+```html
+<form>
+  <div>
+    <label for="title">文章标题：</label>
+    <input type="text" id="title" name="title" value="My excellent blog post" />
+  </div>
+  <div>
+    <label for="content">文章内容：</label>
+    <textarea id="content" name="content" cols="60" rows="5">
+This is the content of my excellent blog post. I hope you enjoy it!
+    </textarea>
+  </div>
+  <div>
+    <button type="submit">更新文章</button>
+  </div>
+  <!-- 隐藏数据 -->
+  <input type="hidden" id="postId" name="postId" value="34657" />
+</form>
+
+```
+
+
 ### [3. select](#)
 元素是一种表单控件，可用于在表单中接受用户输入。
 
