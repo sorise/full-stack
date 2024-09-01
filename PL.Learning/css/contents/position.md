@@ -19,6 +19,7 @@
 | bottom	   | CSS2	            | 无	   | 检索或设置对象参照相对物底边界向上偏移位置。   |
 | left	     | CSS2	            | 无	   | 检索或设置对象参照相对物左边界向右偏移位置。   |
 | clip	     | CSS2/3, **已弃用**	 | 无    | 	检索或设置对象的可视区域。区域外的部分是透明的 | 
+| clip-path	     | CSS3, **已弃用**	 | 无    | 	CSS 的 clip-path 属性是 clip 属性的升级版，它们的作用都是对元素进行 “剪裁” | 
 
 ### [2. position](#)
 **position** 属性规定应用于元素的定位方法的类型（static、relative、fixed、absolute 或 sticky）。
@@ -285,3 +286,49 @@ img
   clip:rect(0px,60px,200px,0px);
 }
 ```
+
+#### [4.1 clip-path](#)
+CSS 的 clip-path 属性是 clip 属性的升级版，它们的作用都是对元素进行 “剪裁”，不同的是 clip 只能作用于 position 为 absolute 和 fixed 的元素且剪裁区域只能是正方形，而 clip-path 更加强大，可以以任意形状去裁剪元素，且对元素的定位方式没有要求。基于这样的特性，clip-path 常用于实现一些炫酷的动画效果。
+
+**非常高级，必须掌握**：
+- [clip-path 语法规则](https://developer.mozilla.org/zh-CN/docs/Web/CSS/clip-path)
+- [前端小技巧：CSS clip-path 的妙用](https://segmentfault.com/a/1190000023301221)
+- [bilibili 视频教程](https://www.bilibili.com/video/BV1be41197iL/?spm_id_from=333.337.search-card.all.click&vd_source=a03ca1a86c1e90990c4facd27ae17815)
+- [语法辅助工具](https://tools.jb51.net/code/css3path) CSS3剪贴路径（Clip-path）在线生成器工具
+**语法**
+```css
+/* Keyword values */
+clip-path: none;
+
+/* <clip-source> values */
+clip-path: url(resources.svg#c1);
+
+/* <geometry-box> values */
+clip-path: margin-box;
+clip-path: border-box;
+clip-path: padding-box;
+clip-path: content-box;
+clip-path: fill-box;
+clip-path: stroke-box;
+clip-path: view-box;
+
+/* <basic-shape> values */
+clip-path: inset(100px 50px);
+clip-path: circle(50px at 0 100px);
+clip-path: ellipse(50px 60px at 0 10% 20%);
+clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+clip-path: path(
+  "M0.5,1 C0.5,1,0,0.7,0,0.3 A0.25,0.25,1,1,1,0.5,0.3 A0.25,0.25,1,1,1,1,0.3 C1,0.7,0.5,1,0.5,1 Z"
+);
+
+/* Box and shape values combined */
+clip-path: padding-box circle(50px at 0 100px);
+
+/* Global values */
+clip-path: inherit;
+clip-path: initial;
+clip-path: revert;
+clip-path: revert-layer;
+clip-path: unset;
+```
+
