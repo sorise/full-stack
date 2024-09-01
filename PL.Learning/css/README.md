@@ -5,9 +5,10 @@
 ### 笔记目录
 
 * CSS 简介
-  * 更新历史
+  * [更新历史](./contents/history.md)
+  * [语法规则](./contents/grammar.md)
 * 属性
-  * 定位
+  * [定位](./contents/position.md)
   * 布局
   * 尺寸
   * 外补白 margin 内补白 padding
@@ -41,6 +42,7 @@
   * 伪类选择符
   * 伪对象选择符号
 * 语法与规则
+* 优先级
 * 取值
   * 颜色
   * 文本
@@ -60,3 +62,6 @@
 
 ### 相关链接
 - [caniuse](https://caniuse.com/) - CSS 兼容性查询网站
+- [cascading style sheets home page](https://www.w3.org/Style/CSS/#specs) - W3C 层叠样式表规范
+- [css-guidebook](https://tsejx.github.io/css-guidebook/) - CSS Guidebook
+- [掘金 CSS 专栏](https://juejin.cn/tag/CSS)
