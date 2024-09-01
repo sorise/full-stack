@@ -9,9 +9,9 @@
   * [语法规则](./contents/grammar.md)
 * 属性
   * [定位](./contents/position.md)
-  * 布局
+  * [外补白 margin 内补白 padding](./contents/marginPadding.md)
   * 尺寸
-  * 外补白 margin 内补白 padding
+  * [布局，盒模型](./contents/boxModel.md)
   * 边框
   * 背景
   * 颜色、透明
