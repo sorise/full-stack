@@ -225,3 +225,59 @@ blockquote {
 
 
 ### [5. border-image](#)
+在给定元素的周围绘制图像，取代元素的常规边框。
+
+此属性为以下 CSS 属性的简写：
+
+```css
+border-image：border-image-source 
+|| border-image-slice [ / border-image-width |
+/ border-image-width ? / border-image-outset ]? || border-image-repeat
+```
+
+* border-image-outset 边框图像到元素外部边缘的距离,最多可以指定四个值。
+* border-image-repeat 定义源图像边缘区域适配边框图像尺寸的方式。最多可以指定两个值。
+* border-image-slice 用于将源图像分割为多个区域。最多可以指定四个值。
+* border-image-source 用以创建元素边框图像的源图像。
+* border-image-width 边框图像的宽度。最多可以指定四个值。
+```css
+.example{
+  /* source | slice */
+  border-image: linear-gradient(red, blue) 27;
+
+  /* source | slice | repeat */
+  border-image: url("/images/border.png") 27 space;
+
+  /* source | slice | width */
+  border-image: linear-gradient(red, blue) 27 / 35px;
+
+  /* source | slice | width | outset | repeat */
+  border-image: url("/images/border.png") 27 23 / 50px 30px / 1rem round space;
+}
+```
+
+**参考**
+- [掘金 CSS border-image（边框图片）](https://juejin.cn/post/7136833061320146974)
+- [CSS3 border-image 彻底明白](https://segmentfault.com/a/1190000010969367)
+
+#### [5.1 border-image-source](#)
+指定一个图像来替换边框的默认样式。
+
+**值**
+* none 不使用边框图像，而由 border-style 定义所展现的外观。
+* `<image>` 用作边框的图片引用。
+
+```css
+.exp{
+  border-image-source: url("/umix/kicker.png");
+}
+
+div {
+  width: 200px;
+  border: 27px solid;
+  padding: 10px;
+  border-image-source: url(./border.png);
+}
+```
+
+#### [5.2 border-image-slice](#)
