@@ -14,9 +14,9 @@
   * [尺寸](./contents/dimension.md)
   * [布局，盒模型](./contents/boxModel.md)
   * [边框](./contents/border.md)
-  * 背景
-  * 颜色、透明
-  * 字体
+  * [背景](./contents/background.md)
+  * [颜色、透明度](./contents/colorOpacity.md)
+  * [字体](./contents/fonts.md)
   * 文本
   * 文本修饰
   * 书写模式
@@ -48,7 +48,7 @@
   * 颜色
   * 文本
   * 函数
-  * 图像
+  * [图像、渐变](./uints/imageGradient.md)
   * 数字
   * 其他
 * 单位

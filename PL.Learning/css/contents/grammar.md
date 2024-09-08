@@ -125,6 +125,9 @@ p {
 ### [3. CSS 变量](#)
 CSS变量，也称为自定义属性，是CSS中的一种强大的特性，可以提高样式表的灵活性和可维护性。以下是对CSS变量的详细解释：
 
+- [参考视频教程](https://www.bilibili.com/video/BV1vQHyeaEYE/?spm_id_from=333.1007.tianma.1-2-2.click&vd_source=a03ca1a86c1e90990c4facd27ae17815)
+- [MDN 使用 CSS 自定义属性（变量）](https://developer.mozilla.org/zh-CN/docs/Web/CSS/Using_CSS_custom_properties)
+
 #### [3.1 CSS变量的定义](#)
 CSS变量使用 `--` 作为前缀定义，并且通常定义在 `:root` 选择器下，以便全局使用。
 

@@ -1,5 +1,5 @@
 ## [CSS 边框样式](#)
-> **介绍** : 
+> **介绍** : 边框样式、圆角边框、边框阴影、边框图像。
 
 
 ### [1. 属性大纲](#)
@@ -202,7 +202,6 @@ box-shadow: initial;
 box-shadow: unset;
 ```
 
-
 向元素添加单个 box-shadow 效果时使用以下规则：
 * 当给出两个、三个或四个 `<length>` 值时。
   * 如果只给出两个值，那么这两个值将会被当作 `<offset-x><offset-y>` 来解释。
@@ -223,9 +222,8 @@ blockquote {
 }
 ```
 
-
 ### [5. border-image](#)
-在给定元素的周围绘制图像，取代元素的常规边框。
+在给定元素的周围绘制图像，取代元素的常规边框，[视频教学](https://www.bilibili.com/video/BV1xM4y1y73W/?spm_id_from=333.337.search-card.all.click&vd_source=a03ca1a86c1e90990c4facd27ae17815)。
 
 此属性为以下 CSS 属性的简写：
 
@@ -235,11 +233,12 @@ border-image：border-image-source
 / border-image-width ? / border-image-outset ]? || border-image-repeat
 ```
 
+* **border-image-slice** 用于将源图像分割为多个区域。最多可以指定四个值。
+* **border-image-source** 用以创建元素边框图像的源图像。
+* **border-image-width** 边框图像的宽度。最多可以指定四个值。
+* **border-image-repeat** 定义源图像边缘区域适配边框图像尺寸的方式。最多可以指定两个值。
 * border-image-outset 边框图像到元素外部边缘的距离,最多可以指定四个值。
-* border-image-repeat 定义源图像边缘区域适配边框图像尺寸的方式。最多可以指定两个值。
-* border-image-slice 用于将源图像分割为多个区域。最多可以指定四个值。
-* border-image-source 用以创建元素边框图像的源图像。
-* border-image-width 边框图像的宽度。最多可以指定四个值。
+
 ```css
 .example{
   /* source | slice */
@@ -281,3 +280,134 @@ div {
 ```
 
 #### [5.2 border-image-slice](#)
+定义边框图像从什么位置开始分割。
+
+```
+border-image-slice：[ <number> | <percentage> ]{1,4} && fill?
+```
+
+**值**：
+* `<number>`：数值，用具体数值指定图像分割的位置，数值代表图像的像素位置或向量坐标，不允许负值；
+* `<percentage>`：百分比，相对于图像尺寸的百分比，图像的宽度影响水平方向，高度影响垂直方向；
+* `fill`：保留边框图像的中间部分。
+
+border-image-slice 属性可以指定上、下、左、右四个方位来分割图像，并将图像分成 4 个角、4条边和中间区域等 9 个部份，中间区域始终是透明的（即没图像填充），除非加上关键字 fill
+**其中，左上角、右上角、左下角、右下角不会发生拉伸和变形** ，5、6、7、8 区域因为高度宽度重复方式等会发生变化。
+
+![img.png](static/img.png)
+
+除 fill 关键字外，border-image-slice 属性可以接受 1~4 个参数值：
+* 如果提供全部四个参数值，那么将按上、右、下、左的顺序对图像进行分割；
+* 如果提供三个参数，那么第一个参数用于上方，第二个参数用于左、右两侧，第三个参数用于下方；
+* 如果提供两个参数，那么第一个参数用于上方和下方，第二个参数用于左、右两个；
+* 如果只提供一个参数，那么上、右、下、左都将使用该值进行分割，**就是指定上图四条红线的位置**。
+
+![img_1.png](static/img_1.png)
+
+**例子:** 
+![img_2.png](static/9cabffea389448d9bbaa6780587787f7~tplv-k3u1fbpfcp-zoom-in-crop-mark_1512_0_0_0.webp)
+
+#### [5.3 border-image-outset](#)
+属性定义边框图像可超出边框盒的大小。
+
+```css
+.same{
+  /* border-image-outset: sides */
+  border-image-outset: 30%;
+  /* border-image-outset:垂直,水平 */
+  border-image-outset: 10% 30%;
+  /* border-image-outset: 顶 水平 底 */
+  border-image-outset: 30px 30% 45px;
+  /* border-image-outset:顶 右 底 左  */
+  border-image-outset: 7px 12px 14px 5px;
+  /*  */
+  border-image-repeat: inherit;
+}
+```
+
+* **sides** 边框图像在四个方向超出边框盒的 `<length>` 或 `<number>` 数量。
+* **horizontal** 边框图像在水平方向（左和右）超出边框盒的 `<length>` 或 `<number>` 数量。
+* **vertical** 边框图像在垂直方向（上和下）超出边框盒的 `<length>` 或 `<number>` 数量。
+* **top** 边框图像在上方超出边框盒的 `<length>` 或 `<number>` 数量。
+* **bottom** 边框图像在下方超出边框盒的 `<length>` 或 `<number>` 数量。
+* **right** 边框图像在右方超出边框盒的 `<length>` 或 `<number>` 数量。
+* **left** 边框图像在左方超出边框盒的 `<length>` 或 `<number>` 数量。
+* **inherit** 四个方向的值都继承于父元素的该属性计算后值。
+
+
+#### [5.4 border-image-width](#)
+border-image-width 属性用来设置通过 border-image-source 属性加载的图像厚度（宽度），属性的语法格式如下：
+
+```
+border-image-width：[ <length> | <percentage> | <number> | auto ]{1,4}
+```
+
+语法说明如下：
+* `<length>`：使用数值加单位的形式指定图像边框的宽度，不允许为负值；
+* `<percentage>`：用百分比的形式指定图像边框的宽度，参照图像边框区域的宽和高进行换算，不允许负值；
+* `<number>`：使用浮点数指定图像边框的宽度，该值对应 border-width 的倍数，例如值为 2，则参数的实际值为 2 * border-width，不允许负值；
+* **auto**：由浏览器自动设定，当 border-image-width 设置为 auto 时，它的实际值与 border-image-slice 相同的值。
+
+**border-image-width** 属性同样可以接受 1~4 个参数值：
+* 如果提供全部四个参数值，那么将按照上、右、下、左的顺序设置图像边框四个方向上的宽度；
+* 如果提供三个参数，那么第一个参数用于上边框，第二个参数用于左、右两个边框，第三个参数用于下边框；
+* 如果提供两个参数，那么第一个参数用于上、下两个边框，第二个参数用于左、右两个边框；
+* 如果只提供一个参数，那么上、右、下、左都将使用该值设置图像边框的宽度。
+
+```css
+div {
+    width: 200px;
+    border: 27px solid;
+    padding: 10px;
+    border-image-source: url(./border.png);
+    border-image-slice: 27;
+    border-image-width: 10px 1 0.5 15px;
+}
+```
+#### [5.5 border-image-outset](#)
+border-image-outset 属性用来定义图像边框相对于边框边界向外偏移的距离（使图像边框延伸到盒子模型以外），该属性的语法格式如下：
+
+```
+border-image-outset：[ <length> | <number> ]{1,4};
+```
+语法说明如下：
+* `<length>`：用具体的数值加单位的形式指定图像边框向外偏移的距离，不允许为负值；
+* `<number>`：用浮点数指定图像边框向外偏移的距离，该值表示 border-width 的倍数，例如值为 2，则表示偏移量为 2 * border-width，不允许为负值。
+
+**border-image-outset** 属性同样可以接受 1~4 个参数值：
+* 如果提供全部四个参数值，那么将按上、右、下、左的顺序作用于四边；
+* 如果提供三个参数值，那么第一个参数将用于上边框，第二个参数将用于左、右两个边框，第三个参数将用于下边框；
+* 如果提供两个参数，那么第一个参数将用于上、下两个边框，第二个参数将用于左、右两个边框；
+* 如果只提供一个参数，那么该参数将同时作用于四边。
+
+```css
+div {
+  width: 200px;
+  border: 27px solid;
+  padding: 10px;
+  margin: 30px 0px 0px 30px;
+  border-image-source: url(./border.png);
+  border-image-slice: 27;
+  border-image-outset: 25px;
+  background-color: #ccc;
+}
+```
+
+![img_1.png](static/imgsss_1.png)
+
+#### [5.6 border-image-repeat](#)
+填充使用 border-image-slice 属性分割的图像边框。
+
+border-image-repeat 属性用来设置如何填充使用 border-image-slice 属性分割的图像边框，例如平铺、拉伸等等，该属性的语法格式如下：
+
+```
+border-image-repeat：[ stretch | repeat | round | space ]{1,2}
+```
+**如果给两个值 就是先指定水平方向，再指定垂直方向**
+* **stretch**：将被分割的图像使用拉伸的方式来填充满边框区域；
+* **repeat**：将被分割的图像使用重复平铺的方式来填充满边框区域，当图像碰到边界时，超出的部分会被截断；
+* **round**：与 repeat 关键字类似，不同之处在于，当背景图像不能以整数次平铺时，会根据情况缩放图像，**推荐使用**；
+* **space**：与 repeat 关键字类似，不同之处在于，当背景图像不能以整数次平铺时，会用空白间隙填充在图像周围，**推荐使用**。
+
+**介绍**:
+![img_3.png](static/ebd4d3a1ee9a4a4fb104e81104ec962f~tplv-k3u1fbpfcp-zoom-in-crop-mark_1512_0_0_0.webp)
