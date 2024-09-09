@@ -17,7 +17,7 @@
   * [背景](./contents/background.md)
   * [颜色、透明度](./contents/colorOpacity.md)
   * [字体](./contents/fonts.md)
-  * 文本
+  * [文本](./contents/texts.md)
   * 文本修饰
   * 书写模式
   * 列表
