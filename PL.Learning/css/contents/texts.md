@@ -3,22 +3,22 @@
 
 ### [1. 属性大纲](#)
 
-| 属性                                                                                   | 版本	     |继承性| 简介                             |
-|:-------------------------------------------------------------------------------------|:--------|:----|:-------------------------------|
-| text-transform	                                                                      |CSS1/3|	有	| 检索或设置对象中的文本的大小写                |
-| white-space	                                                                         |CSS1|	有	| 设置或检索对象内空格的处理方式                |
-| [tab-size](https://developer.mozilla.org/zh-CN/docs/Web/CSS/tab-size)	               |CSS3|	有	| 检索或设置对象中的制表符的长度                |
-| word-wrap	                                                                           |CSS3|	有	| 请使用overflow-wrap                            |
-| [overflow-wrap](https://developer.mozilla.org/zh-CN/docs/Web/CSS/overflow-wrap)	     |CSS3|	有| 	设置或检索当内容超过指定容器的边界时是否断行        |
-| [word-break](https://developer.mozilla.org/zh-CN/docs/Web/CSS/word-break)	           |CSS3|	有	| 设置或检索对象内文本的字内换行行为              |
-| [text-align](https://developer.mozilla.org/zh-CN/docs/Web/CSS/text-align)	           |CSS1/3|	有	| 设置或检索对象中内容的水平对齐方式              |
-| [text-align-last](https://developer.mozilla.org/zh-CN/docs/Web/CSS/text-align-last)	 |CSS3|	有| 指定一行或者块中的最后一行在被强制换行之前的对齐规则     |
-| [text-justify](https://developer.mozilla.org/zh-CN/docs/Web/CSS/text-justify)	       |CSS3|	有	| 设置或检索对象内调整文本使用的对齐方式            |
-| [word-spacing](https://developer.mozilla.org/zh-CN/docs/Web/CSS/word-spacing)	       |CSS1/3|	有| 	检索或设置对象中的单词之间的最小，最大和最佳间隙      |
-| [letter-spacing]()	                                                                  |CSS1/3|	有| 	检索或设置对象中的字符之间的最小，最大和最佳间隙      |
-| [text-indent](https://developer.mozilla.org/zh-CN/docs/Web/CSS/text-indent)	         |CSS1/3|	有| 	设置区块元素中文本行前面空格（缩进）的长度。                |
-| [vertical-align](https://developer.mozilla.org/zh-CN/docs/Web/CSS/vertical-align)	   |CSS1/2|	无| 	设置或检索对象内容的垂直对其方式              |
-| [line-height](https://developer.mozilla.org/zh-CN/docs/Web/CSS/line-height)	         |CSS1|	有| 	检索或设置对象的行高。即字体最底端与字体内部顶端之间的距离 |
+| 属性                                                                                   | 版本	    |继承性| 简介                             |
+|:-------------------------------------------------------------------------------------|:-------|:----|:-------------------------------|
+| text-transform	                                                                      | CSS1/3 |	有	| 检索或设置对象中的文本的大小写                |
+| white-space	                                                                         | CSS1   |	有	| 设置或检索对象内空格的处理方式                |
+| [tab-size](https://developer.mozilla.org/zh-CN/docs/Web/CSS/tab-size)	               | CSS3   |	有	| 检索或设置对象中的制表符的长度                |
+| word-wrap	                                                                           | CSS3   |	有	| 请使用overflow-wrap                            |
+| [overflow-wrap](https://developer.mozilla.org/zh-CN/docs/Web/CSS/overflow-wrap)	     | CSS3   |	有| 	设置或检索当内容超过指定容器的边界时是否断行        |
+| [word-break](https://developer.mozilla.org/zh-CN/docs/Web/CSS/word-break)	           | CSS3   |	有	| 设置或检索对象内文本的字内换行行为              |
+| [text-align](https://developer.mozilla.org/zh-CN/docs/Web/CSS/text-align)	           | CSS1/3 |	有	| 设置或检索对象中内容的水平对齐方式              |
+| [text-align-last](https://developer.mozilla.org/zh-CN/docs/Web/CSS/text-align-last)	 | CSS3   |	有| 指定一行或者块中的最后一行在被强制换行之前的对齐规则     |
+| [text-justify](https://developer.mozilla.org/zh-CN/docs/Web/CSS/text-justify)	       | CSS3   |	有	| 设置或检索对象内调整文本使用的对齐方式            |
+| [word-spacing](https://developer.mozilla.org/zh-CN/docs/Web/CSS/word-spacing)	       | CSS1/3 |	有| 	检索或设置对象中的单词之间的最小，最大和最佳间隙      |
+| [letter-spacing](https://developer.mozilla.org/zh-CN/docs/Web/CSS/letter-spacing)	                                                                  | CSS1/3 |	有| 	检索或设置对象中的字符之间的最小，最大和最佳间隙      |
+| [text-indent](https://developer.mozilla.org/zh-CN/docs/Web/CSS/text-indent)	         | CSS1/3 |	有| 	设置区块元素中文本行前面空格（缩进）的长度。                |
+| [vertical-align](https://developer.mozilla.org/zh-CN/docs/Web/CSS/vertical-align)	   | CSS2.1 |	无| 用来指定行内元素（inline）或表格单元格（table-cell）元素的垂直对齐方式。  |
+| [line-height](https://developer.mozilla.org/zh-CN/docs/Web/CSS/line-height)	         | CSS1   |	有| 	检索或设置对象的行高。即字体最底端与字体内部顶端之间的距离 |
 
 #### [1.1 text-transform](#)
 CSS 属性指定如何将元素的文本大写。它可以用于使文本显示为全大写或全小写，也可单独对每一个单词进行操作, **兼容性不佳**。
