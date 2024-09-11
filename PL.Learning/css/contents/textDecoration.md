@@ -13,10 +13,10 @@
 | [text-decoration-thickness](https://developer.mozilla.org/zh-CN/docs/Web/CSS/text-decoration-thickness) | CSS3    |有| 用于设置元素中文本所使用的装饰线笔触厚度。                 |
 | [text-underline-position](https://developer.mozilla.org/zh-CN/docs/Web/CSS/text-underline-position)     | CSS3    |有| 检索或设置对象中的下划线的位置。                      |
 | [text-underline-offset](https://developer.mozilla.org/zh-CN/docs/Web/CSS/text-underline-offset)         | CSS3    |有| 设置文本装饰下划线与其原始位置的偏移距离。                 |
-| text-shadow                                                                                             | CSS3    |有| 设置或检索对象中文本的文字是否有阴影及模糊效果               |
-| text-emphasis                                                                                           | CSS3    |有|  将强调标记应用到除去空格和控制字符的文本。 |
-| [text-emphasis-color](https://developer.mozilla.org/zh-CN/docs/Web/CSS/text-emphasis-color)  | CSS3    |有| 设置强调色，这个值也可以使用简写属性。 |
-| [text-emphasis-style]()                                                                                 | CSS3    |有| 设置强调标记的样式|
+| [text-shadow](https://developer.mozilla.org/zh-CN/docs/Web/CSS/text-shadow)                             | CSS3    |有| 设置或检索对象中文本的文字是否有阴影及模糊效果               |
+| [text-emphasis](https://developer.mozilla.org/zh-CN/docs/Web/CSS/text-emphasis)                         | CSS3    |有|  将强调标记应用到除去空格和控制字符的文本。 |
+| [text-emphasis-color](https://developer.mozilla.org/zh-CN/docs/Web/CSS/text-emphasis-color)             | CSS3    |有| 设置强调色，这个值也可以使用简写属性。 |
+| [text-emphasis-style](https://developer.mozilla.org/zh-CN/docs/Web/CSS/text-emphasis-style)             | CSS3    |有| 设置强调标记的样式|
 
 
 #### [1.1 text-decoration](#)
@@ -175,14 +175,3 @@ em {
   text-emphasis-style: "*";
 }
 ```
-
-<style>
-em {
-  text-emphasis-color: green;
-  text-emphasis-style: "*";
-}
-</style>
-
-<p>这是一个示例：</p>
-
-<em>这里有强调标记！</em>

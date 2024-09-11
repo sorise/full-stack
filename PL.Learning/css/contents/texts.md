@@ -14,8 +14,9 @@
 | [text-align](https://developer.mozilla.org/zh-CN/docs/Web/CSS/text-align)	           | CSS1/3 |	有	| 设置或检索对象中内容的水平对齐方式              |
 | [text-align-last](https://developer.mozilla.org/zh-CN/docs/Web/CSS/text-align-last)	 | CSS3   |	有| 指定一行或者块中的最后一行在被强制换行之前的对齐规则     |
 | [text-justify](https://developer.mozilla.org/zh-CN/docs/Web/CSS/text-justify)	       | CSS3   |	有	| 设置或检索对象内调整文本使用的对齐方式            |
+| [text-overflow](https://developer.mozilla.org/zh-CN/docs/Web/CSS/text-overflow)	              | CSS3   |	有	|属性用于确定如何提示用户存在隐藏的溢出内容。|
 | [word-spacing](https://developer.mozilla.org/zh-CN/docs/Web/CSS/word-spacing)	       | CSS1/3 |	有| 	检索或设置对象中的单词之间的最小，最大和最佳间隙      |
-| [letter-spacing](https://developer.mozilla.org/zh-CN/docs/Web/CSS/letter-spacing)	                                                                  | CSS1/3 |	有| 	检索或设置对象中的字符之间的最小，最大和最佳间隙      |
+| [letter-spacing](https://developer.mozilla.org/zh-CN/docs/Web/CSS/letter-spacing)	   | CSS1/3 |	有| 	检索或设置对象中的字符之间的最小，最大和最佳间隙      |
 | [text-indent](https://developer.mozilla.org/zh-CN/docs/Web/CSS/text-indent)	         | CSS1/3 |	有| 	设置区块元素中文本行前面空格（缩进）的长度。                |
 | [vertical-align](https://developer.mozilla.org/zh-CN/docs/Web/CSS/vertical-align)	   | CSS2.1 |	无| 用来指定行内元素（inline）或表格单元格（table-cell）元素的垂直对齐方式。  |
 | [line-height](https://developer.mozilla.org/zh-CN/docs/Web/CSS/line-height)	         | CSS1   |	有| 	检索或设置对象的行高。即字体最底端与字体内部顶端之间的距离 |
