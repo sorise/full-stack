@@ -20,7 +20,7 @@
   * [文本](./contents/texts.md)
   * [文本修饰](./contents/textDecoration.md)
   * [书写模式](./contents/writingModes.md)
-  * 列表
+  * [列表](./contents/list.md)
   * 表格
   * 内容
   * 用户界面
@@ -36,16 +36,15 @@
   * Only Firefox
   * Only Webkit
 * 选择器
-  * 元素选择符
-  * 多类选择符
-  * 关系选择符
-  * 属性选择符
+  * [元素选择符](./contents/selectors/element.md)
+  * [类选择符](https://developer.mozilla.org/zh-CN/docs/Web/CSS/Class_selectors)
+  * [关系选择符](./contents/selectors/relationship.md)
+  * [属性选择符](./contents/selectors/attribute.md)
   * 伪类选择符
   * 伪对象选择符号
 * 语法与规则
 * 优先级
 * 取值
-  * 颜色
   * 文本
   * 函数
   * [图像、渐变](./uints/imageGradient.md)
