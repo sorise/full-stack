@@ -25,7 +25,7 @@
   * 内容
   * 用户界面
   * 多列
-  * 伸缩盒 flex 布局
+  * [伸缩盒 flex 布局](./contents/flex.md)
   * 网格布局 grid
   * 变换
   * 过渡
@@ -40,8 +40,9 @@
   * [类选择符](https://developer.mozilla.org/zh-CN/docs/Web/CSS/Class_selectors)
   * [关系选择符](./contents/selectors/relationship.md)
   * [属性选择符](./contents/selectors/attribute.md)
-  * 伪类选择符
-  * 伪对象选择符号
+  * [伪类选择符](./contents/selectors/pseudo-classes.md)
+  * [伪对象选择符号](./contents/selectors/pseudo-element.md)
+  * [嵌套选择器](./contents/selectors/nested-selector.md)
 * 语法与规则
 * 优先级
 * 取值

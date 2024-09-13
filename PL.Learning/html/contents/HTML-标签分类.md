@@ -13,7 +13,7 @@
 * [9. 功能标签](#9-功能标签)
 * [10. 大内容 canvas](#10-大内容-canvas)
 * [11. iframe](#11-iframe)
-* [12. template、slot](#12-template-slot)
+* [12. template、slot](#12-templateslot)
 * [13. svg](#13-svg)
 
 -----
