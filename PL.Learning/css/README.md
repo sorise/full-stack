@@ -21,12 +21,12 @@
   * [文本修饰](./contents/textDecoration.md)
   * [书写模式](./contents/writingModes.md)
   * [列表](./contents/list.md)
-  * 表格
+  * [表格](./contents/table.md)
   * 内容
   * 用户界面
   * 多列
   * [伸缩盒 flex 布局](./contents/flex.md)
-  * 网格布局 grid
+  * [网格布局 grid](./contents/grid.md)
   * 变换
   * 过渡
   * 动画
