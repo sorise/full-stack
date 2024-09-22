@@ -254,7 +254,7 @@ loadScript(scriptURL);
 ### [3. 文档模式](#)
 ES5 引入了文档模式的概念，通过使用DOCTYPE实现模式切换，它的主要作用是告诉浏览器以哪种模式呈现，如何解析文档，也就是说两种模式主要影响CSS内容的呈现，某些情况下也会影响JavaScript的执行。
 
-![img.png](static/img.png)
+![img.png](./static/img.png)
 
 文档模式的类型
 * 混杂模式：向后兼容的解析方式
