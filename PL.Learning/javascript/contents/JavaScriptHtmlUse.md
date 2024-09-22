@@ -5,7 +5,7 @@
 
 - [1. Javasript 语言t](#1-javasript-语言)
 - [2. 在HTML中使用Javasript](#2-在html中使用javasript)
-- [3. 文档模式](#2-文档模式)
+- [3. 文档模式](#3-文档模式)
 
 -----
 ### [1. Javasript 语言](#)
@@ -128,6 +128,128 @@ script 元素的基本属性 : 一般将外部脚本引用写在html文档底部
 html5 规定按照他们出现的先后顺序执行脚本代码，在现实中延迟脚本并不一定会按照顺序执行，也不一定会在DOMContendLoaded 事件出发前执行
 * nonce 允许脚本的一个一次性加密随机数（nonce）。服务器每次传输策略时都必须生成一个唯一的 nonce 值。提供一个无法猜测的 nonce 是至关重要的，因为绕过一个资源的策略是微不足道的。
 
+#### [2.1 动态加载脚本](#)
+
+1、直接document.write
+```html
+<script>
+    document.write("<script src='a.js'><\/script>");
+</script>
+```
+2、动态改变已有script的src属性
+
+```html
+<script src='' id="s1"></script>
+<script language="javascript">
+    s1.src = "b.js"
+</script>
+```
+3、动态创建script元素
+
+```html
+<script>
+    var oHead = document.getElementsByTagName('head')[0]; // 在head标签中创建创建script
+    var oScript = document.createElement("script");
+    oScript.type = "text/javascript";
+    oScript.src = "c.js";
+    oHead.appendChild(oScript);
+</script>
+```
+这三种方法都是异步执行的，也就是说，在加载这些脚本的同时，主页面的脚本继续运行，如果用以上的方法，那下面的代码将得不到预期的效果。
+例如：
+```html
+<script language="JavaScript">
+function LoadJS(id, fileUrl) {
+  var scriptTag = document.getElementById(id); 
+  var oHead = document.getElementsByTagName('HEAD').item(0);
+  var oScript= document.createElement("script");
+  if ( scriptTag  ) oHead.removeChild(scriptTag);
+  oScript.id = id; 
+  oScript.type = "text/javascript"; 
+  oScript.src=fileUrl ; 
+  oHead.appendChild(oScript); 
+}
+LoadJS("a.js");
+alert("主页面动态加载a.js并取其中的变量：" + str);
+</script>
+```
+上述代码执行后 a.js 的 alert 执行并弹出消息，
+
+但是 主页面产生了错误，没有弹出对话框。原因是 'str' 未定义，为什么呢？因为主页面在取 str 的时候 a.js 并没有
+完全加载成功。遇到需要同步执行脚本的时候，可以用下面的第四种方法。
+
+4、 用XMLHTTP取得要脚本的内容，再创建 Script 对象，a.js必须用UTF8编码保存，要不会出错。因为服务器与XML使用UTF8编码传送数据。
+主页面代码：
+
+```html
+<script language="JavaScript">
+function GetHttpRequest() {
+  if ( window.XMLHttpRequest ) // Gecko
+    return new XMLHttpRequest() ;
+  else if (window.ActiveXObject) // IE 
+    return new ActiveXObject("MsXml2.XmlHttp") ;
+}
+ 
+function AjaxPage(sId, url) {
+  var oXmlHttp = GetHttpRequest() ;
+  oXmlHttp.OnReadyStateChange = function() { 
+    if (oXmlHttp.readyState == 4) {
+      if (oXmlHttp.status == 200 || oXmlHttp.status == 304) {
+        IncludeJS(sId, url, oXmlHttp.responseText);
+      } else { 
+        alert('XML request error: ' + oXmlHttp.statusText + ' (' + oXmlHttp.status + ')') ;
+      } 
+    } 
+  } 
+  oXmlHttp.open('GET', url, true); 
+  oXmlHttp.send(null);
+}
+ 
+function IncludeJS(sId, fileUrl, source) { 
+  if ((source != null) && (!document.getElementById(sId))) { 
+    var oHead = document.getElementsByTagName('HEAD').item(0); 
+    var oScript = document.createElement("script"); 
+    oScript.language = "javascript"; 
+    oScript.type = "text/javascript"; 
+    oScript.id = sId; 
+    oScript.defer = true; 
+    oScript.text = source; 
+    oHead.appendChild(oScript); 
+  }
+}
+ 
+AjaxPage("scrA", "b.js");
+alert("主页面动态加载JS脚本。");
+alert("主页面动态加载a.js并取其中的变量：" + str );
+</script>
+```
+5、使用 eval 函数加载脚本
+
+一旦有了需要加载的脚本文件的 URL，接下来就可以使用 eval 函数动态加载脚本了。通过将脚本文件的 URL 作为参数传
+递给 eval 函数，可以让 JavaScript 引擎在运行时执行并加载该脚本文件的代码。
+
+```javascript
+//下面是一个简单的示例，演示了如何使用 eval 函数加载脚本：
+
+function loadScript(scriptURL) {
+  const xhr = new XMLHttpRequest(); // 创建 XMLHttpRequest 对象
+  xhr.open('GET', scriptURL, true); // 使用 GET 请求获取脚本文件
+  xhr.onreadystatechange = function() {
+    if (xhr.readyState === 4 && xhr.status === 200) {
+      const scriptCode = xhr.responseText; // 获取脚本文件的代码
+      eval(scriptCode); // 使用 eval 函数执行脚本代码
+    }
+  };
+  xhr.send(); // 发送请求
+}
+
+// 调用 loadScript 函数加载脚本
+const scriptURL = constructScriptURL('exampleScript');
+loadScript(scriptURL);
+```
+在这个示例中，loadScript 函数接受一个参数 scriptURL，表示需要加载的脚本文件的 URL。函数
+内部使用 XMLHttpRequest 对象发起 GET 请求获取脚本文件的代码，并在请求成功时通过 eval 
+函数执行脚本代码。这样就实现了动态加载脚本的功能。
 
 ### [3. 文档模式](#)
 ES5 引入了文档模式的概念，通过使用DOCTYPE实现模式切换，它的主要作用是告诉浏览器以哪种模式呈现，如何解析文档，也就是说两种模式主要影响CSS内容的呈现，某些情况下也会影响JavaScript的执行。
