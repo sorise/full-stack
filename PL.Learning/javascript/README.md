@@ -9,4 +9,4 @@ JavaScript/ECMAScript（JS）是一种具有函数优先特性的轻量级、解
 基于原型、多范式、单线程的动态语言，并且支持面向对象、命令式和声明式（如函数式编程）风格。
 
 - [JavaScript 版本更新历史](./history/current.md) 目前推荐学习到ES9
-- [JavaScript 第一课](./contents/JavaScriptHtmlUse) 学习了解ECMAScript，如何在HTML中使用、引入JavaScript代码。
+- [JavaScript 第一课](./contents/JavaScriptHtmlUse.md) 学习了解ECMAScript，如何在HTML中使用、引入JavaScript代码。
