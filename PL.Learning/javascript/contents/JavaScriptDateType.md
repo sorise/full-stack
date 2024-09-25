@@ -1,5 +1,6 @@
-### [Javasript 基础](#)
-> **介绍**： 语法基础，看看就行！
+## [Javasript 基础](#)
+> **介绍**：ECMAScript 的语法很大程度上借鉴了 C 语言和其他类 C 语言，如 Java 和 Perl。熟悉这些语言的开
+发者，应该很容易理解 ECMAScript 宽松的语法。
 
 -----
 - [1. Javasript语法基础](#1-javasript语法基础)
@@ -12,8 +13,12 @@
 -----
 
 ### [1. Javasript语法基础](#)
-**标识符**: 英文大小写字母、数字、下划线（ _ ）和美元符号（ $ ） (可以使用汉字或其他合法字符命名，但是不推荐)。
-1. 区分大小写。
+首先要知道的是，ECMAScript 中一切都区分大小写。无论是变量、函数名还是操作符，都区分大小写。换句话说，变量 test 和变量 Test 是两个不同的变量。类似地，typeof 不能作为函数名，因
+为它是一个关键字（后面会介绍）。但 Typeof 是一个完全有效的函数名。
+
+#### 1.1 标识符
+**标识符**: 英文大小写字母、数字、下划线（ **_** ）和美元符号（ **$** ） (可以使用汉字或其他合法字符命名，但是不推荐)。
+1. 区分大小写，第一个字符必须是一个字母、下划线（_）或美元符号（$），剩下的其他字符可以是字母、下划线、美元符号或数字；
 2. 可以以 字母 $ _ 开头。  
 3. 注释: 单行注释 // 多行注释 /**/ 每个语句结束最好加; 避免不必要的错误。
 
@@ -30,10 +35,26 @@ console.log(gg);
 
 /* 多行注释 在此 */
 ```
+
+#### 1.2 严格模式
+ECMAScript 5 增加了严格模式（strict mode）的概念。严格模式是一种不同的 JavaScript 解析和执
+行模型，ECMAScript 3 的一些不规范写法在这种模式下会被处理，对于不安全的活动将抛出错误。要对整个脚本启用严格模式，在脚本开头加上这一行：
+```javascript
+"use strict"; 
+```
+虽然看起来像个没有赋值给任何变量的字符串，但它其实是一个预处理指令。任何支持的 JavaScript 引擎看到它都会切换到严格模式。选择这种语法形式的目的是不破坏 ECMAScript 3 语法。
+
+```javascript
+function doSomething() {
+ "use strict";
+ // 函数体
+}
+```
+严格模式会影响 JavaScript 执行的很多方面，因此本书在用到它时会明确指出来。所有现代浏览器都支持严格模式。
 * 在非严格模式下可以不声明直接使用对象等非严格操作。
 * 在严格模式下JavasScript3中不确定的行为将为得到处理，不安全的操作将会抛出错误。
 
-#### [1.1 语句](#)
+#### [1.3 语句](#)
 ECMAScript 中的语句以分号结尾。省略分号意味着由解析器确定语句在哪里结尾：
 ```javascript
 let sum = list.length + limit;
@@ -41,9 +62,9 @@ let gap = liner - cicer  //有解析器判断语句结尾
 ```
 推荐一定要写分号结尾！有助于提高性能！
 
-#### [1.2 保留关键字](#)
-
-```javascript
+#### [1.4 关键字与保留字](#)
+规范中也描述了一组未来的保留字，同样不能用作标识符或属性名。虽然保留字在语言中没有特定 用途，但它们是保留给将来做关键字用的。
+```
 abstract    arguments   boolean     break       byte
 case        catch       char        class*      const
 continue    debugger	default     delete      do
@@ -59,19 +80,19 @@ try         typeof      var	void   volatile
 while	    with        yield		
 ```
 
-#### [1.3 内置对象](#)
+#### [1.5 内置对象](#)
 您也应该避免使用 JavaScript 内置的对象、属性和方法的名称作为 Javascript 的变量或函数名：
 
-```javascript
+```
 Array       Date        eval        function        hasOwnProperty
 Infinity    isFinite    isNaN       isPrototypeOf   length
 Math        NaN	        name	    Number          Object
 prototype   String      toString    undefined       valueOf
 ```
 
-
 ### [2. 变量声明](#)
-ECMAScript 变量是松散类型的，意思是变量可以用于保存任何类型的数据。每个变量只不过是一个用于保存任意值的命名占位符。 可以使用三个关键字声明变量  var const let
+ECMAScript 变量是松散类型的，意思是变量可以用于保存任何类型的数据。**每个变量只不过是一个用于保存任意值的命名占位符**，
+可以使用三个关键字声明变量  var const let。
 
 ECS 包含两种不同的数据类型：
 * 基本类型值:简单的数据段  Undefind Null Boolean Number String Symbol 这几种类型都是按值访问
@@ -79,10 +100,10 @@ ECS 包含两种不同的数据类型：
 
 #### [2.1 var 关键字](#)
 使用var 来声明非常简单啊，但是var也有一些缺点，已经不再推荐使用！
-- 变量提升
+- 变量提升。
 - 非块级作用域，函数级作用域，使用var操作符定义的变量会成为包含它的函数的局部变量。
-- 可重复声明
-- 不同类型赋值
+- 可重复声明。
+- 不同类型之前可以相互赋值。
 
 ```javascript
 //变量提升 以下代码并不会报错
@@ -111,12 +132,12 @@ var userName = 'JxKicker';
 var userName = 45;
 ```
 可以省略var操作符定义全局变量，但不推荐这么做 在全局声明 使用 var 中声明的变量会成为window对象的属性。
-
 ```javascript
 message = '这是一条全局消息';
 ```
+> 虽然可以通过省略 var 操作符定义全局变量，但不推荐这么做。在局部作用域中定义的全局变量很难维护，也会造成困惑。这是因为不能一下子断定省略 var 是不是有意而为之。在严格模式下，如果像这样给未声明的变量赋值，则会导致抛出 ReferenceError。
 
-**for-var 的问题**
+##### for-var 的问题
 ```javascript
 let funStack = [];
 for (var i = 0; i < 5; i++) {
@@ -131,21 +152,22 @@ for (var j = 0; j < 5; j++) {
 ```
 
 #### [2.2 let 声明](#)
-* 块级作用域，不可重复声明，不会再作用域被提升[暂时性死区]！
+let 跟 var 的作用差不多，但有着非常重要的区别，最明显的区别是，let 声明的范围是块作用域， 而 var 声明的范围是函数作用域。
+
+* 块级作用域，不可重复声明，不会再作用域被提升 **暂时性死区** ！
 * 在全局声明 使用 let 中声明的变量不会成为window对象的属性。
 * 不支持条件声明！
 
 ```javascript
 try{
-    console.log(age);
-    let age = 25;
+  console.log(age);
+  let age = 25;
 }catch (e) {
-    console.error(Error Name: ${e.name} );//ReferenceError
-    console.error(e.message); //Cannot access 'age' before initialization
+  console.error(`Error Name: ${e.name}` );//ReferenceError
+  console.error(e.message); //Cannot access 'age' before initialization
 }
 ```
 使用尚未声明的let变量会抛出 ReferenceError 错误！ 表示无效引用。比如引用一个不存在的变量。
-
 **for-let**
 ```javascript
 let funStack = [];
@@ -163,10 +185,12 @@ try{
     console.error(Error Name: ${e.name} );//ReferenceError
 }
 ```
+
+
 #### [2.3 const 声明](#)
 const 的行为和let基本一样，唯一的区别就是 const 一旦声明必须初始化，一旦初始化就不能更改其引用其值！
 
-const声明的变量是引用类型，那么可以改变引用类型里面的值，但是不能改变引用：
+const 声明的限制只适用于它指向的变量的引用。换句话说，如果 const 变量引用的是一个对象，那么修改这个对象内部的属性并不违反 const 的限制。
 ```javascript
 const userName = 'remix';
 const user = {
@@ -186,11 +210,16 @@ try {
 ```
 
 ### [3. Javasript原生数据类型](#)
-1. Javasript 有如下几种简单数据类型 Undefined Null  Boolean String  Number  Object Function  Symbol 可以使用 typeof 判断类型
-2. 没必要将一个变量初始化为 Undefined 因为它是自动的
-3. undefined 派生自null  所以两个相等 未经初始化的变量自动是 undefined null表示一个空对象引用 typeof 返回类型为 object。 function本质上也是 object 但是 typeof返回function
+**ECMAScript** 有如下几种简单数据类型 **Undefined**、 **Null**、**Boolean**、**String**、**Number**、**Object**、**Function**、**Symbol** 可以使用 typeof 判断类型。
+
+1. 没必要将一个变量初始化为 Undefined 因为它是自动的
+2. **undefined 派生自null**  所以两个相等,**未经初始化的变量自动是 undefined**, **null表示一个空对象引用 typeof 返回类型为 object**。
+3. function本质上也是 object 但是 typeof返回function
 4. 可以使用 typeof 运算符来粗略的确定数据类型
 
+> 严格来讲，函数在 ECMAScript 中被认为是对象，并不代表一种数据类型。可是，函数也有自己特殊的属性。为此，就有必要通过 typeof 操作符来区分函数和其他对象。
+
+**例子**：
 ```javascript
 let gala;  //undefined
 let xiaohu = null;
@@ -211,9 +240,16 @@ console.log(typeof bom);//symbol
 console.log(typeof user);//object
 console.log(typeof str); //string
 ```
+因为 ECMAScript 的类型系统是松散的，所以需要一种手段来确定任意变量的数据类型。typeof 操作符就是为此而生的。对一个值使用 typeof 操作符会返回下列字符串之一：
+* "undefined"表示值未定义；
+* "boolean"表示值为布尔值；
+* "string"表示值为字符串；
+* "number"表示值为数值；
+* "object"表示值为对象（而不是函数）或 null；
+* "function"表示值为函数；
 
 #### [3.1 Undefined](#)
-对于尚未初始化的变量,会被JS引擎会自动初始化为 Undefined
+对于尚未初始化的变量,会被JS引擎会自动初始化为 Undefined。
 typeof 变量的问题， 如果变量声明了没有初始化那么返回 undefined，如果这个变量都没有声明过那么也返回 ndefined
 
 ```javascript
@@ -227,6 +263,38 @@ if (typeof age == "undefined"){
     console.log('age 尚未初始化或声明');
 }
 ```
+注意，包含 undefined 值的变量跟未定义变量是有区别的。
+```javascript
+let message; // 这个变量被声明了，只是值为 undefined
+// 确保没有声明过这个变量
+// let age
+console.log(message); // "undefined"
+console.log(age); // 报错
+```
+**对未初始化的变量调用 typeof 时，返回的结果是"undefined"，但对未声明的变量调用它时，返回的结果还是"undefined"**，这就有点让人看不懂了。
+```javascript
+let message; // 这个变量被声明了，只是值为 undefined
+// 确保没有声明过这个变量
+// let age
+console.log(typeof message); // "undefined"
+console.log(typeof age); // "undefined"
+```
+如何区分,如果需要，可以用更简洁的方式检测它。
+```javascript
+let message; // 这个变量被声明了，只是值为 undefined
+// age 没有声明
+if (message) {
+ // 这个块不会执行
+}
+if (!message) {
+ // 这个块会执行
+}
+if (age) {
+ // 这里会报错
+} 
+```
+
+
 转换为 Boolean 值返回为 false
 
 #### [3.2 Null 类型](#)
