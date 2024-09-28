@@ -6,9 +6,15 @@
 - [1. Javasript语法基础](#1-javasript语法基础)
 - [2. 变量声明](#2-变量声明)
 - [3. javasript原生数据类型](#3-javasript原生数据类型)
-- [4. 模板字符串](#4-模板字符串)
-- [5. math](#5-math)
-- [5. bigInt 对象](#5-bigint-对象)
+- [4. undefined](#4-undefined)
+- [5. Null 类型](#5-null-类型)
+- [6. Boolean 类型](#6-boolean-类型)
+- [7. Number 对象](#7-number-对象)
+- [8. String 类型](#8-string-类型)
+- [9. 模板字符串精讲](#9-模板字符串精讲)
+- [10. math](#10-math)
+- [11. bigInt 对象](#11-bigint-对象)
+- [12. Symbol 类型](#12-symbol-对象)
 
 -----
 
@@ -248,7 +254,7 @@ console.log(typeof str); //string
 * "object"表示值为对象（而不是函数）或 null；
 * "function"表示值为函数；
 
-#### [3.1 Undefined](#)
+### [4. Undefined](#)
 对于尚未初始化的变量,会被JS引擎会自动初始化为 Undefined。
 typeof 变量的问题， 如果变量声明了没有初始化那么返回 undefined，如果这个变量都没有声明过那么也返回 ndefined
 
@@ -294,28 +300,34 @@ if (age) {
 } 
 ```
 
-
 转换为 Boolean 值返回为 false
 
-#### [3.2 Null 类型](#)
-Null 类型同样只有一个值即  null。 空对象指针(引用)
+### [5. Null 类型](#)
+**Null 类型** 同样只有一个值，即特殊值 null。逻辑上讲，null 值表示一个空对象指针，这也是给typeof 传一个 null 会返回"object"的原因：
 
+* 在定义将来要保存对象值的变量时，建议使用 null 来初始化，不要使用其他值。
 ```javascript
+let car = null;
+console.log(typeof car); // "object" 
+
 let name = null;
 
 if ( name ){
     console.log('这里不会执行');
 }
 
-if (name === null){
+//判断类型是否是null
+if (name === null){ 
     console.log('name 是 null');
 }
 ```
+**转换为 Boolean 值返回为 false**, undefined 值是由 null 值派生而来的，因此 ECMA-262 将它们定义为表面上相等，如下面的例子所示：
+```javascript
+console.log(null == undefined); // true
+```
 
-转换为 Boolean 值返回为 false
-
-#### [3.3 Boolean 类型](#)
-只有两个字面值 true false, true 不是 1, false 不是 0。
+### [6. Boolean 类型](#)
+Boolean（布尔值）类型是 ECMAScript 中使用最频繁的类型之一，有两个字面值：true 和 false。
 
 * Boolean 对象是 Boolean 原始类型的引用类型。要创建 Boolean 对象，只需要传递 Boolean 值作为参数：
 * Boolean 对象将覆盖 Object 对象的 ValueOf() 方法，返回原始值，即 true 和 false。ToString() 方法也会被覆盖，返回字符串 "true" 或 "false"。
@@ -327,13 +339,13 @@ let found = true;
 let lost = false;
 ```
 
-|数据类型|转换为true|转换为false
-|--|:--:|--:
-|Boolean|true|false
-|String|任何非空字符|空字符
-|Number|任何非零数字值|0和NaN
-|Object|任何对象|null
-|Undefined|undefined 只能转换为 false|undefined
+|数据类型|转换为true|转换为false| 
+|--|:--:|----------:|
+|Boolean|true|    false  |
+|String|任何非空字符|       空字符 |
+|Number|任何非零数字值|     0和NaN |
+|Object|任何对象|      null |
+|Undefined|undefined 只能转换为 false| undefined |
 
 可以使用Boolean(obj) 将一个值转换为Boolean值
 
@@ -342,16 +354,17 @@ let lost = false;
 let val = true;
 console.log(val.toString());
 ```
-val 明明是值类型 为何还能够调用方法呢？ 类似于引用类型
+**val** 明明是值类型 为何还能够调用方法呢？ 类似于引用类型
 ```javascript
 // 实际做法 做了包装 在不调用方法的时候就是值类型 将要调用方法的时候将其转换为引用类型 
 // 然后调用结束后 再转换会值类型  有一个包装的过程
 let val = new Boolean(true);
 console.log(val.toString());
 ```
-#### [3.4 Number 对象](#)
-Number类型采用IEEE 754格式表示整数和浮点值 正如你可能想到的，Number 对象是 Number 原始类型的引用类型。要创建 Number 对象，采用下列代码：
 
+### [7. Number 对象](#)
+ECMAScript 中最有意思的数据类型或许就是 Number 了。Number 类型使用 IEEE 754 格式表示整
+数和浮点值（在某些语言中也叫双精度值）。不同的数值类型相应地也有不同的数值字面量格式。
 ```javascript
 //引用类型
 let oNumberObject = new Number(68);
@@ -361,7 +374,7 @@ let iNumber = oNumberObject.valueOf();
 let age = 78;
 ```
 
-Number的属性： MAX_VALUE  MIN_VALUE  NEGATIVE_INFINITY  POSITIVE_INFINITY
+Number的属性： **MAX_VALUE  MIN_VALUE  NEGATIVE_INFINITY  POSITIVE_INFINITY**。
 
 ```javascript
 let max = Number.MAX_VALUE //获得最大值
@@ -374,7 +387,7 @@ console.log(min) //5e-324
 console.log(isFinite(max)) //true
 ```
 
-#### [3.5 Number类型的方法](#)
+#### [7.1 Number类型的方法](#)
 * toFixed() :方法返回的是具有指定位数小数的数字的字符串表示。
 * toExponential() 方法:与格式化数字相关的另一个方法是 toExponential()，它返回的是用科学计数法表示的数字的字符串形式。
 * toPrecision() 方法:toPrecision() 方法根据最有意义的形式来返回数字的预定形式或指数形式。它有一个参数，即用于表示数的数字总数（不包括指数）。如下所示
@@ -395,16 +408,31 @@ console.log(oNumberObject.toPrecision(2));  //输出 "68"
 console.log(oNumberObject.toPrecision(3));  //输出 "68.0"
 ```
 
-#### [3.6 进制表示](#)
-最基本的数值字面量格式是十进制整数 八进制 使用前缀 0 十六进制 0x
+存储浮点值使用的内存空间是存储整数值的两倍，所以 ECMAScript 总是想方设法把值转换为整数。在小数点后面没有数字的情况下，数值就会变成整数。
+
+#### [7.2 进制表示](#)
+最基本的数值字面量格式是十进制整数 八进制 使用前缀 0 十六进制 0x。
 ```javascript
 let kicker = 54;
 let umix = 070 ; //56 八进制
-let remix = 0xlf ; //31 十六进制
+let remix = 0x1f ; //31 十六进制
 ```
 
-#### [3.7 Number 数值转换](#)
-Number 数值转换 将其他值转换为数值类型:只有不为空的且非全数字的字符串 和 undefined 会转换成NaN
+#### [7.3 Number 数值转换](#)
+有 3 个函数可以将非数值转换为数值：Number()、parseInt()和 parseFloat()。Number()是转型函数，可用于任何数据类型。后两个函数主要用于将字符串转换为数值。对于同样的参数，这 3 个函数执行的操作也不同。
+
+**Number() 函数基于如下规则执行转换**。
+* 布尔值，true 转换为 1，false 转换为 0。
+* 数值，直接返回。
+* null，返回 0。
+* undefined，返回 NaN。
+* 字符串，应用以下规则。
+  * 如果字符串包含数值字符，包括数值字符前面带加、减号的情况，则转换为一个十进制数值。 因此，`Number("1")` 返回 1，`Number("123")` 返回 123，`Number("011")` 返回 11（忽略前面 的零）。
+  * 如果字符串包含有效的浮点值格式如"1.1"，则会转换为相应的浮点值（同样，忽略前面的零）。
+  * 如果字符串包含有效的十六进制格式如"0xf"，则会转换为与该十六进制值对应的十进制整数值。
+  * 如果是空字符串（不包含字符），则返回 0。
+  * 如果字符串包含除上述情况之外的其他字符，则返回 NaN。
+* 对象，调用 valueOf()方法，并按照上述规则转换返回的值。如果转换结果是 NaN，则调用toString()方法，再按照转换字符串的规则转换。
 
 ```javascript
 var num1 = Number("6546sdf")
@@ -417,11 +445,9 @@ var num7 = Number(undefined)
 console.log(num1,num2,num3,num4,num5,num6,num7) 
          // NaN   NaN  0    56   1    0    NaN
 ```
-
 parseInt只认数字或者以数字开头 近能够进行进制转换
-
 ```javascript
-var num1 = parseInt("6546sdf"， 10);// 按照十进制解析
+var num1 = parseInt("6546sdf",10);// 按照十进制解析
 var num2 = parseInt("sdf")
 var num3 = parseInt("")
 var num4 = parseInt("00056", 8);//按照八进制解析
@@ -433,7 +459,6 @@ var num9 = parseInt("AAA",16) //  16进制
 console.log(num1,num2,num3,num4,num5,num6,num7,num8,num9) 
          // 6546  NaN  NaN  56   NaN  NaN NaN  339  2730
 ```
-
 parseFloat只认数字或者以数字开头 不能够进行进制转换
 ```javascript
 var num1 = parseFloat("4554.2jj")
@@ -449,8 +474,8 @@ console.log(num1,num2,num3,num4,num5,num6,num7,num8,num9)
          // 4554.2 85.2 1520000 NaN NaN NaN NaN 523 0
 ```
 
-#### [3.8 浮点值](#)
-浮点数的小问题， 浮点数采用 IEEE 754数值标准。
+#### [7.4 浮点值](#)
+要定义浮点值，数值中必须包含小数点，而且小数点后面必须至少有一个数字，浮点数采用 IEEE 754数值标准。
 
 ```javascript
 let float_number_one = 1. ; //. 后面有问题 当作整数 1 处理
@@ -459,9 +484,43 @@ let float_number_two = 10.0 ; //小数点后面是 0 当作整数处理
 let score =  39.0;
 console.log(score);//39
 ```
+因为存储浮点值使用的内存空间是存储整数值的两倍，所以 ECMAScript 总是想方设法把值转换为整数。
 
-#### [3.9 String 类型](#)
-String 字符串数据类型表示 0-N 个 16 Unicode 字符串序列！ ES6 加强了对 Unicode 的支持，允许采用\uxxxx形式表示一个字符，其中xxxx表示字符的 Unicode 码点。
+#### [7.5 NaN](#)
+有一个特殊的数值叫 NaN，意思是“不是数值”（Not a Number），用于表示本来要返回数值的操作
+失败了（而不是抛出错误）。比如，用 0 除任意数值在其他语言中通常都会导致错误，从而中止代码执
+行。但在 ECMAScript 中，0、+0 或 0 相除会返回 NaN：
+```javascript
+console.log(0/0); // NaN
+console.log(-0/+0); // NaN
+```
+如果分子是非 0 值，分母是有符号 0 或无符号 0，则会返回 Infinity 或-Infinity：
+```javascript
+console.log(5/0); // Infinity
+console.log(5/-0); // -Infinity
+```
+NaN 有几个独特的属性。首先，任何涉及 NaN 的操作始终返回 NaN（如 NaN/10），在连续多步计算
+时这可能是个问题。其次，NaN 不等于包括 NaN 在内的任何值。例如，下面的比较操作会返回 false：
+
+```javascript
+console.log(NaN == NaN); // false
+```
+为此，ECMAScript 提供了 isNaN()函数。该函数接收一个参数，可以是任意数据类型，然后判断
+这个参数是否“不是数值”。把一个值传给 isNaN()后，该函数会尝试把它转换为数值。某些非数值的
+值可以直接转换成数值，如字符串"10"或布尔值。任何不能转换为数值的值都会导致这个函数返回
+true。举例如下：
+
+```javascript
+console.log(isNaN(NaN)); // true 
+console.log(isNaN(10)); // false，10 是数值
+console.log(isNaN("10")); // false，可以转换为数值 10 
+console.log(isNaN("blue")); // true，不可以转换为数值
+console.log(isNaN(true)); // false，可以转换为数值 1
+```
+
+### [8. String 类型](#)
+String（字符串）数据类型表示零或多个 16 位 Unicode 字符序列。字符串可以使用双引号（"）、 单引号（'）或反引号（`）标示，因此下面的代码都是合法的：
+
 String 官方文档解释方法属性 String 是一个基本包装类型,它是唯一的,一旦创建不能改变,每次改变实际上都是创建一个新的字符串 可以使用单引号 也可以使用双引号表示
 
 ```javascript
@@ -472,12 +531,28 @@ let sentence = ${userName} said: "${message}"!;
 
 console.log(sentence); //remix said: "this is a message"!
 ```
+JavaScript字符串字面量还支持一些特殊字符的转义，如下表所示：
 
-#### [3.10 String 转换](#)
+| 转义字符    | 	描述      |
+|:--------|:---------|
+| `\\`    | 反斜杠字符 `\`| 
+| `\"`	   |双引号|
+| `\'`	   |单引号|
+| `\n`	   |换行符|
+| `\r`	   |回车符|
+| `\t`	   |制表符|
+| `\b`	   |退格符|
+| `\f`	   |换页符|
+| `\uXXXX`	 |以16进制编码的Unicode字符（其中XXXX为4位数）|
+
+> **特点** : ECMAScript 中的字符串是不可变的（immutable），意思是一旦创建，它们的值就不能变了。要修改
+某个变量中的字符串值，必须先销毁原始的字符串，然后将包含新值的另一个字符串保存到该变量。
+
+#### [8.1 String 转换 toString](#)
 有两种方法将一个其他类型转换为字符串
 
-1. toString(n) 方法 n 表示 蒋数字转换为几进制 默认值 10
-2. String(带转换变量) undefined, null 没有 toString方法！
+1. **toString(n)** 方法 n 表示 蒋数字转换为几进制 默认值 10
+2. **String(带转换变量)** undefined, null 没有 toString方法！
 
 如果值是undefined 则返回字符串 undefined 。null 同理一样！如果数字是非数字 那么返回NaN 
 ```javascript
@@ -492,26 +567,119 @@ let nl = null;
 console.log(String(und)); //undefined
 console.log(String(nl)); //null
 ```
-#### [3.11 String ES6 改造](#)
+
+#### [8.3 模板字面量与字符串插值](#)
+ECMAScript 6 新增了使用[模板字面量](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Template_literals)定义字符串的能力。与使用单引号或双引号不同，模板字面量保留换行字符，可以跨行定义字符串：
+
+模板字面量有时被非正式地叫作模板字符串，因为它们最常被用作字符串插值（通过替换占位符来创建字符串）。
+
+```javascript
+const name = "Alice";
+const age = 25;
+
+// 不带标签的模板字面量
+const greeting = `Hello, ${name}! You are ${age} years old.`;
+console.log(greeting); // 输出: Hello, Alice! You are 25 years old.
+```
+
+#### [8.4 模板字面量标签函数](#)
+模板字面量也支持定义标签函数（tag function），而通过标签函数可以自定义插值行为。标签函数会接收被插值记号分隔后的模板和对每个表达式求值的结果。
+
+```javascript
+let a = 6; 
+let b = 9; 
+function simpleTag(strings, aValExpression, bValExpression, sumExpression) { 
+ console.log(strings); 
+ console.log(aValExpression); 
+ console.log(bValExpression); 
+ console.log(sumExpression); 
+ return 'foobar'; 
+} 
+let untaggedResult = `${ a } + ${ b } = ${ a + b }`; 
+let taggedResult = simpleTag`${ a } + ${ b } = ${ a + b }`; 
+// ["", " + ", " = ", ""] 
+// 6 
+// 9 
+// 15
+```
+因为表达式参数的数量是可变的，所以通常应该使用剩余操作符（rest operator）将它们收集到一个数组中：
+
+```javascript
+let a = 6; 
+let b = 9; 
+function simpleTag(strings, ...expressions) { 
+ console.log(strings); 
+ for(const expression of expressions) { 
+ console.log(expression); 
+ } 
+ return 'foobar'; 
+} 
+let taggedResult = simpleTag`${ a } + ${ b } = ${ a + b }`; 
+// ["", " + ", " = ", ""] 
+// 6 
+// 9 
+// 15 
+console.log(taggedResult); // "foobar"
+```
+
+#### [8.5 原始字符串](#)
+使用模板字面量也可以直接获取原始的模板字面量内容（如换行符或 Unicode 字符），而不是被转换后的字符表示。为此，可以使用默认的 String.raw 标签函数：
+
+```javascript
+// Unicode 示例
+// \u00A9 是版权符号
+console.log(`\u00A9`); // © 
+console.log(String.raw`\u00A9`); // \u00A9 
+// 换行符示例
+console.log(`first line\nsecond line`); 
+// first line 
+// second line 
+console.log(String.raw`first line\nsecond line`); // "first line\nsecond line"
+```
+另外，也可以通过标签函数的第一个参数，即字符串数组的.raw 属性取得每个字符串的原始内容：
+
+```javascript
+function printRaw(strings) {
+console.log('Actual characters:');
+for (const string of strings) {
+console.log(string);
+}
+console.log('Escaped characters;');
+for (const rawString of strings.raw) {
+console.log(rawString);
+}
+}
+printRaw`\u00A9${ 'and' }\n`;
+// Actual characters:
+// ©
+//（换行符）
+// Escaped characters:
+// \u00A9
+// \n
+```
+
+
+#### [8.6 String ES6 改造](#)
 JS5的字符串是基于16位的UTF-16编码进行构建的,每十六位表示一个编程单元,代表一个字符,许多字符串方法和属性都是基于此编程单元的的,但是过去16足够了但是 Unicode引入扩展字符集,
 编码规则不得不进行变更,所有不再限制在16位,扩展到了32位,一个字符对应一个码位例如 55362 表示 吉这个字符.UTF-16中,前面216码位 均以16位的编码单位表示,这个范围被称为基于多文
 中平面(BMP)超过这个范围的码位则要归属于某个辅助平面,其中码位仅用16位就无法表示了,为此UTF-16引入 代理对 其规定用两个16位编码单位表示一个码位,也就是说,字符串里的字符有两种,
 一种是16位编码单位的BMP字符,一种是两个编码单位的32位字符串,为此产生了很多的问题
 
 1.采用了代理对的一个字符串长度为2,例如 let val="𠮷"; console.log(val.length); 结果长度为2
-
 2.不利于对字符串进行排序和比较,要使用normalize() 方法进行等效关系标准化.
 
-#### [3.12 针对代理对编码提供了码点方法](#)
+#### [8.7 针对代理对编码提供了码点方法](#)
 codePointAt() 方法, 能够正确处理 4(32位) 个字节储存的字符，返回一个字符的码点。 charCodeAt() 方法只能返回16位的码点,无法兼容到代理对  
-ES5 提供String.fromCharCode方法，用于从码点返回对应字符，但是这个方法不能识别 32 位的 UTF-16 字符（Unicode 编号大于0xFFFF）。  
-ES6 提供了String.fromCodePoint方法，可以识别大于0xFFFF的字符，弥补了String.fromCharCode方法的不足。在作用上，正好与codePointAt方法相反。
+* 
+* ES5 提供String.fromCharCode方法，用于从码点返回对应字符，但是这个方法不能识别 32 位的 UTF-16 字符（Unicode 编号大于0xFFFF）。  
+* ES6 提供了 **String.fromCodePoint** 方法，可以识别大于0xFFFF的字符，弥补了String.fromCharCode方法的不足。在作用上，正好与codePointAt方法相反。
 
 ```javascript
 let g="𠮷";
 console.log("[𠮷] 长度为:"+g.length);    
 console.log(g.charCodeAt(0));
-console.log(g.codePointAt(0));//Unicode 代理对
+console.log(g.codePointAt(0));
+//Unicode 代理对
 console.log(String.fromCodePoint(134071)); 
 console.log(String.fromCharCode(134071)); 
 //输出
@@ -529,7 +697,7 @@ function is32Bit(code){
 ```
 注意:fromCodePoint方法定义在String对象上，而codePointAt方法定义在字符串的实例对象上。
 
-#### [3.13 标准化 normalize](#)
+#### [8.8 标准化 normalize](#)
 许多欧洲语言有语调符号和重音符号。为了表示它们，Unicode 提供了两种方法。一种是直接提供带重音符号的字符，比如Ǒ（\u01D1）。另一种是提供合成符号（combining character），即原字
 符与重音符号的合成，两个字符合成一个字符，比如O（\u004F）和ˇ（\u030C）合成Ǒ（\u004F\u030C）。这两种表示方法，在视觉和语义上都等价，但是 JavaScript 不能识别。JavaScript 将合
 成字符视为两个字符，导致两种表示方法不相等。
@@ -587,7 +755,7 @@ console.log(values.sort(function(first,second){
 }));
 ```
 
-#### [3.14 字符串遍历器](#)
+#### [8.9 字符串遍历器](#)
 for...of循环遍历，除了遍历字符串，这个遍历器最大的优点是可以识别大于0xFFFF的码点，传统的for循环无法识别这样的码点。
 ```javascript
 for (let codePoint of 'foo') {
@@ -614,7 +782,7 @@ for (let i of text) {
 // "𠮷
 ```
 
-#### [3.15 直接输入](#)
+#### [8.10 直接输入](#)
 JavaScript 字符串允许直接输入字符，以及输入字符的转义形式。举例来说，“中”的 Unicode 码点是 U+4e2d，你可以直接在字符串里面输入这个汉字，也可以输入它的转义形式\u4e2d，两者是等价的。
 
 ```javascript
@@ -641,7 +809,7 @@ JSON 格式已经冻结（RFC 7159），没法修改了。为了消除这个报�
 ```node
 const PS = eval("'\u2029'");
 ```
-### [4. 模板字符串](#)
+### [9. 模板字符串精讲](#)
 传统的 JavaScript 语言，输出模板通常是这样写的（下面使用了 jQuery 的方法）。
 ```javascript
 $('#result').append(
@@ -655,13 +823,15 @@ $('#result').append(
 
 ```javascript
 $('#result').append(
+   `
   There are <b>${basket.count}</b> items
    in your basket, <em>${basket.onSale}</em>
   are on sale!
+  `
 );
 ```
 模板字符串（template string）是增强版的字符串，用反引号（&#180;）标识。它可以当作普通字符串使用，也可以用来定义多行字符串，或者在字符串中嵌入变量。
-```javascript
+```
 // 普通字符串
 In JavaScript '\n' is a line-feed.
 
@@ -679,7 +849,7 @@ Hello ${name}, how are you ${time}?
 上面代码中的模板字符串，都是用反引号表示。如果在模板字符串中需要使用反引号，则前面要用反斜杠转义。
 
 ```javascript
-let greeting = \Yo\ World!;
+let greeting = `\Yo\ World!`;
 ```
 如果使用模板字符串表示多行字符串，所有的空格和缩进都会被保留在输出之中。
 
@@ -722,10 +892,10 @@ function authorize(user, action) {
 let x = 1;
 let y = 2;
 
-${x} + ${y} = ${x + y}
+`${x} + ${y} = ${x + y}`
 // "1 + 2 = 3"
 
-${x} + ${y * 2} = ${x + y * 2}
+`${x} + ${y * 2} = ${x + y * 2}`
 // "1 + 4 = 5"
 
 let obj = {x: 1, y: 2};
@@ -739,7 +909,7 @@ function fn() {
   return "Hello World";
 }
 
-foo ${fn()} bar
+`foo ${fn()} bar``
 // foo Hello World bar
 ```
 如果大括号中的值不是字符串，将按照一般的规则转为字符串。比如，大括号中是一个对象，将默认调用对象的toString方法。
@@ -747,25 +917,25 @@ foo ${fn()} bar
 如果模板字符串中的变量没有声明，将报错。
 ```javascript
 // 变量place没有声明
-let msg = Hello, ${place};
+let msg = `Hello, ${place};`
 // 报错
 ```
 由于模板字符串的大括号内部，就是执行 JavaScript 代码，因此如果大括号内部是一个字符串，将会原样输出。
 ```javascript
-Hello ${'World'}
+`Hello ${'World'}`
 // "Hello World"
 ```
 模板字符串甚至还能嵌套。
 
 ```javascript
-const tmpl = addrs => 
-  <table>
-  ${addrs.map(addr => 
-    <tr><td>${addr.first}</td></tr>
-    <tr><td>${addr.last}</td></tr>
-  ).join('')}
-  </table>
-;
+const tmpl = addres => `<table>
+    ${
+        addres.map(addr => `
+            <tr><td>${addr.first}</td></tr>
+            <tr><td>${addr.last}</td></tr>
+        `).join('')
+}
+</table>`;
 ```
 上面代码中，模板字符串的变量之中，又嵌入了另一个模板字符串，使用方法如下。
 
@@ -794,7 +964,7 @@ func('Jack') // "Hello Jack!"
 ```
 上面代码中，模板字符串写成了一个函数的返回值。执行这个函数，就相当于执行这个模板字符串了。
 
-#### [4.1 标签模板](#)
+#### [9.1 标签模板](#)
 模板字符串的功能，不仅仅是上面这些。它可以紧跟在一个函数名后面，该函数将被调用来处理这个模板字符串。
 这被称为“标签模板”功能（tagged template）。
 ```node
@@ -857,7 +1027,7 @@ function passthru(literals) {
 }
 ```
 
-#### [4.2 ES6 扩展的String 方法](#)
+#### [9.2 ES6 扩展的String 方法](#)
 * str.includes(string [,indexStart]) ：返回布尔值，表示是否找到了参数字符串。
 * str.startsWith(string [,indexStart]) ：返回布尔值，表示参数字符串是否在原字符串的头部。
 * str.endsWith(string [,indexStart]) ：返回布尔值，表示参数字符串是否在原字符串的尾部。
@@ -896,7 +1066,7 @@ s.includes('Hello', 6) // false
 'x'.padEnd(4, 'ab') // 'xaba'
 ```
 
-#### [4.3 String.raw()](#)
+#### [9.3 String.raw()](#)
 ES6 还为原生的 String 对象，提供了一个raw方法。往往用来充当模板字符串的处理函数，返回一个斜杠都被转义（即斜杠前面再加一个斜杠）的字符串，对应于替换变量后的模板字符串。
 ```javascript
 String.rawHi\n${2+3}!;
@@ -931,7 +1101,7 @@ String.raw = function (strings, ...values) {
   return output;
 }
 ```
-### [5. Math](#)
+### [10. Math](#)
 Math 对象用于执行数学任务。Math 对象并不像 Date 和 String 那样是对象的类，因此没有构造函数 Math()。
 
 ```javascript
@@ -963,7 +1133,7 @@ let y = Math.sqrt(16); // 返回 16 的平方根
 * ceil(x)	对数进行上舍入。
 * sqrt(x)	返回数的平方根。
 
-#### [5. 1 Math 对象的扩展](#)
+#### [10.1 Math 对象的扩展](#)
 Math.trunc() 方法用于去除一个数的小数部分，返回整数部分。
 ```javascript
 Math.trunc(4.9) // 4
@@ -1006,7 +1176,7 @@ Math.clz32(0b01000000000000000000000000000000) // 1
 Math.clz32(0b00100000000000000000000000000000) // 2
 ```
 
-### [6. BigInt 对象](#)
+### [11. BigInt 对象](#)
 JavaScript 原生提供BigInt对象，可以用作构造函数生成 BigInt 类型的数值。转换规则基本与Number()一致，将其他类型的值转为 BigInt。
 
 ```javascript
@@ -1017,7 +1187,6 @@ BigInt(true) // 1n
 ```
 
 BigInt()构造函数必须有参数，而且参数必须可以正常转为数值，下面的用法都会报错。
-
 ```javascript
 new BigInt() // TypeError
 BigInt(undefined) //TypeError
@@ -1048,8 +1217,247 @@ BigInt.asUintN(64, max + 1n)
 // 9223372036854775808n
 ```
 
+### [12. Symbol 类型](#)
+ES6 新增的类型，Symbol是原始值，且符号实例是唯一、不可变的。符号的用途是确保对象属性使用唯一标识符！不会发生属性冲突的危险！可以用来实现接口操作！
+
+尽管听起来跟私有属性有点类似，但符号并不是为了提供私有属性的行为才增加的（尤其是因为Object API 提供了方法，可以更方便地发现符号属性）。相反，符号就是用来创建唯一记号，进而用作非 字符串形式的对象属性。
+
+> Symbol 类型主要用于创建唯一的标识符，解决了对象属性名称冲突的问题
+
+#### 12.1 符号的创建
+符号要是有Symbol 函数初始化,本身是原始类型，typeof 返回 symbol。 Symbol(str) 不能和 new一起使用。即不能当构造函数，这样做是为了比卖你创建符号包装对象！
+
+symbol Symbol(str):返回一个符号原始值，这个唯一值不能更变，可以传入一个字符串参数作为对符号的描述！这个字符串参数与符号定义或标识无关，仅仅是一个描述！ 如果两个符号的描述一样，其值也不一样！
+```javascript
+let nameSymbol = Symbol('name symbol');
+let nameSymbol_ = Symbol('name symbol');
+let ageSymbol = Symbol();
+
+console.log(nameSymbol, ageSymbol);//Symbol(name symbol) Symbol()
+console.log(nameSymbol == nameSymbol_);//false
+
+//不建议 包装 symbol
+let wrapper =  Object(ageSymbol);
+console.log(wrapper);//[Symbol: Symbol()]
+```
+
+#### [12.2 使用全局符号注册表](#)
+如果运行时的不同部分需要共享和重用符号实例，那么可以用一个字符串作为键，在全局符号注册表中创建并重用符号！使用 `Symbol.for(key)` 方法！
+
+如果未创建则创建新符号然后返回，已创建则找到后返回！
+```javascript
+let nameSymbolGlobal = Symbol.for('name');
+let names = Symbol.for('name');
+let iterator = Symbol.iterator; //内置对象
+let iterator_ = Symbol.iterator;
+
+console.log(iterator == iterator_);//true
+console.log(nameSymbolGlobal == names);//true
+```
+全局注册的符号不等于使用函数常见的符号，即使描述等于键！
+
+```javascript
+let nameSymbolGlobal = Symbol.for('name');
+let names = Symbol('name');
+
+
+console.log(nameSymbolGlobal == names);//false
+```
+还可以反过来用符号查询键值 使用方法:  `Symbol.keyFor(symbol)`
+
+```javascript
+let nameSymbolGlobal = Symbol.for('name');
+console.log(Symbol.keyFor(nameSymbolGlobal));//name
+```
+
+#### [12.3 使用符号作为对象属性](#)
+凡是使用字符串或数值作为属性的方法的地方，都可以使用符号！同理支持使用 defineProperty、 defineProperties定义属性。
+
+* Object.getOwnPropertyNames()：返回对象实例的常规属性数组。
+* Object.getOwnPropertySymbols()：返回对象实例的符号属性数组。这两个方法的返回值互斥。
+
+```javascript
+let nameSymbol = Symbol('name');
+let ageSymbol  = Symbol('age');
+let sexSymbol = Symbol('sex');
+
+let user =  {
+    uid: '2016110418',
+    [nameSymbol]: 'remix',
+    [ageSymbol]: 25,
+    toString: function () {
+        return `Name: ${this[nameSymbol]} age: ${this[ageSymbol]} sex: ${this[sexSymbol]?'boy':'girl'}`
+    }
+}
+
+Object.defineProperty(user, sexSymbol,  {
+    value: true,
+    configurable: false,
+    enumerable: true,
+    writable: false
+})
+
+
+let uidSymbol = Symbol('uid');
+let gradeSymbol = Symbol('grade');
+Object.defineProperties(user, {
+    [uidSymbol]: {
+        value:'2016110418',
+        configurable: false,
+        enumerable: true,
+        writable: false
+    },
+    [gradeSymbol]: {
+        value:'高三',
+        configurable: false,
+        enumerable: true,
+        writable: false
+    }
+});
+
+
+console.log(user.toString());//Name: remix  age: 25
+console.log(user[nameSymbol]);//remix
+console.log(user[sexSymbol]);//true
+
+for (const property of  Object.getOwnPropertyNames(user)) {
+    console.log(property);
+}//uid toString
+
+
+for (const symbol of  Object.getOwnPropertySymbols(user)) {
+    console.log(symbol);
+}//Symbol(name) Symbol(age) Symbol(sex) Symbol(uid) Symbol(grade)
+```
+
+> 注意：对象字面量只能在计算属性语法中使用符号为属性！` `注意使用 [] 来使用属性和定义符号属性！
+
+
+**常用内置符号** ECMAScript6也引入了一批常用内置符号(well-known symbol) 用于暴露语言内部行为，开发者可以直接访问、重写或模拟这些行为。这些内置符号都已Symbol工厂函数字符串 属性的形式存在！
+
+for-of 循环为在相关对象上使用Symbol.iterator属性。那么就可以通过在自定义对象上重新定义Symbol.iterator的值，来改变 for-of 在迭代该对象时的行为。
+
+**内置符号属性都是不可写、不可枚举、不可配置！**
+
+在提到ECMAScript规范时，经常会引用符号在规范中的名称，前缀为`@@`。例如： `@@iterator` 指的是 Symbol.iterator;
+
+##### [2.1 Symbol.hasInstance](#)
+根据ECMAScript规范，这个符号作为一个属性表示“一个方法，该方法决定一个构造器对象是否认可一个对象时它的实例。由instanceof操作符使用”。instanceof操作符可以用来确定一个对象实例的原型链上是否有原型。instanceof的典型使用场景如下：　
+```javascript
+function Foo(){}
+let f = new Foo()
+console.log(f instanceof Foo)//true
+
+class Bar{}
+let b = new Bar();
+console.log(b instanceof Bar)//true
+```
+在ES6中，instanceof操作符会使用Symbol.hasInstance函数来确定关系。以Symbol.hasInstance为键的函数会执行同样的操作，只是操作数对调了一下：
+
+```javascript
+function Foo(){}
+let f = new Foo()
+console.log(Foo[Symbol.hasInstance](f))//true
+
+class Bar{}
+let b = new Bar()
+console.log(Bar[Symbol.hasInstance](b))//true
+```
+这个属性定义在Function的原型上，因此默认在所有函数和类上都可以调用。由于instanceof操作符会在原型链上寻找这个属性定义，就跟在原型链上寻找其他属性一样，因此可以在继承的类上通过静态方法重新定义这个函数：
+
+```javascript
+class Bar{}
+class Baz extends Bar{
+    static [Symbol.hasInstance](){
+        return false;
+    }
+}
+
+let b =  new Baz()
+console.log(Bar[Symbol.hasInstance](b))//true
+console.log(b instanceof Bar)          //true
+console.log(Baz[Symbol.hasInstance](b))//false
+console.log(b instanceof Baz)          //false
+```
+
+#### [12.3 Symbol.iterator](#)
+根据ECMAScript规范，这个符号作为一个属性表示“一个方法，该方法返回对象默认的迭代器。由for-of语句使用”。换句话说，这个符号表示实现迭代器API的函数。
+
+for-of循环这样的语言结构会利用这个函数执行迭代操作。循环时它们会调用以Symbol.iterator为键的函数，并默认这个函数会返回一个实现迭代器API的对象。很多时候，返回对象是实现该API的Generator:
+
+```javascript
+class Foo{
+    *[Symbol.iterator](){}
+}
+
+let f = new Foo()
+console.log(f[Symbol.iterator]())
+//Genatator{<suspaneded>}
+```
+技术上，这个由Symbol.iterator函数生成的对象应该通过其next()方法陆续返回值。可以通过显式地调用next()方法返回，也可以隐式地通过生成器函数返回：
+
+```javascript
+class Emitter {
+    constructor(max) {
+        this.max = max;
+        this.idx = 0;
+    }
+    *[Symbol.iterator]() {
+        while (this.idx < this.max) {
+            yield this.idx++;
+        }
+    }
+}
+
+function count() {
+    let emitter = new Emitter(5);
+    for(const x of emitter){
+        console.log(x);
+    }
+}
+count();
+```
+
+#### [12.4 Symbol.asyncIterator](#)
+一个方法，该方法返回对象默认的AsyncIterator。由for-await-of语句使用 这个符号表示实现异步迭代器API的函数
+
+
+#### [12.5 Symbol.split](#)
+一个正则表达式方法，该方法在匹配正则表达式的索引位置拆分字符串。由String.prototype.split()方法使用
+
+#### [12.6 Symbol.toPrimitive](#)
+一个方法，该方法将对象转换为相应的原始值。由ToPrimitive抽象操作使用
+
+#### [12.7 Symbol.species](#)
+
+#### [12.8 ...其他内置符号请需要百度看](#)
+...
+
+#### [13. Object 类型](#)
+ECMAScript 中的对象其实就是一组数据和功能的集合。对象通过 new 操作符后跟对象类型的名称来创建。开发者可以通过创建 Object 类型的实例来创建自己的对象，然后再给对象添加属性和方法：
+
+```javascript
+let o = new Object();
+```
+这个语法类似 Java，但 ECMAScript 只要求在给构造函数提供参数时使用括号。如果没有参数，如上面的例子所示，那么完全可以省略括号（不推荐）：
+```javascript
+let o = new Object; // 合法，但不推荐
+```
+Object 的实例本身并不是很有用，但理解与它相关的概念非常重要。类似 Java 中的 java.lang.Object，ECMAScript 中的 Object 也是派生其他对象的基类。Object 类型的所有属性和方法在派生的对象上同样存在。
+
+**每个 Object 实例都有如下属性和方法。**
+* constructor：用于创建当前对象的函数。在前面的例子中，这个属性的值就是 Object()
+函数。
+* hasOwnProperty(propertyName)：用于判断当前对象实例（不是原型）上是否存在给定的属
+性。要检查的属性名必须是字符串（如 o.hasOwnProperty("name")）或符号。
+* isPrototypeOf(object)：用于判断当前对象是否为另一个对象的原型。
+* propertyIsEnumerable(propertyName)：用于判断给定的属性是否可以使用for-in 语句枚举。与 hasOwnProperty()一样，属性名必须是字符串。
+* toLocaleString()：返回对象的字符串表示，该字符串反映对象所在的本地化执行环境。
+* toString()：返回对象的字符串表示。
+* valueOf()：返回对象对应的字符串、数值或布尔值表示。通常与 toString()的返回值相同。
+因为在 ECMAScript 中 Object 是所有对象的基类，所以任何对象都有这些属性和方法。
 
 -----
-时间: [2022/8/14 第三次 再次修订] 
+时间: [2024/9/28 第四次 再次修订](#) 
 
 
