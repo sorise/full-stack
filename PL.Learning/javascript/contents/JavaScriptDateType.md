@@ -16,7 +16,7 @@
 - [11. bigInt 对象](#11-bigint-对象)
 - [12. Symbol 类型](#12-symbol-类型)
 - [13. Object 类型](#13-object-类型)
-
+- [14. 函数](#14-函数)
 -----
 
 ### [1. Javasript语法基础](#)
@@ -1457,6 +1457,31 @@ Object 的实例本身并不是很有用，但理解与它相关的概念非常�
 * toString()：返回对象的字符串表示。
 * valueOf()：返回对象对应的字符串、数值或布尔值表示。通常与 toString()的返回值相同。
 因为在 ECMAScript 中 Object 是所有对象的基类，所以任何对象都有这些属性和方法。
+
+
+### [14. 函数](#)
+函数对任何语言来说都是核心组件，因为它们可以封装语句，然后在任何地方、任何时间执行。 
+ECMAScript 中的函数使用 function 关键字声明，后跟一组参数，然后是函数体。
+
+```javascript
+function functionName(arg0, arg1,...,argN) { 
+ statements 
+} 
+function sayHi(name, message) { 
+ console.log("Hello " + name + ", " + message); 
+} 
+```
+ECMAScript 中的函数不需要指定是否返回值。任何函数在任何时间都可以使用 return 语句来返回函数的值，用法是后跟要返回的值。比如：
+```javascript
+function sum(num1, num2) { 
+ return num1 + num2; 
+}
+```
+严格模式对函数也有一些限制,如果违反上述规则，则会导致语法错误，代码也不会执行。
+* 函数不能以 eval 或 arguments 作为名称；
+* 函数的参数不能叫 eval 或 arguments；
+* 两个命名参数不能拥有同一个名称。
+
 
 -----
 时间: [2024/9/28 第四次 再次修订](#) 
