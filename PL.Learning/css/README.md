@@ -12,7 +12,7 @@
   * [定位](./contents/position.md)
   * [外补白 margin 内补白 padding](./contents/marginPadding.md)
   * [尺寸](./contents/dimension.md)
-  * [布局，盒模型](./contents/boxModel.md)
+  * [布局，盒模型](./contents/boxModel.md)  display、overflow、float、clear、visibility。
   * [边框](./contents/border.md)
   * [背景](./contents/background.md)
   * [颜色、透明度](./contents/colorOpacity.md)
@@ -23,8 +23,8 @@
   * [列表](./contents/list.md)
   * [表格](./contents/table.md)
   * [内容](./contents/content.md)
-  * 用户界面
-  * 多列
+  * [用户界面](./contents/userInterface.md)
+  * [多列](./contents/columns.md)
   * [伸缩盒 flex 布局](./contents/flex.md)
   * [网格布局 grid](./contents/grid.md)
   * 变换

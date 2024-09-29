@@ -1,5 +1,5 @@
-### [CSS 表格样式](#)
-> **介绍** 设置表格的样式。
+### [CSS 内容](#)
+> **介绍** 设置内容的样式。
 
 
 ### [1. 属性大纲](#)
@@ -7,10 +7,10 @@
 | 属性                                                                           | 版本	 | 继承性 | 简介 |
 |:-----------------------------------------------------------------------------|:----|:----|:---|
 | [content](https://developer.mozilla.org/zh-CN/docs/Web/CSS/content)	         |CSS2	|无|	用来和:after及:before伪元素一起使用，在对象前或后显示内容|
-| [counter-increment]()                                                          |	CSS2|	无|	设定当一个selector发生时计数器增加的值|
+| [counter-increment]()                                                        |	CSS2|	无|	设定当一个selector发生时计数器增加的值|
 | [counter-reset]()	                                                           |CSS2|	无|	将指定selector的计数器复位|
 | [counter-set](https://developer.mozilla.org/zh-CN/docs/Web/CSS/counter-set)	 |CSS2|	无|	将 CSS 计数器设置为给定值。|
-| quotes	                                                                      |CSS2	|有	|设置或检索对象内使用的嵌套标记|
+| [quotes](https://developer.mozilla.org/zh-CN/docs/Web/CSS/quotes)|CSS2	|有	|设置或检索对象内使用的嵌套标记|
 
 counter-increment
 counter-reset
