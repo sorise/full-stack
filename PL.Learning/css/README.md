@@ -27,8 +27,8 @@
   * [多列](./contents/columns.md)
   * [伸缩盒 flex 布局](./contents/flex.md)
   * [网格布局 grid](./contents/grid.md)
-  * 变换
-  * 过渡
+  * [变换](./contents/transform.md)
+  * [过渡](./contents/transition.md)
   * 动画
   * 打印
   * 媒体查询
