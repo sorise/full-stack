@@ -9,6 +9,6 @@ JavaScript/ECMAScript（JS）是一种具有函数优先特性的轻量级、解
 基于原型、多范式、单线程的动态语言，并且支持面向对象、命令式和声明式（如函数式编程）风格。
 
 - [JavaScript 版本更新历史](./history/current.md) 目前推荐学习到ES9
-- [JavaScript 第一课](./contents/JavaScriptHtmlUse.md) 了解ECMAScript、DOM、BOM，如何在HTML中使用、引入JavaScript代码。
-- [JavaScript 基础数据类型简介](./contents/JavaScriptHtmlUse.md) ECMAScript 有如下几种简单数据类型 Undefined、 Null、Boolean、String、Number、Object、Function、Symbol。
+- [JavaScript 介绍与如何在HTML中使用](./contents/JavaScriptHtmlUse.md) 了解ECMAScript、DOM、BOM，如何在HTML中使用、引入JavaScript代码。
+- [JavaScript 基础数据类型简介](./contents/JavaScriptDateType.md) ECMAScript 有如下几种简单数据类型 Undefined、 Null、Boolean、String、Number、Object、Function、Symbol。
 - [JavaScript 操作符与语句](./contents/JavaScriptOpAndControl.md) 操作符、运算符、流程控制
