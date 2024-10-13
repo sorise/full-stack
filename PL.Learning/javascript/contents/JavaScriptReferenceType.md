@@ -177,7 +177,7 @@ Date 类型剩下的方法（见下表）直接涉及取得或设置日期值的
 * **Function.prototype.apply()**  apply() 方法会以给定的 this 值和作为数组（或类数组对象）提供的 arguments 调用该函数。
 * **Function.prototype.bind()**
 * **Function.prototype.call()**
-* **Function.prototype[Symbol.hasInstance]()**
+* **Function.prototype** `[Symbol.hasInstance]()`
 * **Function.prototype.toString()**
 
 ### [2. RegExp](#)
