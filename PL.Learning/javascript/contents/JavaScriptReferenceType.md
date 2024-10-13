@@ -14,8 +14,8 @@
 ECMAScript 的 Date 类型参考了 Java 早期版本中的 **java.util.Date**。为此，Date 类型将日期
 保存为自协调世界时（UTC，Universal Time Coordinated）时间 1970 年 1 月 1 日午夜（零时）至今所经过的**毫秒数**。
 
-[官方文档：MDN Web Docs - JavaScript Date。](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Date)
-> 使用这种存储格式，Date 类型可以精确表示 1970 年 1 月 1 日之前及之后 285 616 年的日期。
+
+> 使用这种存储格式，Date 类型可以精确表示 1970 年 1 月 1 日之前及之后 285 616 年的日期, [官方文档：MDN Web Docs - JavaScript Date。](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Date)。
 
 创建日期对象,在不给 Date 构造函数传参数的情况下，创建的对象将保存当前日期和时间。
 ```javascript
@@ -110,12 +110,12 @@ Date 类型有几个专门用于格式化日期的方法，它们都会返回字
 * toLocaleTimeString()显示日期中的时、分、秒（格式特定于实现和地区）；
 * toUTCString()显示完整的 UTC 日期（格式特定于实现）。
 
-* 这些方法的输出与 toLocaleString()和 toString()一样，会因浏览器而异。因此不能用于在用户界面上一致地显示日期。
+这些方法的输出与 toLocaleString()和 toString()一样，会因浏览器而异。因此不能用于在用户界面上一致地显示日期。
 
 #### [1.6 日期/时间组件方法](#)
 Date 类型剩下的方法（见下表）直接涉及取得或设置日期值的特定部分。注意表中“UTC 日期”，指的是没有时区偏移（将日期转换为 GMT）时的日期。
 
-**返回时间**
+**返回时间**:
 
 |方法|描述|
 |:---|:---|
@@ -129,7 +129,7 @@ Date 类型剩下的方法（见下表）直接涉及取得或设置日期值的
 |getSeconds() |返回日期中的秒（0~59）|
 |getMilliseconds()| 返回日期中的毫秒|
 
-**返回UTC时间**
+**返回UTC时间**:
 
 |方法|描述|
 |:---|:---|
@@ -143,7 +143,7 @@ Date 类型剩下的方法（见下表）直接涉及取得或设置日期值的
 |getUTCMilliseconds() 返回 UTC 日期中的毫秒|
 
 
-**设置时间**
+**设置时间**:
 
 |方法|描述|
 |:---|:---|
@@ -156,7 +156,7 @@ Date 类型剩下的方法（见下表）直接涉及取得或设置日期值的
 |setMilliseconds(milliseconds) |设置日期中的毫秒|
 |setFullYear(year) |设置日期的年（year 必须是 4 位数）|
 
-**设置UTC时间**
+**设置UTC时间**:
 
 |方法|描述|
 |:---|:---|
