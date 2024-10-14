@@ -4,8 +4,9 @@
 ---
 
 - [1. Date 日期类型](#1-date-日期类型)
-- [2. ](#2-)
-- [3. ](#3-)
+- [2. RegExp 正则表达式](#2-regexp-正则表达式)
+- [3. 原始值包装类型](#3-原始值包装类型)
+- [4. Boolean](#4-boolean)
 
 
 ----
@@ -15,7 +16,7 @@ ECMAScript 的 Date 类型参考了 Java 早期版本中的 **java.util.Date**�
 保存为自协调世界时（UTC，Universal Time Coordinated）时间 1970 年 1 月 1 日午夜（零时）至今所经过的**毫秒数**。
 
 
-> 使用这种存储格式，Date 类型可以精确表示 1970 年 1 月 1 日之前及之后 285 616 年的日期, [官方文档：MDN Web Docs - JavaScript Date。](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Date)。
+> 使用这种存储格式，Date 类型可以精确表示 1970 年 1 月 1 日之前及之后 285 616 年的日期, [官方文档：MDN Web Docs - JavaScript Date](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Date) 。
 
 创建日期对象,在不给 Date 构造函数传参数的情况下，创建的对象将保存当前日期和时间。
 ```javascript
@@ -180,8 +181,8 @@ Date 类型剩下的方法（见下表）直接涉及取得或设置日期值的
 * **Function.prototype** `[Symbol.hasInstance]()`
 * **Function.prototype.toString()**
 
-### [2. RegExp](#)
-ECMAScript 通过 RegExp 类型支持正则表达式，正则表达式使用类似 Perl 的简洁语法来创建。
+### [2. RegExp 正则表达式](#)
+ECMAScript 通过 RegExp 类型支持正则表达式，正则表达式使用类似 Perl 的简洁语法来创建, [JavaScript 菜鸟教程、正则表达式](https://www.runoob.com/regexp/regexp-tutorial.html)。
 
 ```
 let expression = /pattern/flags; 
@@ -192,9 +193,11 @@ let expression = /pattern/flags;
 * **g**：全局模式，表示查找字符串的全部内容，而不是找到第一个匹配的内容就结束。
 * **i**：不区分大小写，表示在查找匹配时忽略 pattern 和字符串的大小写。
 * **m**：多行模式，表示查找到一行文本末尾时会继续查找。
-* **y**：粘附模式，表示只查找从 lastIndex 开始及之后的字符串。
-* **u**：Unicode 模式，启用 Unicode 匹配。
+* **y**：执行“粘性（sticky）”搜索，从目标字符串的当前位置开始匹配。。
 * **s**：dotAll 模式，表示元字符.匹配任何字符（包括`\n` 或`\r`）。
+* **v**	升级 u 模式，提供更多 Unicode 码特性。
+* **u**	“Unicode”；将模式视为 Unicode 码位序列。	unicode
+* **v**	升级 u 模式，提供更多 Unicode 码特性。	unicodeSets
 
 ```javascript
 // 匹配字符串中的所有"at"
@@ -203,4 +206,298 @@ let pattern1 = /at/g;
 let pattern2 = /[bc]at/i;
 // 匹配所有以"at"结尾的三字符组合，忽略大小写
 let pattern3 = /.at/gi; 
+```
+与其他语言中的正则表达式类似，所有元字符在模式中也必须转义，包括： `( [ { \ ^ $ | ) ] } ? * + . `。
+
+元字符在正则表达式中都有一种或多种特殊功能，所以要匹配上面这些字符本身，就必须使用反斜杠来转义。下面是几个例子：
+```javascript
+// 匹配第一个"bat"或"cat"，忽略大小写
+let pattern1 = /[bc]at/i;
+// 匹配第一个"[bc]at"，忽略大小写
+let pattern2 = /\[bc\]at/i;
+// 匹配所有以"at"结尾的三字符组合，忽略大小写
+let pattern3 = /.at/gi;
+// 匹配所有".at"，忽略大小写
+let pattern4 = /\.at/gi; 
+```
+这里的 pattern1 匹配"bat"或"cat"，不区分大小写。
+
+#### [2.1 构造函数](#)
+正则表达式也可以使用 RegExp 构造函数来创建，它接收两个参数：模式字符串和（可选的）标记字符串。 任何
+使用字面量定义的正则表达式也可以通过构造函数来创建，比如：
+```javascript
+// 匹配第一个"bat"或"cat"，忽略大小写
+let pattern1 = /[bc]at/i;
+// 跟 pattern1 一样，只不过是用构造函数创建的
+let pattern2 = new RegExp("[bc]at", "i"); 
+```
+
+#### [2.2 实例属性](#)
+每个 RegExp 实例都有下列属性，提供有关模式的各方面信息。
+* global：布尔值，表示是否设置了 g 标记。
+* ignoreCase：布尔值，表示是否设置了 i 标记。
+* unicode：布尔值，表示是否设置了 u 标记。
+* sticky：布尔值，表示是否设置了 y 标记。
+* lastIndex：整数，表示在源字符串中下一次搜索的开始位置，始终从 0 开始。
+* multiline：布尔值，表示是否设置了 m 标记。
+* dotAll：布尔值，表示是否设置了 s 标记。
+* source：正则表达式的字面量字符串（不是传给构造函数的模式字符串），没有开头和结尾的斜杠。
+* flags：正则表达式的标记字符串。始终以字面量而非传入构造函数的字符串模式形式返回（没有前后斜杠）。
+
+通过这些属性可以全面了解正则表达式的信息，不过实际开发中用得并不多，因为模式声明中包含这些信息。下面是一个例子：
+```javascript
+let pattern1 = /\[bc\]at/i;
+console.log(pattern1.global); // false
+console.log(pattern1.ignoreCase); // true
+console.log(pattern1.multiline); // false
+console.log(pattern1.lastIndex); // 0
+console.log(pattern1.source); // "\[bc\]at"
+console.log(pattern1.flags); // "i"
+
+let pattern2 = new RegExp("\\[bc\\]at", "i");
+
+console.log(pattern2.global); // false
+console.log(pattern2.ignoreCase); // true
+console.log(pattern2.multiline); // false
+console.log(pattern2.lastIndex); // 0
+console.log(pattern2.source); // "\[bc\]at"
+console.log(pattern2.flags); // "i"
+```
+注意，虽然第一个模式是通过字面量创建的，第二个模式是通过 RegExp 构造函数创建的，但两个模式的source和
+flags 属性是相同的。source 和 flags 属性返回的是规范化之后可以在字面量中使用的形式。
+
+#### [2.3 exec](#)
+RegExp 实例的主要方法是 exec()，主要用于配合捕获组使用。
+
+这个方法只接收一个参数，即要应用模式的字符串。如果找到了匹配项，则返回包含第一个匹配信息的数组；如果没找到匹配项，则返回null。
+
+返回的数组虽然是 Array 的实例，但包含两个额外的属性：
+* **index** 是字符串中匹配模式的起始位置。 
+* **input** 是要查找的字符串。
+
+这个数组的第一个元素是匹配整个模式的字符串，其他元素是与表达式中的捕获组匹配的字符串。如果模式中没有捕获组，则数组只包含一个元素。
+
+```javascript
+let text = "mom and dad and baby";
+let pattern = /mom( and dad( and baby)?)?/gi;
+let matches = pattern.exec(text);
+
+console.log(matches.index); // 0
+console.log(matches.input); // "mom and dad and baby"
+console.log(matches[0]); // "mom and dad and baby"
+console.log(matches[1]); // " and dad and baby"
+console.log(matches[2]); // " and baby"
+```
+如果模式设置了全局标记，则每次调用 exec()方法会返回一个匹配的信息。如果没有设置全局标
+记，则无论对同一个字符串调用多少次 exec()，也只会返回第一个匹配的信息。
+
+```javascript
+let text = "cat, bat, sat, fat";
+let pattern = /.at/;
+
+let matches = pattern.exec(text);
+console.log(matches.index); // 0
+console.log(matches[0]); // cat
+console.log(pattern.lastIndex); // 0
+
+matches = pattern.exec(text);
+console.log(matches.index); // 0
+console.log(matches[0]); // cat 
+console.log(pattern.lastIndex); // 0 
+```
+如果在这个模式上设置了 **g** 标记，则每次调用 exec()都会在字符串中向前搜索下一个匹配项，如下面的例子所示：
+```javascript
+let text = "cat, bat, sat, fat";
+let pattern = /.at/g;
+
+let matches = pattern.exec(text);
+console.log(matches.index); // 0
+console.log(matches[0]); // cat
+console.log(pattern.lastIndex); // 3
+
+matches = pattern.exec(text);
+console.log(matches.index); // 5
+console.log(matches[0]); // bat
+console.log(pattern.lastIndex); // 8
+
+matches = pattern.exec(text);
+console.log(matches.index); // 10
+console.log(matches[0]); // sat 
+```
+如果模式设置了粘附标记 y，则每次调用 exec()就只会在 lastIndex 的位置上寻找匹配项。粘附标记覆盖全局标记。
+```javascript
+let text = "cat, bat, sat, fat";
+let pattern = /.at/y;
+
+let matches = pattern.exec(text);
+console.log(matches.index); // 0
+console.log(matches[0]); // cat
+console.log(pattern.lastIndex); // 3
+
+// 以索引 3 对应的字符开头找不到匹配项，因此 exec()返回 null
+// exec()没找到匹配项，于是将 lastIndex 设置为 0
+matches = pattern.exec(text);
+console.log(matches); // null
+console.log(pattern.lastIndex); // 0
+
+// 向前设置 lastIndex 可以让粘附的模式通过 exec()找到下一个匹配项：
+pattern.lastIndex = 5;
+matches = pattern.exec(text);
+console.log(matches.index); // 5
+console.log(matches[0]); // ba
+console.log(pattern.lastIndex); // 8 
+```
+
+#### [2.4 test](#)
+接收一个字符串参数。如果输入的文本与模式匹配，则参数返回 true，否则返回 false。
+这个方法适用于只想测试模式是否匹配，而不需要实际匹配内容的情况。 
+
+**test()** 经常用在 if 语句中：
+```javascript
+let text = "000-00-0000";
+let pattern = /\d{3}-\d{2}-\d{4}/;
+
+if (pattern.test(text)) {
+ console.log("The pattern was matched.");
+} 
+```
+无论正则表达式是怎么创建的，继承的方法 **toLocaleString()** 和 **toString()** 都返回正则表达式的字面量表示。比如：
+```javascript
+let pattern = new RegExp("\\[bc\\]at", "gi");
+
+console.log(pattern.toString()); // /\[bc\]at/gi
+console.log(pattern.toLocaleString()); // /\[bc\]at/gi 
+```
+
+正则表达式的 **valueOf**()方法返回正则表达式本身。
+
+#### [2.5 构造函数属性](#)
+RegExp 构造函数本身也有几个属性。换句话说，每个属性都有一个全名和一个简写。
+
+|全 名|简 写| 说 明                            |
+|:---|:---|:-------------------------------|
+|input |`$_`| 最后搜索的字符串（非标准特性）                |
+|lastMatch |`$&`| 最后匹配的文本|
+|lastParen |`$+`| 最后匹配的捕获组（非标准特性）|
+|leftContext |`$`| input 字符串中出现在 lastMatch 前面的文本|
+|rightContext |`$'`|  input 字符串中出现在 lastMatch 后面的文本 |
+
+通过这些属性可以提取出与 exec()和 test()执行的操作相关的信息。来看下面的例子：
+```javascript
+let text = "this has been a short summer";
+let pattern = /(.)hort/g;
+
+if (pattern.test(text)) {
+    console.log(RegExp.input); // this has been a short summer
+    console.log(RegExp.leftContext); // this has been a
+    console.log(RegExp.rightContext); // summer
+    console.log(RegExp.lastMatch); // short
+    console.log(RegExp.lastParen); // s
+} 
+```
+以上代码创建了一个模式，用于搜索任何后跟"hort"的字符，并把第一个字符放在了捕获组中。
+不同属性包含的内容如下。
+* **input** 属性中包含原始的字符串。
+* **leftConext** 属性包含原始字符串中"short"之前的内容，rightContext 属性包含"short" 之后的内容。
+* **lastMatch** 属性包含匹配整个正则表达式的上一个字符串，即"short"。
+* **lastParen** 属性包含捕获组的上一次匹配，即"s"。
+
+这些属性名也可以替换成简写形式，只不过要使用中括号语法来访问，如下面的例子所示，因为大
+多数简写形式都不是合法的 ECMAScript 标识符：
+```javascript
+let text = "this has been a short summer";
+let pattern = /(.)hort/g;
+/*
+* 注意：Opera 不支持简写属性名
+* IE 不支持多行匹配
+  */
+if (pattern.test(text)) {
+  console.log(RegExp.$_); // this has been a short summer
+  console.log(RegExp["$`"]); // this has been a
+  console.log(RegExp["$'"]); // summer
+  console.log(RegExp["$&"]); // short
+  console.log(RegExp["$+"]); // s
+} 
+```
+
+#### [2.6 模式局限](#)
+虽然 ECMAScript 对正则表达式的支持有了长足的进步，但仍然缺少 Perl 语言中的一些高级特性。
+下列特性目前还没有得到 ECMAScript 的支持（想要了解更多信息，可以参考 `Regular-Expressions.info` 网站）：
+
+* `\A` 和 `\Z` 锚（分别匹配字符串的开始和末尾）
+* 联合及交叉类
+* 原子组
+* x（忽略空格）匹配模式
+* 条件式匹配
+* 正则表达式注释
+
+虽然还有这些局限，但 ECMAScript 的正则表达式已经非常强大，可以用于大多数模式匹配任务。
+
+
+### [3. 原始值包装类型](#)
+为了方便操作原始值，ECMAScript 提供了 3 种特殊的引用类型：Boolean、Number 和 String。
+
+```javascript
+let s1 = "some text";
+let s2 = s1.substring(2);
+
+let s1 = "some text";
+s1.color = "red";
+console.log(s1.color); // undefined 
+
+let obj = new Object("some text");
+console.log(obj instanceof String); // true
+
+let value = "25";
+let number = Number(value); // 转型函数
+console.log(typeof number); // "number"
+let obj = new Number(value); // 构造函数
+console.log(typeof obj); // "object"
+```
+
+### [4. Boolean](#)
+Boolean 是对应布尔值的引用类型。要创建一个 Boolean 对象，就使用 Boolean 构造函数并传入
+true 或 false，如下例所示：
+
+```javascript
+let booleanObject = new Boolean(true); 
+```
+Boolean 的实例会重写 valueOf 和 toString 方法。
+* valueOf()方法，返回一个原始值 true 或 false。
+* toString()方法被调用时也会被覆盖，返回字符串"true"或"false"。
+
+```javascript
+let falseObject = new Boolean(false);
+let result = falseObject && true;
+
+console.log(result); // true
+let falseValue = false;
+result = falseValue && true;
+
+console.log(result); // false 
+```
+**typeof 操作符对原始值返回"boolean"，但对引用值返回"object"**。
+```javascript
+console.log(typeof falseObject); // object
+console.log(typeof falseValue); // boolean
+console.log(falseObject instanceof Boolean); // true
+console.log(falseValue instanceof Boolean); // false 
+```
+理解原始布尔值和 Boolean 对象之间的区别非常重要，强烈建议永远不要使用后者。
+
+### [5. Number](#)
+Number 是对应数值的引用类型。要创建一个 Number 对象，就使用 Number 构造函数并传入一个数值，如下例所示：
+```javascript
+let numberObject = new Number(10); 
+```
+与 Boolean 类型一样，Number 类型重写了 valueOf()、toLocaleString()和 toString()方法。
+* toString() 方法可选地接收一个表示基数的参数，并返回相应基数形式的数值字符串
+```javascript
+let num = 10;
+
+console.log(num.toString()); // "10"
+console.log(num.toString(2)); // "1010"
+console.log(num.toString(8)); // "12"
+console.log(num.toString(10)); // "10"
+console.log(num.toString(16)); // "a" 
 ```
