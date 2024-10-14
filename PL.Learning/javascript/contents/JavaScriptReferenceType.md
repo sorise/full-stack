@@ -13,10 +13,10 @@
 
 ### [1. Date 日期类型](#)
 ECMAScript 的 Date 类型参考了 Java 早期版本中的 **java.util.Date**。为此，Date 类型将日期
-保存为自协调世界时（UTC，Universal Time Coordinated）时间 1970 年 1 月 1 日午夜（零时）至今所经过的**毫秒数**。
+保存为自协调世界时（UTC，Universal Time Coordinated）时间1970年1月1日午夜（零时）至今所经过的**毫秒数**。
 
 
-> 使用这种存储格式，Date 类型可以精确表示 1970 年 1 月 1 日之前及之后 285 616 年的日期, [官方文档：MDN Web Docs - JavaScript Date](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Date) 。
+> 使用这种存储格式，Date 类型可以精确表示1970年1月1日之前及之后285616年的日期, [官方文档：MDN Web Docs - JavaScript Date](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Date) 。
 
 创建日期对象,在不给 Date 构造函数传参数的情况下，创建的对象将保存当前日期和时间。
 ```javascript
