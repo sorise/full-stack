@@ -501,3 +501,95 @@ console.log(num.toString(8)); // "12"
 console.log(num.toString(10)); // "10"
 console.log(num.toString(16)); // "a" 
 ```
+
+#### [5.1 静态方法](#)
+
+| 方法                      | 介绍                                                                       |
+|:------------------------|:-------------------------------------------------------------------------|
+| isFinite(value)              | 判断传入值是否是一个有限数——也就是说，它检查给定值是一个数字，且该数字既不是正的 Infinity，也不是负的 Infinity 或 NaN。 
+| isInteger(value)             |判断传入值是否为整数。|
+| isNaN(value)                 |判断传入的值是否为 NaN，如果输入不是数字类型，则返回 false。它是全局 isNaN() 函数更健壮的版本。|
+| isSafeInteger(testValue)         |判断提供的值是否是一个安全整数。|
+| parseFloat(string)            |解析参数并返回浮点数。如果无法从参数中解析出一个数字，则返回 NaN。|
+| parseInt(string， radix) |解析一个字符串参数并返回一个指定基数的整数。|
+
+
+```javascript
+Number.isFinite(Infinity); // false
+Number.isFinite(NaN); // false
+Number.isFinite(-Infinity); // false
+
+Number.isFinite(0); // true
+Number.isFinite(2e64); // true
+```
+
+#### [5.2 静态属性](#)
+
+| 方法                      | 介绍                                |
+|:------------------------|:----------------------------------|
+|Number.EPSILON| 表示 1 与大于 1 的最小浮点数之间的差值            |
+|Number.MAX_SAFE_INTEGER| 表示在 JavaScript 中最大的安全整数（253 – 1）。 |
+|Number.MAX_VALUE| 表示在 JavaScript 中可表示的最大数值。         |
+|Number.MIN_SAFE_INTEGER| 代表在 JavaScript 中最小的安全整数（-253 – 1） |
+|Number.MIN_VALUE| 表示在 JavaScript 中可表示的最小正数值。        |
+|Number.NaN| 表示非数字值，等同于 NaN。                   |
+|Number.NEGATIVE_INFINITY|  表示负无穷值。  |
+|Number.POSITIVE_INFINITY|      表示正无穷大值。         |
+
+```javascript
+function checkNumber(bigNumber) {
+  if (bigNumber === Number.POSITIVE_INFINITY) {
+    return 'Process number as Infinity';
+  }
+  return bigNumber;
+}
+
+console.log(checkNumber(Number.MAX_VALUE));
+// Expected output: 1.7976931348623157e+308
+
+console.log(checkNumber(Number.MAX_VALUE * 2));
+// Expected output: "Process number as Infinity"
+```
+
+#### [5.3 实例方法](#)
+
+| 方法 | 介绍 |
+|:---|:---|
+|Number.prototype.toExponential()|返回一个以指数表示法表示该数字的字符串。|
+|Number.prototype.toFixed()|使用定点表示法来格式化该数值。|
+|Number.prototype.toLocaleString()|回这个数字特定于语言环境的表示字符串。 |
+|Number.prototype.toPrecision(precision)| 方法返回一个以指定精度表示该数字的字符串。|
+|Number.prototype.toString()| 返回表示该数字值的字符串。 |
+|Number.prototype.valueOf()| 返回该数字的值。|
+
+**toExponential**
+```javascript
+function expo(x, f) {
+  return Number.parseFloat(x).toExponential(f);
+}
+
+console.log(expo(123456, 2));
+// Expected output: "1.23e+5"
+
+console.log(expo('123456'));
+// Expected output: "1.23456e+5"
+
+console.log(expo('oink'));
+// Expected output: "NaN"
+```
+
+**toFixed**
+```javascript
+function financial(x) {
+  return Number.parseFloat(x).toFixed(2);
+}
+
+console.log(financial(123.456));
+// Expected output: "123.46"
+
+console.log(financial(0.004));
+// Expected output: "0.00"
+
+console.log(financial('1.23e+5'));
+// Expected output: "123000.00"
+```
