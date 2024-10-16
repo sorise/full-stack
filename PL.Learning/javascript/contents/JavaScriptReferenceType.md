@@ -7,6 +7,7 @@
 - [2. RegExp 正则表达式](#2-regexp-正则表达式)
 - [3. 原始值包装类型](#3-原始值包装类型)
 - [4. Boolean](#4-boolean)
+- [5. Number ](#5-number)
 
 
 ----
@@ -503,6 +504,7 @@ console.log(num.toString(16)); // "a"
 ```
 
 #### [5.1 静态方法](#)
+直接通过类名就可以访问的方法
 
 | 方法                      | 介绍                                                                       |
 |:------------------------|:-------------------------------------------------------------------------|
@@ -524,17 +526,18 @@ Number.isFinite(2e64); // true
 ```
 
 #### [5.2 静态属性](#)
+直接通过类名就可以访问的属性
 
-| 方法                      | 介绍                                |
-|:------------------------|:----------------------------------|
-|Number.EPSILON| 表示 1 与大于 1 的最小浮点数之间的差值            |
-|Number.MAX_SAFE_INTEGER| 表示在 JavaScript 中最大的安全整数（253 – 1）。 |
-|Number.MAX_VALUE| 表示在 JavaScript 中可表示的最大数值。         |
-|Number.MIN_SAFE_INTEGER| 代表在 JavaScript 中最小的安全整数（-253 – 1） |
-|Number.MIN_VALUE| 表示在 JavaScript 中可表示的最小正数值。        |
-|Number.NaN| 表示非数字值，等同于 NaN。                   |
-|Number.NEGATIVE_INFINITY|  表示负无穷值。  |
-|Number.POSITIVE_INFINITY|      表示正无穷大值。         |
+| 方法                                                                                                                | 介绍                                |
+|:------------------------------------------------------------------------------------------------------------------|:----------------------------------|
+| [Number.EPSILON](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Number/EPSILON) | 表示 1 与大于 1 的最小浮点数之间的差值            |
+| Number.MAX_SAFE_INTEGER                                                                                           | 表示在 JavaScript 中最大的安全整数（253 – 1）。 |
+| Number.MAX_VALUE                                                                                                  | 表示在 JavaScript 中可表示的最大数值。         |
+| Number.MIN_SAFE_INTEGER                                                                                           | 代表在 JavaScript 中最小的安全整数（-253 – 1） |
+| Number.MIN_VALUE                                                                                                  | 表示在 JavaScript 中可表示的最小正数值。        |
+| Number.NaN                                                                                                        | 表示非数字值，等同于 NaN。                   |
+| [Number.NEGATIVE_INFINITY](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Number/NEGATIVE_INFINITY)|  表示负无穷值。  |
+| Number.POSITIVE_INFINITY                                                                                          |      表示正无穷大值。         |
 
 ```javascript
 function checkNumber(bigNumber) {
@@ -552,17 +555,18 @@ console.log(checkNumber(Number.MAX_VALUE * 2));
 ```
 
 #### [5.3 实例方法](#)
+实例调用的方法。
 
-| 方法 | 介绍 |
-|:---|:---|
-|Number.prototype.toExponential()|返回一个以指数表示法表示该数字的字符串。|
-|Number.prototype.toFixed()|使用定点表示法来格式化该数值。|
-|Number.prototype.toLocaleString()|回这个数字特定于语言环境的表示字符串。 |
-|Number.prototype.toPrecision(precision)| 方法返回一个以指定精度表示该数字的字符串。|
-|Number.prototype.toString()| 返回表示该数字值的字符串。 |
-|Number.prototype.valueOf()| 返回该数字的值。|
+| 方法                                          | 介绍 |
+|:--------------------------------------------|:---|
+| Number.prototype.toExponential()            |返回一个以指数表示法表示该数字的字符串。|
+| Number.prototype.toFixed()                  |使用定点表示法来格式化该数值。|
+| Number.prototype.toLocaleString()           |回这个数字特定于语言环境的表示字符串。 |
+| [Number.prototype.toPrecision(precision)](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Number/toPrecision) | 方法返回一个以指定精度表示该数字的字符串。|
+| Number.prototype.toString()                 | 返回表示该数字值的字符串。 |
+| Number.prototype.valueOf()                  | 返回该数字的值。|
 
-**toExponential**
+**toExponential(fractionDigits)** 返回一个以指数表示法表示该数字的字符串。
 ```javascript
 function expo(x, f) {
   return Number.parseFloat(x).toExponential(f);
@@ -578,7 +582,8 @@ console.log(expo('oink'));
 // Expected output: "NaN"
 ```
 
-**toFixed**
+**toFixed(digits)** 使用定点表示法来格式化该数值, 小数点后的位数。
+应该是一个介于 0 和 100 之间的值，包括 0 和 100。如果这个参数被省略，则被视为 0。
 ```javascript
 function financial(x) {
   return Number.parseFloat(x).toFixed(2);
@@ -592,4 +597,262 @@ console.log(financial(0.004));
 
 console.log(financial('1.23e+5'));
 // Expected output: "123000.00"
+```
+
+**toPrecision(precision)** 返回一个以指定精度表示该数字的字符串。 
+
+**异常 RangeError**  如果 precision 不在 1 和 100 之间（包含两端），则抛出该错误。
+
+```javascript
+let numObj = 5.123456;
+
+console.log(numObj.toPrecision()); // 输出 '5.123456'
+console.log(numObj.toPrecision(5)); // 输出 '5.1235'
+console.log(numObj.toPrecision(2)); // 输出 '5.1'
+console.log(numObj.toPrecision(1)); // 输出 '5'
+
+numObj = 0.000123;
+
+console.log(numObj.toPrecision()); // 输出 '0.000123'
+console.log(numObj.toPrecision(5)); // 输出 '0.00012300'
+console.log(numObj.toPrecision(2)); // 输出 '0.00012'
+console.log(numObj.toPrecision(1)); // 输出 '0.0001'
+
+// 请注意，在某些情况下可能会返回指数表示法字符串
+console.log((1234.5).toPrecision(2)); // 输出 '1.2e+3'
+```
+
+### [6. String](#)
+String 是对应字符串的引用类型。要创建一个 String 对象，使用 String 构造函数并传入一个数值，如下例所示：
+
+```javascript
+let stringObject = new String("hello world");
+```
+每个 String 对象都有一个 length 属性，表示字符串中字符的数量。来看下面的例子：
+```javascript
+let stringValue = "hello world";
+console.log(stringValue.length); // "11"
+```
+
+#### [6.1 JavaScript 字符](#)
+JavaScript 字符串由 16 位码元（code unit）组成。对多数字符来说，每 16 位码元对应一个字符。换句话说，字符串的 length 属性表示字符串包含多少 16 位码元：
+
+**charAt()** 方法返回给定索引位置的字符，由传给方法的整数参数指定。具体来说，这个方法查找指定索引位置的 16 位码元，并返回该码元对应的字符：
+```javascript
+let message = "abcde";
+console.log(message.charAt(2)); // "c" 
+```
+JavaScript 字符串使用了两种 Unicode 编码混合的策略：UCS-2 和 UTF-16。对于可以采用 16 位编码的字符（U+0000~U+FFFF），这两种编码实际上是一样的。
+
+使用 charCodeAt()方法可以查看指定码元的字符编码。这个方法返回指定索引位置的码元值，索
+引以整数指定。比如：
+```javascript
+let message = "abcde";
+// Unicode "Latin small letter C"的编码是 U+0063
+console.log(message.charCodeAt(2)); // 99
+// 十进制 99 等于十六进制 63
+console.log(99 === 0x63); // true
+```
+fromCharCode()方法用于根据给定的 UTF-16 码元创建字符串中的字符。这个方法可以接受任意多个数值，并返回将所有数值对应的字符拼接起来的字符串：
+```javascript
+// Unicode "Latin small letter A"的编码是 U+0061
+// Unicode "Latin small letter B"的编码是 U+0062
+// Unicode "Latin small letter C"的编码是 U+0063
+// Unicode "Latin small letter D"的编码是 U+0064
+// Unicode "Latin small letter E"的编码是 U+0065
+console.log(String.fromCharCode(0x61, 0x62, 0x63, 0x64, 0x65)); // "abcde"
+// 0x0061 === 97
+// 0x0062 === 98
+// 0x0063 === 99
+// 0x0064 === 100
+// 0x0065 === 101
+console.log(String.fromCharCode(97, 98, 99, 100, 101)); // "abcde" 
+```
+对于 U+0000~U+FFFF 范围内的字符，**length、charAt()、charCodeAt()和 fromCharCode()** 返回的结果都跟预期是一样的。
+
+这是因为在这个范围内，每个字符都是用 16 位表示的，而这几个方法也都基于 16 位码元完成操作。只要字符编码大小与码元大小一一对应，这些方法就能如期工作。
+
+16 位只能唯一表示65 536 个字符。这对于大多数语言字符集是足够了，在 Unicode 中称为 **基本多语言平面**（**BMP**）。
+
+为了表示更多的字符，Unicode 采用了一个策略，即每个字符使用另外 16 位去选择一个**增补平面**。这种每个字符使用 **两**个 16 位码元的策略称为代理对。
+
+在涉及增补平面的字符时，前面讨论的字符串方法就会出问题。比如，下面的例子中使用了一个笑脸表情符号，也就是一个使用代理对编码的字符：
+
+```javascript
+let message = "ab𠮷de";
+console.log(message.length); // 6
+console.log(message.charAt(1)); // b
+
+console.log(message.charAt(2)); // <?>
+console.log(message.charAt(3)); // ☺
+console.log(message.charAt(4)); // d
+console.log(message.charCodeAt(1)); // 98
+console.log(message.charCodeAt(2)); // 55362
+console.log(message.charCodeAt(3)); // 57271
+console.log(message.charCodeAt(4)); // 101
+
+
+console.log(String.fromCodePoint(134071)); // ☺
+console.log(String.fromCharCode(97, 98,134071, 100, 101)); // abஷde
+```
+为正确解析既包含单码元字符又包含代理对字符的字符串，可以使用 **codePointAt()** 来代替charCodeAt()。
+跟使用 charCodeAt()时类似，codePointAt()接收 16 位码元的索引并返回该索引位置上的码点（code point）。
+码点是 Unicode 中一个字符的完整标识。比如，"c"的码点是 0x0063，而"☺"的码点是 0x1F60A。码点可能
+是 16 位，也可能是 32 位，而 codePointAt()方法可以从指定码元位置识别完整的码点。
+
+```javascript
+let message = "ab☺de";
+console.log(message.codePointAt(1)); // 98
+console.log(message.codePointAt(2)); // 128522
+console.log(message.codePointAt(3)); // 56842
+console.log(message.codePointAt(4)); // 100
+```
+注意，如果传入的码元索引并非代理对的开头，就会返回错误的码点。这种错误只有检测单个字符的时候
+才会出现，可以通过从左到右按正确的码元数遍历字符串来规避。迭代字符串可以智能地识别代理对的码点：
+
+```javascript
+console.log([..."ab☺de"]); // ["a", "b", "☺", "d", "e"]
+```
+与 charCodeAt()有对应的 codePointAt()一样，fromCharCode()也有一个对应的 fromCodePoint()。
+这个方法接收任意数量的码点，返回对应字符拼接起来的字符串：
+```javascript
+console.log(String.fromCharCode(97, 98, 55357, 56842, 100, 101)); // ab☺de
+console.log(String.fromCodePoint(97, 98, 128522, 100, 101)); // ab☺de 
+```
+
+#### [6.2 normalize](#)
+某些 Unicode 字符可以有多种编码方式。有的字符既可以通过一个 BMP 字符表示，也可以通过一个代理对表示。比如：
+
+```javascript
+// U+00C5：上面带圆圈的大写拉丁字母 A
+console.log(String.fromCharCode(0x00C5)); // Å
+// U+212B：长度单位“埃”
+console.log(String.fromCharCode(0x212B)); // Å
+// U+004：大写拉丁字母 A
+// U+030A：上面加个圆圈
+console.log(String.fromCharCode(0x0041, 0x030A)); // Å 
+```
+
+比较操作符不在乎字符看起来是什么样的，因此这 3 个字符互不相等。
+```javascript
+let a1 = String.fromCharCode(0x00C5),
+a2 = String.fromCharCode(0x212B),
+a3 = String.fromCharCode(0x0041, 0x030A);
+
+console.log(a1, a2, a3); // Å, Å, Å
+console.log(a1 === a2); // false
+console.log(a1 === a3); // false
+console.log(a2 === a3); // false
+```
+
+为解决这个问题，Unicode提供了 4种规范化形式，可以将类似上面的字符规范化为一致的格式，无论底层字符的代码是什么。
+* NFD（Normalization Form D）
+* NFC（Normalization Form C）
+* NFKD（Normalization Form KD）
+* NFKC（Normalization Form KC）
+
+可以使用 normalize()方法对字符串应用上述规范化形式，使用时需要传入表示哪种形式的字符串："NFD"、"NFC"、"NFKD"或"NFKC"。
+
+#### [6.3 静态方法](#)
+直接通过类名可以调用的方法：
+
+[String.fromCharCode(numN...)](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/String/fromCharCode) 返回由指定的 UTF-16 码元序列创建的字符串。
+```javascript
+String.fromCharCode(num1)
+String.fromCharCode(num1, num2)
+String.fromCharCode(num1, num2, /* …, */ numN)
+```
+* **参数**：num, 一个介于 0 和 65535（0xFFFF）之间的数字，表示一个 UTF-16 码元。
+* **返回值**: 一个长度为 N 的字符串，由 N 个指定的 UTF-16 码元组成。
+
+[String.fromCodePoint()](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/String/fromCodePoint) 将根据指定的码位序列返回一个字符串。
+
+```javascript
+String.fromCodePoint(num1)
+String.fromCodePoint(num1, num2)
+String.fromCodePoint(num1, num2, /* …, */ numN)
+
+console.log(String.fromCodePoint(9731, 9733, 9842, 0x2f804));
+// Expected output: "☃★♲你"
+```
+* **参数**：num,一个介于 0 和 0x10FFFF（包括两者）之间的整数，表示一个 Unicode 码位。
+* * **返回值**: 通过使用指定的码位序列创建的字符串。
+
+[String.raw()](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/String/raw)   静态方法是模板字符串的标签函数。它的作用类似于 Python 中的 r 前缀或 `C#` 中用于字符串字面量的 @ 前缀。
+```javascript
+// Create a variable that uses a Windows
+// path without escaping the backslashes:
+const filePath = String.raw`C:\Development\profile\aboutme.html`;
+
+console.log(`The file was uploaded from: ${filePath}`);
+// Expected output: "The file was uploaded from: C:\Development\profile\aboutme.html"
+```
+
+#### [6.4 字符串截取](#)
+一共有三个方法，其中一个已经被废除。
+
+[String.prototype.slice()](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/String/slice) 方法提取字符串的一部分，并将其作为新字符串返回，而不修改原始字符串。
+```javascript
+slice(indexStart)
+slice(indexStart, indexEnd)
+```
+* **indexStart** 要返回的子字符串中包含的第一个字符的索引。
+* **indexEnd** `可选` 要返回的子字符串中排除的第一个字符的索引。
+```javascript
+const str1 = "The morning is upon us."; // str1 的长度是 23。
+const str2 = str1.slice(1, 8);
+const str3 = str1.slice(4, -2);
+const str4 = str1.slice(12);
+const str5 = str1.slice(30);
+
+console.log(str2); // he morn
+console.log(str3); // morning is upon u
+console.log(str4); // is upon us.
+console.log(str5); // ""
+```
+ 
+[String.prototype.substr()](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/String/substr) **不再推荐使用该特性** 。
+```javascript
+substr(start)
+substr(start, length)
+```
+* **start** 返回子字符串中要包含的第一个字符的索引。
+* **length** `可选` 要提取的字符数。
+
+```javascript
+const aString = "Mozilla";
+
+console.log(aString.substr(0, 1)); // 'M'
+console.log(aString.substr(1, 0)); // ''
+console.log(aString.substr(-1, 1)); // 'a'
+console.log(aString.substr(1, -1)); // ''
+console.log(aString.substr(-3)); // 'lla'
+console.log(aString.substr(1)); // 'ozilla'
+console.log(aString.substr(-20, 2)); // 'Mo'
+console.log(aString.substr(20, 2)); // ''
+```
+
+[String.prototype.substring()](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/String/substring)  返回该字符串从起始索引到结束索引（不包括）的部分，如果未提供结束索引，则返回到字符串末尾的部分。
+
+```javascript
+substring(indexStart)
+substring(indexStart, indexEnd)
+```
+* **indexStart** 返回子字符串中第一个要**包含**的字符的索引。
+* **indexEnd** `可选` 返回子字符串中第一个要**排除**的字符的索引。
+
+```javascript
+const anyString = "Mozilla";
+
+console.log(anyString.substring(0, 1)); // 'M'
+console.log(anyString.substring(1, 0)); // 'M'
+
+console.log(anyString.substring(0, 6)); // 'Mozill'
+
+console.log(anyString.substring(4)); // 'lla'
+console.log(anyString.substring(4, 7)); // 'lla'
+console.log(anyString.substring(7, 4)); // 'lla'
+
+console.log(anyString.substring(0, 7)); // 'Mozilla'
+console.log(anyString.substring(0, 10)); // 'Mozilla'
 ```
