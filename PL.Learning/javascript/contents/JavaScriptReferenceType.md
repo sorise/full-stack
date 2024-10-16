@@ -776,7 +776,7 @@ console.log(String.fromCodePoint(9731, 9733, 9842, 0x2f804));
 // Expected output: "☃★♲你"
 ```
 * **参数**：num,一个介于 0 和 0x10FFFF（包括两者）之间的整数，表示一个 Unicode 码位。
-* * **返回值**: 通过使用指定的码位序列创建的字符串。
+* **返回值**: 通过使用指定的码位序列创建的字符串。
 
 [String.raw()](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/String/raw)   静态方法是模板字符串的标签函数。它的作用类似于 Python 中的 r 前缀或 `C#` 中用于字符串字面量的 @ 前缀。
 ```javascript
