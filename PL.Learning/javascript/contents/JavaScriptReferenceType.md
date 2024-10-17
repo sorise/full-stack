@@ -756,6 +756,9 @@ console.log(a2 === a3); // false
 #### [6.3 静态方法](#)
 直接通过类名可以调用的方法：
 
+|||
+String.fromCharCode(numN...)
+
 [String.fromCharCode(numN...)](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/String/fromCharCode) 返回由指定的 UTF-16 码元序列创建的字符串。
 ```javascript
 String.fromCharCode(num1)
@@ -791,7 +794,14 @@ console.log(`The file was uploaded from: ${filePath}`);
 #### [6.4 字符串截取](#)
 一共有三个方法，其中一个已经被废除。
 
-[String.prototype.slice()](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/String/slice) 方法提取字符串的一部分，并将其作为新字符串返回，而不修改原始字符串。
+| 方法                                          | 介绍                                               |
+|:--------------------------------------------|:-------------------------------------------------|
+|[String.prototype.slice()](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/String/slice) | 方法提取字符串的一部分，并将其作为新字符串返回，而不修改原始字符串。               |
+|[String.prototype.substr()](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/String/substr)|  **不再推荐使用该特性** 。                                 |
+|[String.prototype.substring()](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/String/substring) | 返回该字符串从起始索引到结束索引（不包括）的部分，如果未提供结束索引，则返回到字符串末尾的部分。 |
+
+
+[String.prototype.slice()](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/String/slice)方法提取字符串的一部分，并将其作为新字符串返回，而不修改原始字符串。
 ```javascript
 slice(indexStart)
 slice(indexStart, indexEnd)
@@ -856,3 +866,57 @@ console.log(anyString.substring(7, 4)); // 'lla'
 console.log(anyString.substring(0, 7)); // 'Mozilla'
 console.log(anyString.substring(0, 10)); // 'Mozilla'
 ```
+
+#### [6.5 实例方法](#)
+
+| 方法                                          | 介绍                                                                                      |
+|:--------------------------------------------|:----------------------------------------------------------------------------------------|
+|String.prototype.anchor()已弃用| 创建一个带有名称的 `<a>` 元素字符串                                                                   | 
+|String.prototype.at()| 方法接受一个整数值，并返回一个新的 String，该字符串由位于指定偏移量处的单个 UTF-16 码元组成。该方法允许正整数和负整数。负整数从字符串中的最后一个字符开始倒数。 |
+|String.prototype.big()已弃用||
+|String.prototype.blink()已弃用||
+|String.prototype.bold()已弃用||
+|String.prototype.charAt()||
+|String.prototype.charCodeAt()||
+|String.prototype.codePointAt()||
+|String.prototype.concat()||
+|String.prototype.endsWith()||
+|String.prototype.fixed()已弃用||
+|String.prototype.fontcolor()已弃用||
+|String.prototype.fontsize()已弃用||
+|String.prototype.includes()||
+|String.prototype.indexOf()||
+|String.prototype.isWellFormed()||
+|String.prototype.italics()已弃用||
+|String.prototype.lastIndexOf()||
+|String.prototype.link()已弃用||
+|String.prototype.localeCompare()||
+|String.prototype.match()||
+|String.prototype.matchAll()||
+|String.prototype.normalize()||
+|String.prototype.padEnd()||
+|String.prototype.padStart()||
+|String.prototype.repeat()||
+|String.prototype.replace()||
+|String.prototype.replaceAll()||
+|String.prototype.search()||
+|String.prototype.slice()||
+|String.prototype.small()已弃用||
+|String.prototype.split()||
+|String.prototype.startsWith()||
+|String.prototype.strike()已弃用||
+|String.prototype.sub()已弃用||
+|String.prototype.substr()已弃用|substr() 方法返回该字符串的一部分，从指定的索引开始，然后扩展到给定数量的字符。|
+|String.prototype.substring()|返回该字符串从起始索引到结束索引（不包括）的部分，如果未提供结束索引，则返回到字符串末尾的部分。|
+|String.prototype.sup()已弃用|String 值的 sup() 方法创建一个 <sup> 元素字符串|
+|String.prototype[Symbol.iterator]()|允许字符串与大多数期望传入可迭代对象的语法一起使用|
+|String.prototype.toLocaleLowerCase()|toLocaleLowerCase() 方法会根据特定区域设置的大小写映射规则，将字符串转换为小写形式并返回。|
+|String.prototype.toLocaleUpperCase()|toLocaleUpperCase() 方法会根据特定区域设置的大小写映射规则，将字符串转换为大写形式并返回。|                                                                                        |
+|String.prototype.toLowerCase()| 小写                                                                                      |
+|String.prototype.toString()| 字符串                                                                                     |
+|String.prototype.toUpperCase()| 大写                                                                                      |
+|String.prototype.toWellFormed()| 方法返回一个字符串，其中该字符串的所有单独代理项都被替换为 Unicode 替换字符 U+FFFD。                                      |
+|String.prototype.trim()| 从字符串的两端移除空白字符，并返回一个新的字符串                                                                |
+|String.prototype.trimEnd()| 方法会从字符串的结尾移除空白字符，并返回一个新的字符串，而不会修改原始字符串。                                                 |
+|String.prototype.trimStart()| 会从字符串的开头移除空白字符，并返回一个新的字符串，而不会修改原始字符串。                                                   |
+|String.prototype.valueOf() | 返回 String 对象的字符串值。                                                                      |
