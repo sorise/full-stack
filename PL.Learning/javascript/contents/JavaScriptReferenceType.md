@@ -7,7 +7,11 @@
 - [2. RegExp 正则表达式](#2-regexp-正则表达式)
 - [3. 原始值包装类型](#3-原始值包装类型)
 - [4. Boolean](#4-boolean)
-- [5. Number ](#5-number)
+- [5. Number](#5-number)
+- [6. String](#6-string)
+- [7. 单例内置对象](#7-单例内置对象)
+- [8. Global](#8-global)
+- [9. Math](#9-math)
 
 
 ----
@@ -15,7 +19,6 @@
 ### [1. Date 日期类型](#)
 ECMAScript 的 Date 类型参考了 Java 早期版本中的 **java.util.Date**。为此，Date 类型将日期
 保存为自协调世界时（UTC，Universal Time Coordinated）时间1970年1月1日午夜（零时）至今所经过的**毫秒数**。
-
 
 > 使用这种存储格式，Date 类型可以精确表示1970年1月1日之前及之后285616年的日期, [官方文档：MDN Web Docs - JavaScript Date](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Date) 。
 
@@ -867,51 +870,145 @@ console.log(anyString.substring(0, 7)); // 'Mozilla'
 console.log(anyString.substring(0, 10)); // 'Mozilla'
 ```
 
-#### [6.5 实例方法](#)
+#### [6.5 字符串迭代与解构](#)
+字符串的原型上暴露了一个@@iterator 方法，表示可以迭代字符串的每个字符。可以像下面这样
+手动使用迭代器：
+
+```javascript
+let message = "abc";
+let stringIterator = message[Symbol.iterator]();
+console.log(stringIterator.next()); // {value: "a", done: false}
+console.log(stringIterator.next()); // {value: "b", done: false}
+console.log(stringIterator.next()); // {value: "c", done: false}
+console.log(stringIterator.next()); // {value: undefined, done: true}
+```
+
+在 for-of 循环中可以通过这个迭代器按序访问每个字符：
+```javascript
+for (const c of "abcde") {
+    console.log(c);
+}
+```
+有了这个迭代器之后，字符串就可以通过解构操作符来解构了。比如，可以更方便地把字符串分割为字符数组：
+```javascript
+let message = "abcde";
+console.log([...message]); // ["a", "b", "c", "d", "e"]
+```
+
+#### [6.6 字符串模式匹配方法](#)
+String 类型专门为在字符串中实现模式匹配设计了几个方法。第一个就是 match()方法，这个方法本质上跟 RegExp 对象的 exec()方法相同。
+
+match()方法接收一个参数，可以是一个正则表达式字符串，也可以是一个 RegExp 对象。来看下面的例子：
+
+```javascript
+let text = "cat, bat, sat, fat"; 
+let pattern = /.at/; 
+
+// 等价于 pattern.exec(text) 
+let matches = text.match(pattern); 
+console.log(matches.index); // 0 
+console.log(matches[0]); // "cat" 
+console.log(pattern.lastIndex); // 0
+```
+> match()方法返回的数组与 RegExp 对象的 exec()方法返回的数组是一样的：
+
+另一个查找模式的字符串方法是 search()。这个方法唯一的参数与 match()方法一样：正则表达式字符串或 RegExp 对象。这个方法返回模式第一个匹配的位置索引，如果没找到则返回-1。
+**search()始终从字符串开头向后匹配模式**。
+
+```javascript
+let text = "cat, bat, sat, fat"; 
+let pos = text.search(/at/); 
+console.log(pos); // 1
+```
+为简化子字符串替换操作，ECMAScript 提供了 replace()方法。这个方法接收两个参数，第一个参数可以是一个 RegExp 对象或一个
+字符串（这个字符串不会转换为正则表达式），第二个参数可以是一个字符串或一个函数。
+
+如果第一个参数是字符串，那么只会替换第一个子字符串。要想替换所有子字符串，第一个参数必须为正则表达式并且带全局标记，如下面的例子所示：
+
+```javascript
+let text = "cat, bat, sat, fat";
+let result = text.replace("at", "ond");
+console.log(result); // "cond, bat, sat, fat"
+result = text.replace(/at/g, "ond");
+console.log(result); // "cond, bond, sond, fond"
+```
+第二个参数是字符串的情况下，有几个特殊的字符序列，可以用来插入正则表达式操作的值。ECMA-262 中规定了下表中的值。
+
+| 字符序列                                                                                         | 替换文本                                                                                         |
+|:---------------------------------------------------------------------------------------------|:---------------------------------------------------------------------------------------------|
+| `$$`                                                                                         | `$`                                                                                          |
+| `$&` | 匹配整个模式的子字符串。与 RegExp.lastMatch 相同                                                            |
+| `$'` | 匹配的子字符串之前的字符串。与 RegExp.rightContext 相同                                                       |
+| **$`**| 匹配的子字符串之后的字符串。与 RegExp.leftContext 相同                                                        |
+| `$n`| 匹配第 n 个捕获组的字符串，其中 n 是 0~9。比如，`$1` 是匹配第一个捕获组的字符串，`$2` 是匹配第二个捕获组的字符串，以此类推。如果没有捕获组，则值为空字符串       |
+| `$nn`| 匹配第 nn 个捕获组字符串，其中 nn 是 01~99。比如，`$01` 是匹配第一个捕获组的字符串，`$02` 是匹配第二个捕获组的字符串，以此类推。如果没有捕获组，则值为空字符串     |
+
+使用这些特殊的序列，可以在替换文本中使用之前匹配的内容，如下面的例子所示：
+```javascript
+let text = "cat, bat, sat, fat";
+result = text.replace(/(.at)/g, "word ($1)");
+console.log(result); // word (cat), word (bat), word (sat), word (fat)
+```
+这里，每个以"at"结尾的词都会被替换成"word"后跟一对小括号，其中包含捕获组匹配的内容$1。
+
+#### [6.7  HTML方法](#)
+早期的浏览器开发商认为使用 JavaScript 动态生成 HTML 标签是一个需求。因此，早期浏览器扩展了规范，增加
+了辅助生成 HTML 标签的方法。下表总结了这些 HTML 方法。不过，这些方法基本上已经没有人使用了，因为结果通常不是语义化的标记。
+
+
+|方 法 |输 出|
+|:---|:---|
+|anchor(name)| `<a name="name">string</a>`|
+|big() |`<big>string</big>`|
+|bold() |`<b>string</b>`|
+|fixed()| `<tt>string</tt>`|
+|fontcolor(color)| `<font color="color">string</font>`|
+|fontsize(size)| `<font size="size">string</font>`|
+|italics() |`<i>string</i>`|
+|link(url)| `<a href="url">string</a>`|
+|small()| `<small>string</small>`|
+|strike()| `<strike>string</strike>`|
+|sub() |`<sub>string</sub>`|
+|sup()| `<sup>string</sup>`|
+
+#### [6.8 实例方法](#)
+详情请查看 [String](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/String)。
 
 | 方法                                          | 介绍                                                                                      |
 |:--------------------------------------------|:----------------------------------------------------------------------------------------|
 |String.prototype.anchor()已弃用| 创建一个带有名称的 `<a>` 元素字符串                                                                   | 
 |String.prototype.at()| 方法接受一个整数值，并返回一个新的 String，该字符串由位于指定偏移量处的单个 UTF-16 码元组成。该方法允许正整数和负整数。负整数从字符串中的最后一个字符开始倒数。 |
-|String.prototype.big()已弃用||
-|String.prototype.blink()已弃用||
-|String.prototype.bold()已弃用||
-|String.prototype.charAt()||
-|String.prototype.charCodeAt()||
-|String.prototype.codePointAt()||
-|String.prototype.concat()||
-|String.prototype.endsWith()||
-|String.prototype.fixed()已弃用||
-|String.prototype.fontcolor()已弃用||
-|String.prototype.fontsize()已弃用||
-|String.prototype.includes()||
-|String.prototype.indexOf()||
-|String.prototype.isWellFormed()||
-|String.prototype.italics()已弃用||
-|String.prototype.lastIndexOf()||
-|String.prototype.link()已弃用||
-|String.prototype.localeCompare()||
-|String.prototype.match()||
-|String.prototype.matchAll()||
-|String.prototype.normalize()||
-|String.prototype.padEnd()||
-|String.prototype.padStart()||
-|String.prototype.repeat()||
-|String.prototype.replace()||
-|String.prototype.replaceAll()||
-|String.prototype.search()||
-|String.prototype.slice()||
-|String.prototype.small()已弃用||
-|String.prototype.split()||
-|String.prototype.startsWith()||
-|String.prototype.strike()已弃用||
-|String.prototype.sub()已弃用||
-|String.prototype.substr()已弃用|substr() 方法返回该字符串的一部分，从指定的索引开始，然后扩展到给定数量的字符。|
-|String.prototype.substring()|返回该字符串从起始索引到结束索引（不包括）的部分，如果未提供结束索引，则返回到字符串末尾的部分。|
-|String.prototype.sup()已弃用|String 值的 sup() 方法创建一个 <sup> 元素字符串|
-|String.prototype[Symbol.iterator]()|允许字符串与大多数期望传入可迭代对象的语法一起使用|
-|String.prototype.toLocaleLowerCase()|toLocaleLowerCase() 方法会根据特定区域设置的大小写映射规则，将字符串转换为小写形式并返回。|
-|String.prototype.toLocaleUpperCase()|toLocaleUpperCase() 方法会根据特定区域设置的大小写映射规则，将字符串转换为大写形式并返回。|                                                                                        |
+|String.prototype.charAt()| 返回一个由给定索引处的单个 UTF-16 码元构成的新字符串。                                                         |
+|String.prototype.charCodeAt()| charCodeAt() 方法返回一个整数，表示给定索引处的 UTF-16 码元，其值介于 0 和 65535 之间。                             |
+|String.prototype.codePointAt()| codePointAt() 方法返回一个非负整数，该整数是从给定索引开始的字符的 Unicode 码位值。                                   |
+|String.prototype.concat()| 方法将字符串参数连接到调用的字符串，并返回一个新的字符串。                                                           |
+|String.prototype.endsWith()| endsWith() 方法用于判断一个字符串是否以指定字符串结尾，如果是则返回 true，否则返回 false。                                |
+|String.prototype.includes()| includes() 方法执行区分大小写的搜索，以确定是否可以在一个字符串中找到另一个字符串，并根据情况返回 true 或 false。                    |
+|String.prototype.indexOf()| indexOf() 方法在字符串中搜索指定子字符串，并返回其第一次出现的位置索引。                                               |
+|String.prototype.isWellFormed()| 返回一个表示该字符串是否包含单独代理项的布尔值。                                                                |
+|String.prototype.lastIndexOf()| 搜索该字符串并返回指定子字符串最后一次出现的索引。                                                               |
+|String.prototype.localeCompare()| 返回一个数字，表示参考字符串在排序顺序中是在给定字符串之前、之后还是与之相同。                                                 |
+|String.prototype.match()| 检索字符串与正则表达式进行匹配的结果。                                                                     |
+|String.prototype.matchAll()| 返回一个迭代器，该迭代器包含了检索字符串与正则表达式进行匹配的所有结果。                                                    |
+|String.prototype.normalize()|  方法返回该字符串的 Unicode 标准化形式。   |
+|String.prototype.padEnd()| padEnd() 方法会将当前字符串从末尾开始填充给定的字符串|
+|String.prototype.padStart()|   padStart() 方法用另一个字符串填充当前字符串（如果需要会重复填充|
+|String.prototype.repeat()| repeat() 方法构造并返回一个新字符串，其中包含指定数量的所调用的字符串副本，这些副本连接在一起。                                    |
+|String.prototype.replace()| 返回一个新字符串，其中一个、多个或所有匹配的 pattern 被替换为 replacement。                                        |
+|String.prototype.replaceAll()| 方法返回一个新字符串，其中所有匹配 pattern 的部分都被替换为 replacement。                                         |
+|String.prototype.search()| 用于在 String 对象中执行正则表达式的搜索，寻找匹配项。                                                         |
+|String.prototype.slice()| 方法提取字符串的一部分，并将其作为新字符串返回，而不修改原始字符串。                                                      |
+|String.prototype.small()已弃用| 创建一个 `<small>` 元素字符串                                                                    |
+|String.prototype.split()| split() 方法接受一个模式，通过搜索模式将字符串分割成一个有序的子串列表，将这些子串放入一个数组，并返回该数组。                             |
+|String.prototype.startsWith()| startsWith() 方法用来判断当前字符串是否以另外一个给定的子字符串开头，并根据判断结果返回 true 或 false。                        |
+|String.prototype.strike()已弃用| strike() 方法创建一个 `<strike>` 元素字符串                                                        |
+|String.prototype.sub()已弃用| 值的 sub() 方法创建一个 `<sub>` 元素字符串                                                           |
+|String.prototype.substr()已弃用| substr() 方法返回该字符串的一部分，从指定的索引开始，然后扩展到给定数量的字符。                                            |
+|String.prototype.substring()| 返回该字符串从起始索引到结束索引（不包括）的部分，如果未提供结束索引，则返回到字符串末尾的部分。                                        |
+|String.prototype.sup()已弃用| String 值的 sup() 方法创建一个 `<sup>` 元素字符串                                                    |
+|String.prototype`[Symbol.iterator]()`| 允许字符串与大多数期望传入可迭代对象的语法一起使用                                                               |
+|String.prototype.toLocaleLowerCase()| toLocaleLowerCase() 方法会根据特定区域设置的大小写映射规则，将字符串转换为小写形式并返回。                                 |
+|String.prototype.toLocaleUpperCase()| toLocaleUpperCase() 方法会根据特定区域设置的大小写映射规则，将字符串转换为大写形式并返回。                                 |                                                                                        |
 |String.prototype.toLowerCase()| 小写                                                                                      |
 |String.prototype.toString()| 字符串                                                                                     |
 |String.prototype.toUpperCase()| 大写                                                                                      |
@@ -920,3 +1017,163 @@ console.log(anyString.substring(0, 10)); // 'Mozilla'
 |String.prototype.trimEnd()| 方法会从字符串的结尾移除空白字符，并返回一个新的字符串，而不会修改原始字符串。                                                 |
 |String.prototype.trimStart()| 会从字符串的开头移除空白字符，并返回一个新的字符串，而不会修改原始字符串。                                                   |
 |String.prototype.valueOf() | 返回 String 对象的字符串值。                                                                      |
+
+
+### [7. 单例内置对象](#)
+ECMA-262 对内置对象的定义是“任何由 ECMAScript 实现提供、与宿主环境无关，并在 ECMAScript 程序开始执行时就存在的对象”。这就意味着，开发者不用显式地实例化内置对象，因为它们已经实例
+化好了。前面我们已经接触了大部分内置对象，包括 Object、Array 和 String。
+
+ECMA-262 定义的另外两个单例内置对象：**Global** 和 **Math**。
+
+### [8. Global](#)
+Global 对象是 ECMAScript 中最特别的对象，因为代码不会显式地访问它。
+
+**ECMA-262 规定 Global 对象为一种兜底对象，它所针对的是不属于任何对象的属性和方法。事实上，不存在全局变量或全局函数这种东西。在全局作用域中定义的变量和函数都会变成 Global 对象的属性**。
+
+包括 isNaN()、isFinite()、parseInt()和 parseFloat()，实际上都是 Global 对象的方法。除了这些，Global 对象上还有另外一些方法。
+#### [8.1 URL 编码方法](#) 
+encodeURI()和 encodeURIComponent()方法用于编码统一资源标识符（URI），以便传给浏览器。
+
+```javascript
+let uri = "http://www.wrox.com/illegal value.js#start";
+// "http://www.wrox.com/illegal%20value.js#start"
+console.log(encodeURI(uri).toString());
+// "http%3A%2F%2Fwww.wrox.com%2Fillegal%20value.js%23start"
+console.log(encodeURIComponent(uri));
+```
+与 encodeURI()和 encodeURIComponent()相对的是 decodeURI()和 decodeURIComponent()。
+* decodeURI()只对使用 encodeURI()编码过的字符解码。
+* 类似地，decodeURIComponent()解码所有被 encodeURIComponent()编码的字符，基本上就是解码所有特殊值。
+
+```javascript
+let uri = "http%3A%2F%2Fwww.wrox.com%2Fillegal%20value.js%23start";
+// http%3A%2F%2Fwww.wrox.com%2Fillegal value.js%23start
+console.log(decodeURI(uri));
+// http:// www.wrox.com/illegal value.js#start
+console.log(decodeURIComponent(uri)); 
+```
+
+#### [8.2 eval](#)
+最后一个方法可能是整个 ECMAScript 语言中最强大的了，它就是 eval()。这个方法就是一个完
+整的 **ECMAScript 解释器**，它接收一个参数，即一个要执行的 ECMAScript（JavaScript）字符串。
+
+```javascript
+eval("console.log('hi')");
+//上面这行代码的功能与下一行等价：
+console.log("hi"); 
+```
+可以在 eval()内部定义一个函数或变量，然后在外部代码中引用
+```javascript
+eval("function sayHi() { console.log('hi'); }");
+sayHi(); 
+```
+在严格模式下，在 eval()内部创建的变量和函数无法被外部访问。换句话说，最后两个例子会报错。同样，在严格模式下，赋值给 eval 也会导致错误：
+```javascript
+"use strict";
+
+eval("function sayHi() { console.log('hi'); }");
+sayHi(); //ReferenceError: sayHi is not defined
+```
+#### [8.3 Global 对象属性](#)
+Global 对象有很多属性，其中一些前面已经提到过了。
+* 像 undefined、NaN 和 Infinity 等特殊值都是 Global 对象的属性。
+* 所有原生引用类型构造函数，比如 Object 和 Function，也都是Global 对象的属性。
+
+|属 性|  说 明 |
+|:---|:-----|
+|undefined| 特殊值 undefined|
+|NaN |特殊值 NaN|
+|Infinity| 特殊值 Infinity|
+|Object |Object 的构造函数|
+|Array |Array 的构造函数|
+|Function |Function 的构造函数|
+|Boolean |Boolean 的构造函数|
+|String |String 的构造函数|
+|Number| Number 的构造函数|
+|Date |Date 的构造函数|
+|RegExp |RegExp 的构造函数|
+|Symbol| Symbol 的伪构造函数|
+|Error |Error 的构造函数|
+|EvalError |EvalError 的构造函数|
+|RangeError |RangeError 的构造函数|
+|ReferenceError| ReferenceError 的构造函数|
+|SyntaxError| SyntaxError 的构造函数|
+|TypeError |TypeError 的构造函数|
+|URIError |URIError 的构造函数|
+
+#### [8.4 window 对象](#)
+虽然 ECMA-262 没有规定直接访问 Global 对象的方式，但浏览器将 window 对象实现为 Global对象的代理。
+
+> 因此，所有全局作用域中声明的变量和函数都变成了 window 的属性。
+
+```javascript
+var color = "red";
+function sayColor() {
+ console.log(window.color);
+}
+window.sayColor(); // "red"
+```
+
+另一种获取 Global 对象的方式是使用如下的代码：
+```javascript
+let global = function() {
+    return this;
+}(); 
+```
+这段代码创建一个立即调用的函数表达式，返回了 this 的值。
+
+**当一个函数在没有明确（通过成为某个对象的方法，或者通过 call()/apply()）指定this值的情况下执行时，this值等于Global对象**。
+
+因此，调用一个简单返回 this 的函数是在任何执行上下文中获取 Global 对象的通用方式。
+
+### [9. Math](#)
+ECMAScript 提供了 Math 对象作为保存数学公式、信息和计算的地方。Math 对象提供了一些辅助计算的属性和方法。
+
+> Math 对象上提供的计算要比直接在 JavaScript 实现的快得多，因为 Math 对象上的
+> 计算使用了 JavaScript 引擎中更高效的实现和处理器指令。但使用 Math 计算的问题是精
+> 度会因浏览器、操作系统、指令集和硬件而异
+
+#### [9.1 Math 对象属性](#)
+Math 对象有一些属性，主要用于保存数学中的一些特殊值。
+
+| 属 性            | 说 明           |
+|:---------------|:----------------|
+| Math.E         | 自然对数的基数 e 的值 |
+| Math.LN10      | 10 为底的自然对数      |
+| Math.LN2       | 2 为底的自然对数       |
+| Math.LOG2E     | 以 2 为底 e 的对数    |
+| Math.LOG10E    | 以 10 为底 e 的对数   |
+| Math.PI        | π 的值            |
+| Math.SQRT1_2   | 1/2 的平方根        |
+| Math.SQRT2     | 2 的平方根          |
+
+#### [9.2 常用方法](#)
+Math 对象还有很多涉及各种简单或高阶数运算的方法,请查看[MDN Math](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Math) 文档。
+
+| 方 法                      | 说 明           |
+|:-------------------------|:----------------|
+| Math.abs(x)              |返回一个数的绝对值。 |
+| Math.ceil(x)             | 静态方法总是向上舍入，并返回大于等于给定数字的最小整数。 |
+| Math.floor(x)            | 静态方法返回小于等于一个给定数字的最大整数。 |
+| Math.pow(base, exponent) | 返回基数（base）的指数（exponent）次幂，即 base^exponent。 |
+| Math.round(x)            | 返回给定数字的值四舍五入到最接近的整数。 |
+| Math.sqrt(x)             | 函数返回一个数的平方根。 |
+| Math.random(x)      | Math.random() 静态方法返回一个大于等于 0 且小于 1 的伪随机浮点数，并在该范围内近似均匀分布，然后你可以缩放到所需的范围。 |
+
+#### [9.3 min()和 max()方法](#)
+Math 对象也提供了很多辅助执行简单或复杂数学计算的方法。 min()和 max()方法用于确定一组数值中的最小值和最大值。这两个方法都接收任意多个参数，如
+
+下面的例子所示：
+```javascript
+let max = Math.max(3, 54, 32, 16);
+console.log(max); // 54
+let min = Math.min(3, 54, 32, 16);
+console.log(min); // 3
+```
+在 3、54、32 和 16 中，Math.max()返回 54，Math.min()返回 3。使用这两个方法可以避免使用额外的循环和 if 语句来确定一组数值的最大最小值。
+
+要知道数组中的最大值和最小值，可以像下面这样使用扩展操作符：
+```javascript
+let values = [1, 2, 3, 4, 5, 6, 7, 8];
+let max = Math.max(...val); 
+```
