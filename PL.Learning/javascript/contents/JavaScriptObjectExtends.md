@@ -1,10 +1,12 @@
 ### [Javascript 继承 旧版本](#)
+> **介绍**：继承是面向对象编程中讨论最多的话题。很多面向对象语言都支持两种继承：接口继承和实现继承。
+前者只继承方法签名，后者继承实际的方法。
 
 -----
 - [1. 原型链继承](#1-原型链继承)
 - [2. 借用构造函数继承](#2-借用构造函数继承)
 - [3. 组合继承](#3-组合继承)
-- [4. 原型继承](#4-组合继承)
+- [4. 原型继承](#4-原型继承)
 - [5. 寄生式继承](#5-寄生式继承)
 - [6. 寄生组合式继承](#6-寄生组合式继承)
 - [7. 自悟的完美继承方式](#7-自悟的完美继承方式)
@@ -15,14 +17,23 @@
 首先我们要回忆一下，使用构造函数创建对象所JS所做的五个操作
 
 1. 在内存中创建一个对象
-2. 这个对象内部的 `[[Prototype]]`特性被赋值为构造函数的ptototype属性
+2. 这个对象内部的 `[[Prototype]]`特性被赋值为构造函数的 ptototype 属性
 3. 构造函数中 this  指向新对象
 4. 执行构造函数内部代码，给新对象添加属性
 5. 如果构造函数返回非空对象，那么返回该对象，否则返回刚创建的新对象
 
-还要记住凡是对象都具有 `__proto__` 属性指向自己的原型。
+#### [1.1 原型链](#)
+[**原型链**](https://mdn.org.cn/en-US/docs/Web/JavaScript/Inheritance_and_the_prototype_chain): **构造函数、原型和实例的关系**。
+* 记住凡是对象都具有 `__proto__` 属性指向自己的原型。
+* 每个构造函数都有一个`prototype`指向一个原型对象，原型有一个属性 `constructor` 指回构造函数，而实例有一个内部指针 `__proto__` 指向原型。
+* 而原型本身又是一个对象，他也有自己的 `__proto__` 属性。这个原型本身有一个内部指针指向另一个原型，相应地另一个原型也有一个指针指向另一个构造函
+  数。
 ```
-  构造函数 [属性 prototype]  ---------------->  原型对象 [属性 constructor] [属性 __proto__] 
+                                                另一个原型对象 [属性 constructor]、[属性 __proto__] 
+                                                      ↑
+                --------------------------------------|                  
+                |
+  构造函数 [属性 prototype]  ---------------->  原型对象 [属性 constructor]、[属性 __proto__] 
         ↑                                           ↑    |   
         |                                           |    |   
         --------------------------------------------|-----   
@@ -34,28 +45,35 @@
 实例.__proto__ === 构造函数.prototype 
 ```
 
-#### 1.1 所以一个类型有几样东西呢
-1. 构造函数 `[函数也是一个对象 ] prototype` 指向原型
-2. 原型  `[也是一个对象] constructor` 指向 构造函数  `__proto__` 指向上层原型
-3. 实例  `[也是一个对象] __proto__` 指向原型
-
-#### 1.2 一个经典的原型链继承
+#### [1.2 一个经典的原型链继承](#)
 
 ```javascript
+"use strict";
+
 function Parent(name = 'null', age = 0){
-    this.name = name;
-    this.age = age;
+  this.name = name;
+  this.age = age;
+}
+
+Parent.prototype.sayHello = function(_name){
+  console.log(`hello,${_name} ,my name is ${this.name}`);
 }
 
 function Child(id){
-    this.id = id;
+  this.id = id;
 }
+
+Child.prototype.showID = function(){
+  console.log(`showID,${this.id}`);
+}
+
 Child.prototype = new Parent('jxkicker', 25);
 
 let student = new Child('2016110418');
 
 console.log(student);
 console.log(student instanceof Parent); //true
+console.log(student instanceof Child); //true
 console.log(student.constructor); //Parent
 ```
 值得注意的点：constructor 属性的问题，由于Child构造函数的原型上面没有定义 constructor 属性, constructor 在 Child的原型的原型上面 也就是 Parent。
@@ -92,15 +110,14 @@ console.log(student.constructor); //Parent
 ```
 
 #### 1.3 原型链的问题
-1. **原型的属性在所有实例间共享**
-2. **子类在实例化时不能给父类的构造函数传递参数**
-
+1. **原型的属性在所有实例间共享**, 继承的不是类型而是实例。
+2. **子类在实例化时不能给父类的构造函数传递参数**。
 
 ### [2. 借用构造函数继承](#)
-利用call(this, 参数)绑定this实现的, 你了解一下就行了 为啥呢 这种构造函数仍然不完美 
+利用 `call(this, 参数)` 绑定this实现的, 你了解一下就行了,为啥呢 这种构造函数仍然不完美 
 1. 使用借用构造函数无法 实现 子类是属于父类的判断 子类 instanceof 父类 会返回 false
 2. 因为没有完成函数的复用
-3. 可以向父构造器传递参数 `[唯一作用]`
+3. 可以向父构造器传递参数,`唯一作用` 。
 
 ```javascript
 function Parent(color = "white",typeName ="卵生物种"){
@@ -245,7 +262,9 @@ var obj = createAnthor(person);
 ### [6. 寄生组合式继承](#)
 组合继承,非常不错 很常用，**但是也有一些缺点多次调用构造函**, 但是这也是最实用的继承方法了。
 
-1. 多次调用构造函数 会两次调用父类的构造函数 1.子类构造函数内部 2.超类型构造函数
+1. 多次调用构造函数 会两次调用父类的构造函数 
+   * 子类构造函数内部
+   * 超类型构造函数
 2. 属性重复
 
 寄生组合式继承:很好减少了很多的东西 通过改变引用关系 完美的实现了继承 它是最应该掌握的继承方式。
