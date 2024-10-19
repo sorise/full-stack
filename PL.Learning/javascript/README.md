@@ -14,4 +14,4 @@ JavaScript/ECMAScript（JS）是一种具有函数优先特性的轻量级、解
 - [JavaScript 操作符与语句](./contents/JavaScriptOpAndControl.md) 操作符、运算符、流程控制
 - [JavaScript 终极父类 Object](./contents/JavaScriptObject.md) Object 是终极父类
 - [JavaScript 变量 作用域 内存](./contents/JavaScriptVariableAndScopeAndMemeory.md) delete 操作符、执行环境和作用域、垃圾回收机制、内存管理。
-- [JavaScript 基本引用蕾西](./contents/JavaScriptReferenceType.md) 
+- [JavaScript 基本引用类型](./contents/JavaScriptReferenceType.md) Date、RegExp、Number、String、Global、Math。
