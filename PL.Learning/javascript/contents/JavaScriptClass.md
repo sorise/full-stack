@@ -561,7 +561,7 @@ class Bus extends Vehicle {
 Bus.identify(); // vehicle 
 ```
 
-#### [2.1 在使用 super 时要注意几个问题
+#### [2.1 在使用 super 时要注意几个问题](#)
 * super 只能在派生类构造函数和静态方法中使用。     
 * 不能单独引用 super 关键字，要么用它调用构造函数，要么用它引用静态方法。
 * 调用 super()会调用父类构造函数，并将返回的实例赋值给 this。
