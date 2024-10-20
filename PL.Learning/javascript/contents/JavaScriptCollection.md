@@ -390,10 +390,129 @@ alert(values); // 0,1,5,10,15
 
 <img src="./static/dddddImg.png" width="500px" />
 
+#### [1.13 常用操作](#)
+**concat**方法可以在现有数组全部元素基础上创建一个新数组。
+```javascript
+const array1 = ['a', 'b', 'c'];
+const array2 = ['d', 'e', 'f'];
+const array3 = array1.concat(array2);
+
+console.log(array3);
+// Expected output: Array ["a", "b", "c", "d", "e", "f"]
+```
+
+[**slice()**](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Array/slice) 用于创建一个包含原有数组中一个或多个元素的新数组。
+```javascript
+slice()
+slice(start)
+slice(start, end)
+```
+**例子**
+```javascript
+const animals = ['ant', 'bison', 'camel', 'duck', 'elephant'];
+
+console.log(animals.slice(2));
+// Expected output: Array ["camel", "duck", "elephant"]
+
+console.log(animals.slice(2, 4));
+// Expected output: Array ["camel", "duck"]
+```
+
+#### [1.13 splice](#)
+splice()的主要目的是在数组中间插入元素，但有 3 种不同的方式使用这个方法 **违反了单一职责原则**。
+
+```javascript
+splice(start)
+splice(start, deleteCount)
+splice(start, deleteCount, item1)
+splice(start, deleteCount, item1, item2)
+splice(start, deleteCount, item1, item2, /* …, */ itemN)
+```
+
+splice()方法始终返回这样一个数组，它包含从数组中被删除的元素（如果没有删除元素，则返
+回空数组）。以下示例展示了上述 3 种使用方式。
+
+**删除**。需要给 splice()传 2 个参数：要删除的第一个元素的位置和要删除的元素数量。可以从
+数组中删除任意多个元素，比如 splice(0, 2)会删除前两个元素。
+
+**插入**。需要给 splice()传 3 个参数：开始位置、0（要删除的元素数量）和要插入的元素，可
+以在数组中指定的位置插入元素。 第三个参数之后还可以传第四个、第五个参数，乃至任意多个要插入的元素。
+比如，splice(2, 0, "red", "green")会从数组位置 2 开始插入字符串"red"和"green"。
+
+**替换**。splice()在删除元素的同时可以在指定位置插入新元素，同样要传入 3 个参数：开始位
+置、要删除元素的数量和要插入的任意多个元素。要插入的元素数量不一定跟删除的元素数量
+一致。比如，splice(2, 1, "red", "green")会在位置 2 删除一个元素，然后从该位置开始
+向数组中插入"red"和"green"。
+
+#### [1.14 搜索和位置方法](#)
+ECMAScript 提供两类搜索数组的方法：按严格相等搜索和按断言函数搜索。
+
+**严格相等** ECMAScript 提供了 3 个严格相等的搜索方法：indexOf()、lastIndexOf()和 includes()。其
+中，前两个方法在所有版本中都可用，而第三个方法是 ECMAScript 7 新增的。
+
+```javascript
+let numbers = [1, 2, 3, 4, 5, 4, 3, 2, 1];
+alert(numbers.indexOf(4)); // 3
+alert(numbers.lastIndexOf(4)); // 5
+alert(numbers.includes(4)); // true
+alert(numbers.indexOf(4, 4)); // 5
+alert(numbers.lastIndexOf(4, 4)); // 3
+alert(numbers.includes(4, 7)); // false
+
+let person = { name: "Nicholas" };
+let people = [{ name: "Nicholas" }];
+let morePeople = [person];
+
+alert(people.indexOf(person)); // -1
+alert(morePeople.indexOf(person)); // 0
+alert(people.includes(person)); // false
+alert(morePeople.includes(person)); // true 
+```
+
+**断言函数** ECMAScript 也允许按照定义的断言函数搜索数组，每个索引都会调用这个函数。断言函数的返回
+值决定了相应索引的元素是否被认为匹配。
+
+find()和 findIndex()方法使用了断言函数。这两个方法都从数组的最小索引开始。find()返回
+第一个匹配的元素，findIndex()返回第一个匹配元素的索引。这两个方法也都接收第二个可选的参数，
+用于指定断言函数内部 this 的值。
+
+```javascript
+const people = [
+ {
+ name: "Matt",
+ age: 27
+ },
+ {
+ name: "Nicholas",
+ age: 29
+ }
+];
+alert(people.find((element, index, array) => element.age < 28));
+// {name: "Matt", age: 27}
+alert(people.findIndex((element, index, array) => element.age < 28));
+// 0 
+```
+找到匹配项后，这两个方法都不再继续搜索。
+```javascript
+const evens = [2, 4, 6];
+// 找到匹配后，永远不会检查数组的最后一个元素
+evens.find((element, index, array) => {
+console.log(element);
+console.log(index);
+console.log(array);
+return element === 4;
+});
+// 2
+// 0
+// [2, 4, 6]
+// 4
+// 1
+// [2, 4, 6]
+```
 
 
 
-#### [1.1x 操作方法](#)
+#### [1.1x 操作方法列表](#)
 数组操作的基本方法：
 
 | 方法        | 描述                                                                                   |
@@ -430,14 +549,5 @@ alert(values); // 0,1,5,10,15
 | valueOf()   | 返回数组的原始值。                                                                       |
 | at()        | 2021.1新提案，解决方括号的限制，可以输入负数。                                           |
 
-**concat**方法可以在现有数组全部元素基础上创建一个新数组。
-```javascript
-const array1 = ['a', 'b', 'c'];
-const array2 = ['d', 'e', 'f'];
-const array3 = array1.concat(array2);
-
-console.log(array3);
-// Expected output: Array ["a", "b", "c", "d", "e", "f"]
-```
 
 
