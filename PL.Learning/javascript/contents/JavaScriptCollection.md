@@ -3,11 +3,12 @@
 
 -----
 - [1. Array](#1-array)
+- [1. 定型数组](#1-定型数组)
 
 
 -----
 ### [1. Array](#)
-Array 应该就是 ECMAScript 中最常用的类型了,数组是最基本的集合类型之一，它可以存储任意类型的值。数组元素可以通过索引访问，索引是从 0 开始的整数。
+[Array](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Array) 应该就是 ECMAScript 中最常用的类型了,数组是最基本的集合类型之一，它可以存储任意类型的值。数组元素可以通过索引访问，索引是从 0 开始的整数。
 
 > ECMAScript 数组也是一组有序的数据，但跟其他语言不同的是，数组中每个槽位可以存储任意类型的数据。
 
@@ -510,9 +511,55 @@ return element === 4;
 // [2, 4, 6]
 ```
 
+#### [1.15 迭代方法](#)
+ECMAScript 为数组定义了 5 个迭代方法。每个方法接收两个参数：以每一项为参数运行的函数，
+以及可选的作为函数运行上下文的作用域对象（影响函数中 this 的值）。传给每个方法的函数接收 3
+个参数：数组元素、元素索引和数组本身。
+
+* every(callbackFn, thisArg)：对数组每一项都运行传入的函数，如果对每一项函数都返回 true，则这个方法返回 true。
+* filter(callbackFn, thisArg)：对数组每一项都运行传入的函数，函数返回 true 的项会组成数组之后返回。
+* forEach(callbackFn, thisArg)：对数组每一项都运行传入的函数，没有返回值。
+* map(callbackFn, thisArg)：对数组每一项都运行传入的函数，返回由每次函数调用的结果构成的数组。
+* some(callbackFn, thisArg)：对数组每一项都运行传入的函数，如果有一项函数返回 true，则这个方法返回 true。
 
 
-#### [1.1x 操作方法列表](#)
+**callbackFn(element, index, array) -> bool**;
+  * element 数组中当前正在处理的元素。
+  * index 正在处理的元素在数组中的索引。
+  * array 调用了 every() 的数组本身。
+
+```javascript
+const many = [11.2,20,30,42,52];
+
+let new_many = many.filter((element, idx ,array)=>{
+  return element > 25;
+});
+
+console.log(new_many); //[ 30, 42, 52 ]
+
+function isBiggerThan10(element, index, array) {
+  return element > 10;
+}
+
+let r = [20, 50, 80, 11, 40].every(isBiggerThan10); // true
+console.log(r);
+let m = [12, 5, 8, 1, 4].some(isBiggerThan10); // true
+console.log(m);
+```
+
+#### [1.16 归并方法](#)
+ECMAScript 为数组提供了两个归并方法：**reduce**()和 **reduceRight**()。这两个方法都会迭代数
+组的所有项，并在此基础上构建一个最终返回值。reduce()方法从数组第一项开始遍历到最后一项。而reduceRight()从最后一项开始遍历至第一项。
+
+reduce()和 reduceRight()的函数接收 4 个参数：**上一个归并值**、**当前项**、**当前项的索引**和数组本身。
+
+```javascript
+let values = [1, 2, 3, 4, 5];
+let sum = values.reduce((prev, cur, index, array) => prev + cur);
+alert(sum); // 15 
+```
+
+#### [1.17 操作方法列表](#)
 数组操作的基本方法：
 
 | 方法        | 描述                                                                                   |
@@ -551,3 +598,286 @@ return element === 4;
 
 
 
+### [2. 定型数组简介](#)
+定型数组（typed array）是 ECMAScript 新增的结构，目的是提升向原生库传输数据的效率。
+实际上，JavaScript 并没有“TypedArray”类型，它所指的其实是一种特殊的包含数值类型的数组。
+
+在 JavaScript 中，“定型数组”（Typed Arrays）是指一组内置的数组类型，它们用于表示二进制数据。与普通的
+JavaScript 数组不同，定型数组专为处理二进制数据而设计，并且可以更高效地访问和操作这些数据。定型数组允许直接访问和操作内存中的原始字节，这在处理大量的数值数据或直接与底层数据交互时非常有用。
+
+### [3. ArrayBuffer](#)
+[ArrayBuffer](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/ArrayBuffer) 对象用来表示通用的原始二进制数据缓冲区。
+
+```javascript
+const buf = new ArrayBuffer(16); // 在内存中分配 16 字节
+console.log(buf.byteLength); // 16
+```
+ArrayBuffer 一经创建就不能再调整大小。不过，可以使用 slice()复制其全部或部分到一个新
+实例中：
+```javascript
+const buf1 = new ArrayBuffer(16);
+const buf2 = buf1.slice(4, 12);
+alert(buf2.byteLength); // 8 
+```
+**ArrayBuffer 分配的堆内存可以被当成垃圾回收，不用手动释放**。
+
+不能仅通过对 ArrayBuffer 的引用就读取或写入其内容。要读取或写入 ArrayBuffer，就必须
+通过视图。视图有不同的类型，但引用的都是 ArrayBuffer 中存储的二进制数据。
+
+### [4. DataView](#)
+第一种允许你读写 ArrayBuffer 的视图是 DataView。这个视图专为文件 I/O 和网络 I/O 设计，其
+API 支持对缓冲数据的高度控制，但相比于其他类型的视图性能也差一些。DataView 对缓冲内容没有
+任何预设，也不能迭代。
+
+必须在对已有的 ArrayBuffer 读取或写入时才能创建 DataView 实例。这个实例可以使用全部或
+部分 ArrayBuffer，且维护着对该缓冲实例的引用，以及视图在缓冲中开始的位置。
+
+```javascript
+const buf = new ArrayBuffer(16);
+
+// DataView 默认使用整个 ArrayBuffer
+const fullDataView = new DataView(buf);
+alert(fullDataView.byteOffset); // 0
+alert(fullDataView.byteLength); // 16
+alert(fullDataView.buffer === buf); // true
+
+// 构造函数接收一个可选的字节偏移量和字节长度
+// byteOffset=0 表示视图从缓冲起点开始
+// byteLength=8 限制视图为前 8 个字节
+const firstHalfDataView = new DataView(buf, 0, 8);
+alert(firstHalfDataView.byteOffset); // 0
+alert(firstHalfDataView.byteLength); // 8
+alert(firstHalfDataView.buffer === buf); // true 
+```
+
+#### [4.1 实例属性](#)
+
+* DataView.prototype`[Symbol.toStringTag]` `[Symbol.toStringTag]` 属性的初始值为字符串 "DataView"。该属性用于 Object.prototype.toString()。
+* DataView.prototype.buffer  ArrayBuffer 是引用该缓冲区的视图。在构造时会被固定，因此该属性只读。
+* DataView.prototype.byteLength  视图的长度（以字节为单位）。在构造时会被固定，因此该属性只读。
+* DataView.prototype.byteOffset 至 ArrayBuffer 的视图开始位置的字节偏移量。在构造时会被固定，因此该属性只读。
+
+#### [4.2 实例方法](#)
+DataView 对存储在缓冲内的数据类型没有预设。它暴露的 API 强制开发者在读、写时指定一个
+ElementType，然后 DataView 就会忠实地为读、写而完成相应的转换。
+
+* DataView.prototype.getInt8() 从视图开始的指定字节偏移处获取一个带符号 8 位整数（byte）。
+* DataView.prototype.getUint8() 从视图开始的指定字节偏移处获取一个无符号 8 位整数（unsigned byte）。
+* DataView.prototype.getInt16() 从视图开始的指定字节偏移处获取一个带符号 16 位整数（short）。
+* DataView.prototype.getUint16() 从视图开始的指定字节偏移处获取一个无符号 16 位整数（unsigned short）。
+* DataView.prototype.getInt32() 从视图开始的指定字节偏移处获取一个带符号 32 位整数（long）。
+* DataView.prototype.getUint32() 从视图开始的指定字节偏移处获取一个无符号 32 位整数（unsigned long）。
+* DataView.prototype.getFloat32() 从视图开始的指定字节偏移处获取一个带符号 32 位浮点数（float）。
+* DataView.prototype.getFloat64() 从视图开始的指定字节偏移处获取一个带符号 64 位浮点数（double）。
+* DataView.prototype.getBigInt64() 从视图开始的指定字节偏移处获取一个带符号 64 位整数（long long）。
+* DataView.prototype.getBigUint64() 从视图开始的指定字节偏移处获取一个无符号 64 位整数（unsigned long long）。
+* DataView.prototype.setInt8() 在视图开始的指定字节偏移处存储一个带符号 8 位整数（byte）。
+* DataView.prototype.setUint8() 在视图开始的指定字节偏移处存储一个无符号 8 位整数（unsigned byte）。
+* DataView.prototype.setInt16() 在视图开始的指定字节偏移处存储一个带符号 16 位整数（short）。
+* DataView.prototype.setUint16() 在视图开始的指定字节偏移处存储一个无符号 16 位整数（unsigned short）。
+* DataView.prototype.setInt32() 在视图开始的指定字节偏移处存储一个带符号 32 位整数（long）。
+* DataView.prototype.setUint32() 在视图开始的指定字节偏移处存储一个无符号 32 位整数（unsigned long）。
+* DataView.prototype.setFloat32() 在视图开始的指定字节偏移处存储一个带符号 32 位浮点数（float）。
+* DataView.prototype.setFloat64() 在视图开始的指定字节偏移处存储一个带符号 64 位浮点数（double）。
+* DataView.prototype.setBigInt64() 在视图开始的指定字节偏移处存储一个带符号 64 位 BigInt（long long）。
+* DataView.prototype.setBigUint64() 在视图开始的指定字节偏移处存储一个无符号 64 位 BigInt（unsigned long long）。
+
+```javascript
+// 在内存中分配两个字节并声明一个 DataView
+const buf = new ArrayBuffer(2);
+const view = new DataView(buf);
+// 说明整个缓冲确实所有二进制位都是 0
+// 检查第一个和第二个字符
+alert(view.getInt8(0)); // 0
+alert(view.getInt8(1)); // 0
+// 检查整个缓冲
+alert(view.getInt16(0)); // 0
+// 将整个缓冲都设置为 1
+// 255 的二进制表示是 11111111（2^8 - 1）
+view.setUint8(0, 255);
+// DataView 会自动将数据转换为特定的 ElementType
+// 255 的十六进制表示是 0xFF
+view.setUint8(1, 0xFF);
+// 现在，缓冲里都是 1 了
+// 如果把它当成二补数的有符号整数，则应该是-1
+alert(view.getInt16(0)); // -1 
+```
+
+#### [4.3 字节序](#)
+DataView 只支持两种约定：大端字节序和小端字节序。大端字节序也称为“网络字节序”，意思
+是最高有效位保存在第一个字节，而最低有效位保存在最后一个字节。小端字节序正好相反，即最低有
+效位保存在第一个字节，最高有效位保存在最后一个字节。
+
+**DataView 的所有 API 方法都以大端字节序作为默认值，但接收一个可选的布尔值参数，设置为 true 即可启用小端字节序**。
+
+```javascript
+// 在内存中分配两个字节并声明一个 DataView
+const buf = new ArrayBuffer(2);
+const view = new DataView(buf);
+// 填充缓冲，让第一位和最后一位都是 1
+view.setUint8(0, 0x80); // 设置最左边的位等于 1
+view.setUint8(1, 0x01); // 设置最右边的位等于 1
+// 缓冲内容（为方便阅读，人为加了空格）
+// 0x8 0x0 0x0 0x1
+// 1000 0000 0000 0001
+// 按大端字节序读取 Uint16
+// 0x80 是高字节，0x01 是低字节
+// 0x8001 = 2^15 + 2^0 = 32768 + 1 = 32769
+alert(view.getUint16(0)); // 32769
+// 按小端字节序读取 Uint16
+// 0x01 是高字节，0x80 是低字节
+// 0x0180 = 2^8 + 2^7 = 256 + 128 = 384
+alert(view.getUint16(0, true)); // 384
+// 按大端字节序写入 Uint16
+view.setUint16(0, 0x0004);
+// 缓冲内容（为方便阅读，人为加了空格）
+// 0x0 0x0 0x0 0x4
+// 0000 0000 0000 0100
+alert(view.getUint8(0)); // 0
+alert(view.getUint8(1)); // 4
+// 按小端字节序写入 Uint16
+view.setUint16(0, 0x0002, true);
+// 缓冲内容（为方便阅读，人为加了空格）
+// 0x0 0x2 0x0 0x0
+// 0000 0010 0000 0000
+alert(view.getUint8(0)); // 2
+alert(view.getUint8(1)); // 0 
+```
+DataView 完成读、写操作的前提是必须有充足的缓冲区，否则就会抛出 RangeError：
+
+### [5. 定型数组](#)
+定型数组是另一种形式的 ArrayBuffer 视图。虽然概念上与 DataView 接近，但定型数组的区别
+在于，它特定于一种类型且遵循系统原生的字节序。
+
+```javascript
+// 创建一个 12 字节的缓冲
+const buf = new ArrayBuffer(12);
+// 创建一个引用该缓冲的 Int32Array
+const ints = new Int32Array(buf);
+// 这个定型数组知道自己的每个元素需要 4 字节
+// 因此长度为 3
+alert(ints.length); // 3 
+```
+
+**以下是一些常用的定型数组类型**：
+* Int8Array：8位有符号整数。
+* Uint8Array：8位无符号整数。
+* Uint8ClampedArray：与 Uint8Array 类似，但是写入的值如果超出范围会被夹紧到 0 到 255 之间。
+* Int16Array：16位有符号整数。
+* Uint16Array：16位无符号整数。
+* Int32Array：32位有符号整数。
+* Uint32Array：32位无符号整数。
+* Float32Array：32位浮点数。
+* Float64Array：64位浮点数。
+
+定型数组通过一个 ArrayBuffer 对象来存储其元素，这意味着它们可以共享同一段内存区域。这使得定型数组非常适合用于需要高性能的数据交换场景，例如 WebGL 图形编程或者音频处理。
+
+```javascript
+let array = new Int8Array([1, 2, 3]);
+
+let buffer = new ArrayBuffer(8);
+
+let intView = new Int32Array(buffer);
+let uintView = new Uint8Array(buffer);
+```
+
+#### [5.1 创建定型数组](#)
+创建定型数组的方式包括读取已有的缓冲、使用自有缓冲、填充可迭代结构，以及填充基于任意类
+型的定型数组。另外，通过<ElementType>.from()和<ElementType>.of()也可以创建定型数组：
+
+```javascript
+// 创建一个 12 字节的缓冲
+const buf = new ArrayBuffer(12);
+// 创建一个引用该缓冲的 Int32Array
+const ints = new Int32Array(buf);
+// 这个定型数组知道自己的每个元素需要 4 字节
+// 因此长度为 3
+alert(ints.length); // 3 
+// 创建一个长度为 6 的 Int32Array
+const ints2 = new Int32Array(6);
+// 每个数值使用 4 字节，因此 ArrayBuffer 是 24 字节
+alert(ints2.length); // 6
+// 类似 DataView，定型数组也有一个指向关联缓冲的引用
+alert(ints2.buffer.byteLength); // 24
+// 创建一个包含[2, 4, 6, 8]的 Int32Array
+const ints3 = new Int32Array([2, 4, 6, 8]);
+alert(ints3.length); // 4
+alert(ints3.buffer.byteLength); // 16
+alert(ints3[2]); // 6
+// 通过复制 ints3 的值创建一个 Int16Array
+const ints4 = new Int16Array(ints3);
+// 这个新类型数组会分配自己的缓冲
+// 对应索引的每个值会相应地转换为新格式
+alert(ints4.length); // 4
+alert(ints4.buffer.byteLength); // 8
+alert(ints4[2]); // 6
+// 基于普通数组来创建一个 Int16Array
+const ints5 = Int16Array.from([3, 5, 7, 9]);
+alert(ints5.length); // 4
+alert(ints5.buffer.byteLength); // 8
+alert(ints5[2]); // 7
+// 基于传入的参数创建一个 Float32Array
+const floats = Float32Array.of(3.14, 2.718, 1.618);
+alert(floats.length); // 3
+alert(floats.buffer.byteLength); // 12
+alert(floats[2]); // 1.6180000305175781 
+```
+定型数组的构造函数和实例都有一个 **BYTES_PER_ELEMENT** 属性，返回该类型数组中每个元素的大小：
+
+```javascript
+alert(Int16Array.BYTES_PER_ELEMENT); // 2
+alert(Int32Array.BYTES_PER_ELEMENT); // 4
+
+const ints = new Int32Array(1), floats = new Float64Array(1);
+
+alert(ints.BYTES_PER_ELEMENT); // 4
+alert(floats.BYTES_PER_ELEMENT); // 8 
+```
+
+#### [5.2 定型数组行为](#)
+从很多方面看，定型数组与普通数组都很相似。定型数组支持如下操作符、方法和属性：
+
+
+#### [5.3 合并、复制和修改定型数组](#)
+定型数组同样使用数组缓冲来存储数据，而数组缓冲无法调整大小。因此，下列方法不适用于定型
+数组：
+* concat()
+* pop()
+* push()
+* shift()
+* splice()
+* unshift()
+
+不过，定型数组也提供了两个新方法，可以快速向外或向内复制数据：set()和 subarray()。
+
+* set()从提供的数组或定型数组中把值复制到当前定型数组中指定的索引位置：
+* subarray()执行与 set()相反的操作，它会基于从原始定型数组中复制的值返回一个新定型数组。 复制值时的开始索引和结束索引是可选的：
+
+```javascript
+// 创建长度为 8 的 int16 数组
+const container = new Int16Array(8);
+// 把定型数组复制为前 4 个值
+// 偏移量默认为索引 0
+container.set(Int8Array.of(1, 2, 3, 4));
+console.log(container); // [1,2,3,4,0,0,0,0]
+// 把普通数组复制为后 4 个值
+// 偏移量 4 表示从索引 4 开始插入
+container.set([5,6,7,8], 4);
+console.log(container); // [1,2,3,4,5,6,7,8]
+// 溢出会抛出错误
+container.set([5,6,7,8], 7);
+// RangeError 
+
+const source = Int16Array.of(2, 4, 6, 8);
+// 把整个数组复制为一个同类型的新数组
+const fullCopy = source.subarray();
+console.log(fullCopy); // [2, 4, 6, 8]
+// 从索引 2 开始复制数组
+const halfCopy = source.subarray(2);
+console.log(halfCopy); // [6, 8]
+// 从索引 1 开始复制到索引 3
+const partialCopy = source.subarray(1, 3);
+console.log(partialCopy); // [4, 6] 
+```
+
+### [6. Map](#)
