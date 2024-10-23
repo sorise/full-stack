@@ -3,8 +3,14 @@
 
 -----
 - [1. Array](#1-array)
-- [1. 定型数组](#1-定型数组)
-
+- [2. 定型数组简介](#2-定型数组简介)
+- [3. ArrayBuffer](#3-ArrayBuffer)
+- [4. DataView](#4-DataView)
+- [5. 定型数组](#5-定型数组)
+- [6. Map](#6-map)
+- [7. WeakMap](#7-weakmap)
+- [8. Set](#8-set)
+- [9. WeakSet](#9-weakset)
 
 -----
 ### [1. Array](#)
@@ -216,7 +222,7 @@ console.log(colors[2]); // undefined
 
 let colors = ["red", "blue", "green"]; // 创建一个包含 3 个字符串的数组
 colors[99] = "black"; // 添加一种颜色（位置 99）
-alert(colors.length); // 100 
+console.log(colors.length); // 100 
 ```
 > 数组最多可以包含 **4 294 967 295** 个元素，这对于大多数编程任务应该足够了。
 
@@ -272,8 +278,8 @@ console.log(aEntries); // [[0, "foo"], [1, "bar"], [2, "baz"], [3, "qux"]]
 ```javascript
 const a = ["foo", "bar", "baz", "qux"];
 for (const [idx, element] of a.entries()) {
-    alert(idx);
-    alert(element);
+    console.log(idx);
+    console.log(element);
 }
 ```
 
@@ -384,7 +390,7 @@ function compare(value1, value2) {
 
 let values = [0, 1, 5, 10, 15];
 values.sort(compare);
-alert(values); // 0,1,5,10,15
+console.log(values); // 0,1,5,10,15
 ```
 
 **常用的排序方法**：  
@@ -453,21 +459,21 @@ ECMAScript 提供两类搜索数组的方法：按严格相等搜索和按断言
 
 ```javascript
 let numbers = [1, 2, 3, 4, 5, 4, 3, 2, 1];
-alert(numbers.indexOf(4)); // 3
-alert(numbers.lastIndexOf(4)); // 5
-alert(numbers.includes(4)); // true
-alert(numbers.indexOf(4, 4)); // 5
-alert(numbers.lastIndexOf(4, 4)); // 3
-alert(numbers.includes(4, 7)); // false
+console.log(numbers.indexOf(4)); // 3
+console.log(numbers.lastIndexOf(4)); // 5
+console.log(numbers.includes(4)); // true
+console.log(numbers.indexOf(4, 4)); // 5
+console.log(numbers.lastIndexOf(4, 4)); // 3
+console.log(numbers.includes(4, 7)); // false
 
 let person = { name: "Nicholas" };
 let people = [{ name: "Nicholas" }];
 let morePeople = [person];
 
-alert(people.indexOf(person)); // -1
-alert(morePeople.indexOf(person)); // 0
-alert(people.includes(person)); // false
-alert(morePeople.includes(person)); // true 
+console.log(people.indexOf(person)); // -1
+console.log(morePeople.indexOf(person)); // 0
+console.log(people.includes(person)); // false
+console.log(morePeople.includes(person)); // true 
 ```
 
 **断言函数** ECMAScript 也允许按照定义的断言函数搜索数组，每个索引都会调用这个函数。断言函数的返回
@@ -488,9 +494,9 @@ const people = [
  age: 29
  }
 ];
-alert(people.find((element, index, array) => element.age < 28));
+console.log(people.find((element, index, array) => element.age < 28));
 // {name: "Matt", age: 27}
-alert(people.findIndex((element, index, array) => element.age < 28));
+console.log(people.findIndex((element, index, array) => element.age < 28));
 // 0 
 ```
 找到匹配项后，这两个方法都不再继续搜索。
@@ -556,7 +562,7 @@ reduce()和 reduceRight()的函数接收 4 个参数：**上一个归并值**、
 ```javascript
 let values = [1, 2, 3, 4, 5];
 let sum = values.reduce((prev, cur, index, array) => prev + cur);
-alert(sum); // 15 
+console.log(sum); // 15 
 ```
 
 #### [1.17 操作方法列表](#)
@@ -596,8 +602,6 @@ alert(sum); // 15
 | valueOf()   | 返回数组的原始值。                                                                       |
 | at()        | 2021.1新提案，解决方括号的限制，可以输入负数。                                           |
 
-
-
 ### [2. 定型数组简介](#)
 定型数组（typed array）是 ECMAScript 新增的结构，目的是提升向原生库传输数据的效率。
 实际上，JavaScript 并没有“TypedArray”类型，它所指的其实是一种特殊的包含数值类型的数组。
@@ -617,7 +621,7 @@ ArrayBuffer 一经创建就不能再调整大小。不过，可以使用 slice()
 ```javascript
 const buf1 = new ArrayBuffer(16);
 const buf2 = buf1.slice(4, 12);
-alert(buf2.byteLength); // 8 
+console.log(buf2.byteLength); // 8 
 ```
 **ArrayBuffer 分配的堆内存可以被当成垃圾回收，不用手动释放**。
 
@@ -637,17 +641,17 @@ const buf = new ArrayBuffer(16);
 
 // DataView 默认使用整个 ArrayBuffer
 const fullDataView = new DataView(buf);
-alert(fullDataView.byteOffset); // 0
-alert(fullDataView.byteLength); // 16
-alert(fullDataView.buffer === buf); // true
+console.log(fullDataView.byteOffset); // 0
+console.log(fullDataView.byteLength); // 16
+console.log(fullDataView.buffer === buf); // true
 
 // 构造函数接收一个可选的字节偏移量和字节长度
 // byteOffset=0 表示视图从缓冲起点开始
 // byteLength=8 限制视图为前 8 个字节
 const firstHalfDataView = new DataView(buf, 0, 8);
-alert(firstHalfDataView.byteOffset); // 0
-alert(firstHalfDataView.byteLength); // 8
-alert(firstHalfDataView.buffer === buf); // true 
+console.log(firstHalfDataView.byteOffset); // 0
+console.log(firstHalfDataView.byteLength); // 8
+console.log(firstHalfDataView.buffer === buf); // true 
 ```
 
 #### [4.1 实例属性](#)
@@ -688,10 +692,10 @@ const buf = new ArrayBuffer(2);
 const view = new DataView(buf);
 // 说明整个缓冲确实所有二进制位都是 0
 // 检查第一个和第二个字符
-alert(view.getInt8(0)); // 0
-alert(view.getInt8(1)); // 0
+console.log(view.getInt8(0)); // 0
+console.log(view.getInt8(1)); // 0
 // 检查整个缓冲
-alert(view.getInt16(0)); // 0
+console.log(view.getInt16(0)); // 0
 // 将整个缓冲都设置为 1
 // 255 的二进制表示是 11111111（2^8 - 1）
 view.setUint8(0, 255);
@@ -700,7 +704,7 @@ view.setUint8(0, 255);
 view.setUint8(1, 0xFF);
 // 现在，缓冲里都是 1 了
 // 如果把它当成二补数的有符号整数，则应该是-1
-alert(view.getInt16(0)); // -1 
+console.log(view.getInt16(0)); // -1 
 ```
 
 #### [4.3 字节序](#)
@@ -723,25 +727,25 @@ view.setUint8(1, 0x01); // 设置最右边的位等于 1
 // 按大端字节序读取 Uint16
 // 0x80 是高字节，0x01 是低字节
 // 0x8001 = 2^15 + 2^0 = 32768 + 1 = 32769
-alert(view.getUint16(0)); // 32769
+console.log(view.getUint16(0)); // 32769
 // 按小端字节序读取 Uint16
 // 0x01 是高字节，0x80 是低字节
 // 0x0180 = 2^8 + 2^7 = 256 + 128 = 384
-alert(view.getUint16(0, true)); // 384
+console.log(view.getUint16(0, true)); // 384
 // 按大端字节序写入 Uint16
 view.setUint16(0, 0x0004);
 // 缓冲内容（为方便阅读，人为加了空格）
 // 0x0 0x0 0x0 0x4
 // 0000 0000 0000 0100
-alert(view.getUint8(0)); // 0
-alert(view.getUint8(1)); // 4
+console.log(view.getUint8(0)); // 0
+console.log(view.getUint8(1)); // 4
 // 按小端字节序写入 Uint16
 view.setUint16(0, 0x0002, true);
 // 缓冲内容（为方便阅读，人为加了空格）
 // 0x0 0x2 0x0 0x0
 // 0000 0010 0000 0000
-alert(view.getUint8(0)); // 2
-alert(view.getUint8(1)); // 0 
+console.log(view.getUint8(0)); // 2
+console.log(view.getUint8(1)); // 0 
 ```
 DataView 完成读、写操作的前提是必须有充足的缓冲区，否则就会抛出 RangeError：
 
@@ -756,7 +760,7 @@ const buf = new ArrayBuffer(12);
 const ints = new Int32Array(buf);
 // 这个定型数组知道自己的每个元素需要 4 字节
 // 因此长度为 3
-alert(ints.length); // 3 
+console.log(ints.length); // 3 
 ```
 
 **以下是一些常用的定型数组类型**：
@@ -792,46 +796,46 @@ const buf = new ArrayBuffer(12);
 const ints = new Int32Array(buf);
 // 这个定型数组知道自己的每个元素需要 4 字节
 // 因此长度为 3
-alert(ints.length); // 3 
+console.log(ints.length); // 3 
 // 创建一个长度为 6 的 Int32Array
 const ints2 = new Int32Array(6);
 // 每个数值使用 4 字节，因此 ArrayBuffer 是 24 字节
-alert(ints2.length); // 6
+console.log(ints2.length); // 6
 // 类似 DataView，定型数组也有一个指向关联缓冲的引用
-alert(ints2.buffer.byteLength); // 24
+console.log(ints2.buffer.byteLength); // 24
 // 创建一个包含[2, 4, 6, 8]的 Int32Array
 const ints3 = new Int32Array([2, 4, 6, 8]);
-alert(ints3.length); // 4
-alert(ints3.buffer.byteLength); // 16
-alert(ints3[2]); // 6
+console.log(ints3.length); // 4
+console.log(ints3.buffer.byteLength); // 16
+console.log(ints3[2]); // 6
 // 通过复制 ints3 的值创建一个 Int16Array
 const ints4 = new Int16Array(ints3);
 // 这个新类型数组会分配自己的缓冲
 // 对应索引的每个值会相应地转换为新格式
-alert(ints4.length); // 4
-alert(ints4.buffer.byteLength); // 8
-alert(ints4[2]); // 6
+console.log(ints4.length); // 4
+console.log(ints4.buffer.byteLength); // 8
+console.log(ints4[2]); // 6
 // 基于普通数组来创建一个 Int16Array
 const ints5 = Int16Array.from([3, 5, 7, 9]);
-alert(ints5.length); // 4
-alert(ints5.buffer.byteLength); // 8
-alert(ints5[2]); // 7
+console.log(ints5.length); // 4
+console.log(ints5.buffer.byteLength); // 8
+console.log(ints5[2]); // 7
 // 基于传入的参数创建一个 Float32Array
 const floats = Float32Array.of(3.14, 2.718, 1.618);
-alert(floats.length); // 3
-alert(floats.buffer.byteLength); // 12
-alert(floats[2]); // 1.6180000305175781 
+console.log(floats.length); // 3
+console.log(floats.buffer.byteLength); // 12
+console.log(floats[2]); // 1.6180000305175781 
 ```
 定型数组的构造函数和实例都有一个 **BYTES_PER_ELEMENT** 属性，返回该类型数组中每个元素的大小：
 
 ```javascript
-alert(Int16Array.BYTES_PER_ELEMENT); // 2
-alert(Int32Array.BYTES_PER_ELEMENT); // 4
+console.log(Int16Array.BYTES_PER_ELEMENT); // 2
+console.log(Int32Array.BYTES_PER_ELEMENT); // 4
 
 const ints = new Int32Array(1), floats = new Float64Array(1);
 
-alert(ints.BYTES_PER_ELEMENT); // 4
-alert(floats.BYTES_PER_ELEMENT); // 8 
+console.log(ints.BYTES_PER_ELEMENT); // 4
+console.log(floats.BYTES_PER_ELEMENT); // 8 
 ```
 
 #### [5.2 定型数组行为](#)
@@ -881,3 +885,323 @@ console.log(partialCopy); // [4, 6]
 ```
 
 ### [6. Map](#)
+Map 是一种新的集合类型，为这门语言带来了真正的键/值存储机制, API 请查看[ MDN Web Docs 社区 MAP](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Map)。
+
+#### [6.1 创建Map](#)
+使用 new 关键字和 Map 构造函数可以创建一个空映射：
+
+```javascript
+const m = new Map(); 
+```
+如果想在创建的同时初始化实例，可以给 Map 构造函数传入一个可迭代对象，需要包含键/值对数
+组。可迭代对象中的每个键/值对都会按照迭代顺序插入到新映射实例中：
+```javascript
+// 使用嵌套数组初始化映射
+const m1 = new Map([
+  ["key1", "val1"],
+  ["key2", "val2"],
+  ["key3", "val3"]
+]);
+console.log(m1.size); // 3
+
+// 使用自定义迭代器初始化映射
+const m2 = new Map({
+  [Symbol.iterator]: function*() {
+    yield ["key1", "val1"];
+    yield ["key2", "val2"];
+    yield ["key3", "val3"];
+  }
+});
+console.log(m2.size); // 3 
+
+// 映射期待的键/值对，无论是否提供
+const m3 = new Map([[]]);
+console.log(m3.has(undefined)); // true
+console.log(m3.get(undefined)); // undefined 
+```
+初始化之后，可以使用 set()方法再添加键/值对。另外，可以使用 get()和 has()进行查询，可
+以通过 size 属性获取映射中的键/值对的数量，还可以使用 delete()和 clear()删除值。
+```javascript
+const m = new Map();
+console.log(m.has("firstName")); // false
+console.log(m.get("firstName")); // undefined
+console.log(m.size); // 0
+
+m.set("firstName", "Matt")
+ .set("lastName", "Frisbie");
+
+console.log(m.has("firstName")); // true
+console.log(m.get("firstName")); // Matt
+console.log(m.size); // 2
+
+m.delete("firstName"); // 只删除这一个键/值对
+console.log(m.has("firstName")); // false
+console.log(m.has("lastName")); // true
+console.log(m.size); // 1
+
+m.clear(); // 清除这个映射实例中的所有键/值对
+console.log(m.has("firstName")); // false
+console.log(m.has("lastName")); // false
+console.log(m.size); // 0
+```
+set()方法返回映射实例，因此可以把多个操作连缀起来，包括初始化声明：
+```javascript
+const m = new Map().set("key1", "val1");
+m.set("key2", "val2")
+ .set("key3", "val3");
+console.log(m.size); // 3 
+```
+Object 只能使用数值、字符串或符号作为键不同，Map 可以使用任何 JavaScript 数据类型作为
+键。Map 内部使用 SameValueZero 比较操作（ECMAScript 规范内部定义，语言中不能使用），基本上相
+当于使用严格对象相等的标准来检查键的匹配性。与 Object 类似，映射的值是没有限制的。
+
+```javascript
+const m = new Map();
+const functionKey = function() {};
+const symbolKey = Symbol();
+const objectKey = new Object();
+
+m.set(functionKey, "functionValue");
+m.set(symbolKey, "symbolValue");
+m.set(objectKey, "objectValue");
+
+console.log(m.get(functionKey)); // functionValue
+console.log(m.get(symbolKey)); // symbolValue
+console.log(m.get(objectKey)); // objectValue
+// SameValueZero 比较意味着独立实例不冲突
+console.log(m.get(function() {})); // undefined 
+```
+> SameValueZero 是 ECMAScript 规范新增的相等性比较算法。关于 ECMAScript 的相等性比较。
+
+#### [6.2 顺序与迭代](#)
+与 Object 类型的一个主要差异是，Map 实例会维护键值对的插入顺序，因此可以根据插入顺序执行迭代操作。
+
+映射实例可以提供一个迭代器（Iterator），能以插入顺序生成 `[key, value]` 形式的数组。可以
+通过 entries()方法（或者 Symbol.iterator 属性，它引用 entries()）取得这个迭代器：
+```javascript
+const m = new Map([
+ ["key1", "val1"],
+ ["key2", "val2"],
+ ["key3", "val3"]
+]);
+
+console.log(m.entries === m[Symbol.iterator]); // true 
+
+m.forEach((val, key) => console.log(`${key} -> ${val}`));
+// key1 -> val1
+// key2 -> val2
+// key3 -> val3 
+```
+
+### [7. WeakMap](#)
+ECMAScript 6 新增的“弱映射”（WeakMap）是一种新的集合类型，为这门语言带来了增强的键/值对存储机制。
+
+WeakMap 是 Map 的“兄弟”类型，其 API 也是 Map 的子集。WeakMap 中的“weak”（弱），描述的是 JavaScript 垃圾回收程序对待“弱映射”中键的方式。
+
+```javascript
+new WeakMap()
+new WeakMap(iterable)
+```
+初始化之后可以使用 set()再添加键/值对，可以使用 get()和 has()查询，还可以使用 delete()删除：
+
+```javascript
+const wm = new WeakMap();
+const key1 = {id: 1},
+ key2 = {id: 2};
+
+console.log(wm.has(key1)); // false
+console.log(wm.get(key1)); // undefined
+
+wm.set(key1, "Matt")
+ .set(key2, "Frisbie");
+
+console.log(wm.has(key1)); // true
+console.log(wm.get(key1)); // Matt
+
+wm.delete(key1); // 只删除这一个键/值对
+console.log(wm.has(key1)); // false
+console.log(wm.has(key2)); // true 
+```
+
+#### [7.1 弱键的含义](#)
+WeakMap 中“weak”表示弱映射的键是“弱弱地拿着”的。意思就是，这些键不属于正式的引用，不会阻
+止垃圾回收。但要注意的是，弱映射中值的引用可不是“弱弱地拿着”的。只要键存在，键/值对就会存在于映射中，并被当作对值的引用。
+
+```javascript
+const wm = new WeakMap();
+const container = {
+  key: {}
+};
+
+wm.set(container.key, "val");
+
+function removeReference() {
+  container.key = null;
+}
+
+console.log(`wm.has(container.key) = ${wm.has(container.key)}`);
+//wm.has(container.key) = true
+
+console.log(`wm.get(container.key) = ${wm.get(container.key)}`);
+//wm.get(container.key) = val
+
+removeReference();
+
+console.log(`wm.has(container.key) = ${wm.has(container.key)}`);
+//wm.has(container.key) = false
+
+console.log(`wm.get(container.key) = ${wm.get(container.key)}`);
+//wm.get(container.key) = undefined
+```
+这一次，container 对象维护着一个对弱映射键的引用，因此这个对象键不会成为垃圾回收的目
+标。不过，如果调用了 removeReference()，就会摧毁键对象的最后一个引用，垃圾回收程序就可以
+把这个键/值对清理掉。
+
+#### [7.2 不可迭代键](#)
+因为 WeakMap 中的键/值对任何时候都可能被销毁，所以没必要提供迭代其键/值对的能力。
+
+#### [7.3 使用弱映射创建私有变量](#)
+
+```javascript
+
+const wm = new WeakMap();
+class User {
+  constructor(id) {
+    this.idProperty = Symbol('id');
+    this.setId(id);
+  }
+  setPrivate(property, value) {
+    const privateMembers = wm.get(this) || {};
+    privateMembers[property] = value;
+    wm.set(this, privateMembers);
+  }
+  getPrivate(property) {
+    return wm.get(this)[property];
+  }
+  setId(id) {
+    this.setPrivate(this.idProperty, id);
+  }
+  getId() {
+    return this.getPrivate(this.idProperty);
+  }
+}
+const user = new User(123);
+console.log(user.getId()); // 123
+user.setId(456);
+console.log(user.getId()); // 456
+// 并不是真正私有的
+console.log(wm.get(user)[user.idProperty]); // 456
+```
+
+慧眼独具的读者会发现，对于上面的实现，外部代码只需要拿到对象实例的引用和弱映射，就可以
+取得“私有”变量了。为了避免这种访问，可以用一个闭包把 WeakMap 包装起来，这样就可以把弱映
+射与外界完全隔离开了：
+```javascript
+const User = (() => {
+    const wm = new WeakMap();
+    class User {
+        constructor(id) {
+            this.idProperty = Symbol('id');
+            this.setId(id);
+        }
+        setPrivate(property, value) {
+            const privateMembers = wm.get(this) || {};
+            privateMembers[property] = value;
+            wm.set(this, privateMembers);
+        }
+        getPrivate(property) {
+            return wm.get(this)[property];
+        }
+        setId(id) {
+            this.setPrivate(this.idProperty, id);
+        }
+        getId(id) {
+            return this.getPrivate(this.idProperty);
+        }
+    }
+    return User;
+})();
+
+const user = new User(123);
+console.log(user.getId()); // 123
+user.setId(456);
+console.log(user.getId()); // 456
+```
+这样，拿不到弱映射中的健，也就无法取得弱映射中对应的值。虽然这防止了前面提到的访问，但
+整个代码也完全陷入了 ES6 之前的闭包私有变量模式。
+
+#### [7.4 DOM 节点元数据](#)
+因为 WeakMap 实例不会妨碍垃圾回收，所以非常适合保存关联元数据。来看下面这个例子，其中使用了常规的 Map：
+
+```javascript
+const m = new Map();
+const loginButton = document.querySelector('#login');
+// 给这个节点关联一些元数据
+m.set(loginButton, {disabled: true}); 
+```
+假设在上面的代码执行后，页面被 JavaScript 改变了，原来的登录按钮从 DOM 树中被删掉了。但
+由于映射中还保存着按钮的引用，所以对应的 DOM 节点仍然会逗留在内存中，除非明确将其从映射中
+删除或者等到映射本身被销毁。
+
+**如果这里使用的是弱映射，如以下代码所示，那么当节点从 DOM 树中被删除后，垃圾回收程序就可以立即释放其内存（假设没有其他地方引用这个对象）**：
+```javascript
+const wm = new WeakMap();
+const loginButton = document.querySelector('#login');
+// 给这个节点关联一些元数据
+wm.set(loginButton, {disabled: true});
+```
+
+### [8. Set](#)
+ECMAScript 6 新增的 Set 是一种新集合类型，为这门语言带来集合数据结构。Set 在很多方面都
+像是加强的 Map，这是因为它们的大多数 API 和行为都是共有的，API 请查看[ MDN Web Docs 社区 Set](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Set)。 
+
+#### [8.1 集合创建](#)
+使用 new 关键字和 Set 构造函数可以创建一个空集合：
+```javascript
+const m = new Set();
+```
+如果想在创建的同时初始化实例，则可以给 Set 构造函数传入一个可迭代对象，其中需要包含插入到新集合实例中的元素：
+```javascript
+// 使用数组初始化集合
+const s1 = new Set(["val1", "val2", "val3"]);
+
+console.log(s1.size); // 3
+// 使用自定义迭代器初始化集合
+const s2 = new Set({
+ [Symbol.iterator]: function*() {
+ yield "val1";
+ yield "val2";
+ yield "val3";
+ }
+});
+
+console.log(s2.size); // 3 
+```
+初始化之后，可以使用 add()增加值，使用 has()查询，通过 size 取得元素数量，以及使用 delete()
+和 clear()删除元素：
+```javascript
+const s = new Set();
+
+console.log(s.has("Matt")); // false
+console.log(s.size); // 0
+
+s.add("Matt")
+ .add("Frisbie");
+
+console.log(s.has("Matt")); // true
+console.log(s.size); // 2
+
+s.delete("Matt");
+console.log(s.has("Matt")); // false
+console.log(s.has("Frisbie")); // true
+console.log(s.size); // 1
+s.clear(); // 销毁集合实例中的所有值
+console.log(s.has("Matt")); // false
+console.log(s.has("Frisbie")); // false
+console.log(s.size); // 0 
+```
+
+### [9. WeakSet](#)
+ECMAScript 6 新增的“弱集合”（WeakSet）是一种新的集合类型，为这门语言带来了集合数据结
+构。WeakSet 是 Set 的“兄弟”类型，其 API 也是 Set 的子集。WeakSet 中的“weak”（弱），描述的
+是 JavaScript 垃圾回收程序对待“弱集合”中值的方式。
