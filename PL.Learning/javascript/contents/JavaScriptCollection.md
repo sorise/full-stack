@@ -1205,3 +1205,38 @@ console.log(s.size); // 0
 ECMAScript 6 新增的“弱集合”（WeakSet）是一种新的集合类型，为这门语言带来了集合数据结
 构。WeakSet 是 Set 的“兄弟”类型，其 API 也是 Set 的子集。WeakSet 中的“weak”（弱），描述的
 是 JavaScript 垃圾回收程序对待“弱集合”中值的方式。
+
+可以使用 new 关键字实例化一个空的 WeakSet：
+```javascript
+class pair{
+  constructor(_key, _value){
+    this.key = _key;
+    this.value = _value;
+  }
+
+  [Symbol.toStringTag](){
+    return `{${this.key}:${this.value}}`;
+  }
+}
+
+let me = new pair("me", 73);
+let lzm = new pair("lzm", 53);
+let ljk = new pair("ljk", 23);
+
+let colors = new WeakSet([me, lzm]);
+
+console.log(colors); //WeakSet { <items unknown> }
+
+console.log(colors.has(me)); // true
+console.log(colors.has(lzm)); // true
+
+console.log(me);//pair { key: 'me', value: 73 }
+```
+**弱集合中的值只能是 Object 或者继承自 Object 的类型，尝试使用非对象设置值会抛出 TypeError**。
+```javascript
+colors.set(undefined)
+//TypeError: colors.set is not a function
+```
+WeakSet 中“weak”表示弱集合的值是“弱弱地拿着”的。意思就是，这些值不属于正式的引用，不会阻止垃圾回收。
+因为 WeakSet 中的值任何时候都可能被销毁，所以没必要提供迭代其值的能力。
+
