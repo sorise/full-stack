@@ -3,6 +3,14 @@
 
 -----
 - [1. 基本概念](#1-基本概念)
+- [2. 箭头函数](#2-箭头函数)
+- [3. 函数参数](#3-函数参数)
+- [4. 函数作为值](#4-函数作为值)
+- [5. 函数内部](#5-函数内部)
+- [6. 函数属性与方法](#6-函数属性与方法)
+- [7. 递归与尾递归](#7-递归与尾递归)
+- [8. 闭包](#8-闭包)
+- [9. 立即调用的函数表达式](#9-立即调用的函数表达式)
 
 -----
 ### [1. 基本概念](#)
@@ -16,10 +24,17 @@
 
 JavaScript有四种声明函数的方法
 
-第一种方式，**函数的声明语句**
+第一种方式，**函数的声明语句** 函数声明的关键特点是**函数声明提升**，即函数声明会在代码执行之前获得定义。这意味着函数声明
+可以出现在调用它的代码之后：
+
 ```javascript
 function sum (num1, num2) {
     return num1 + num2;
+}
+
+sayHi();
+function sayHi() {
+    console.log("Hi!");
 } 
 ```
 另一种定义函数的语法是函数表达式,**函数表达式**与函数声明几乎是等价的：
@@ -546,14 +561,47 @@ King(); // Error: King must be instantiated using "new"
 和 prototype。
 
 * length 属性保存函数定义的命名参数的个数。
-* prototype **指向原型**，是保存引用类型所有实例方法的地方，这意味着 toString()、valueOf()等方法实际上都保存在 prototype 上，进而由所有实
-  例共享。
-  * prototype 属性是不可枚举的，因此使用 for-in 循环不会返回这个属性。
+* prototype **指向原型**，是保存引用类型所有实例方法的地方，这意味着toString()、valueOf()等方法实际上都保存在 prototype 上，进而由所有实
+例共享。**prototype 属性是不可枚举的，因此使用 for-in 循环不会返回这个属性**。
 
-call()和apply()都是用来改变函数执行时的this指向，并且可以根据不同的应用场景选择合适的方法来传递参数。
-#### [6.1 apply()](#)
-以指定的 this 值来调用函数，即会设置调用函数时函数体内 this 对象的值。函数内 this 的值和一个参数数组。
+bind、call和apply都是JavaScript中用于处理函数调用的方法。它们的作用都是相同的而主要区别在于它们如何设置和传递函数的上下文以及参数。
 
+#### [6.1 bind](#)
+bind会创建一个新的函数，并将原始函数绑定到指定的上下文,以后可以进行复用。这意味着无论在什么时候调用这个新函数，它都会使用绑定的上下文。
+
+```javascript
+const info = { name: '张三' };
+
+function Info(age) {
+  console.log(`姓名: ${this.name}`);
+  console.log(`年龄: ${age}`);
+}
+
+const bindInfo = Info.bind(info,'19');
+bindInfo();  // 输出结果为:姓名: 张三
+             //          年龄: 19 
+```
+
+#### [6.2 call()](#)
+call可以在指定的上下文中调用函数，并传递一个或多个参数。与bind不同的是，call会立即调用函数，而不是返回一个新函数，所以并不能像bind一样进行复用。
+
+call方法的第一个参数是要绑定的上下文对象，后面的参数是要传递给函数的参数。
+```javascript
+const info = { name: '张三' };
+
+function Info(age,sex) {
+  console.log(`姓名: ${this.name}`);
+  console.log(`年龄: ${age}`);
+  console.log(`性别: ${sex}`);
+}
+
+Info.call(info,'19','男'); // 输出结果为:姓名: 张三
+                           //            年龄: 19
+                           //            性别: 男
+
+```
+#### [6.3 apply()](#)
+apply在指定的上下文中调用函数，并传递一个数组作为参数。与call类似，apply也是立即调用函数。第一个参数是要绑定的上下文对象，但与call不同的是，apply的第二个参数是一个数组这个数组里面包含要传递给函数的参数。
 ```javascript
 func.apply(thisArg, [argsArray]);
 ```
@@ -565,8 +613,168 @@ function sum(num1, num2) {
 
 function callSum1(num1, num2) {
     return sum.apply(this, arguments); // 传入 arguments 对象
+}
+
+
+const info = { name: '张三' };
+
+function Info(age,sex) {
+  console.log(`姓名: ${this.name}`);
+  console.log(`年龄: ${age}`);
+  console.log(`性别: ${sex}`);
+}
+
+Info.apply(info,['19','男']);// 输出结果为:姓名: 张三
+//            年龄: 19
+//            性别: 男
+```
+
+### [7. 递归与尾递归](#)
+递归函数通常的形式是一个函数通过名称调用自己，如下面的例子所示：
+```javascript
+function factorial(num) {
+    if (num <= 1) {
+        return 1;
+    } else {
+        return num * arguments.callee(num - 1);
+    }
+}
+```
+
+#### [7.1 尾调用优化](#)
+ECMAScript 6 规范新增了一项内存管理优化机制，让 JavaScript 引擎在满足条件时可以重用栈帧。
+具体来说，这项优化非常适合“尾调用”，**即外部函数的返回值是一个内部函数的返回值**。
+
+```javascript
+function outerFunction() {
+    return innerFunction(); // 尾调用
+} 
+```
+**尾调用优化的条件**
+* 代码在严格模式下执行；
+* 外部函数的返回值是对尾调用函数的调用；
+* 尾调用函数返回后不需要执行额外的逻辑；
+* 尾调用函数不是引用外部函数作用域中自由变量的闭包。
+
+可以通过把简单的递归函数转换为待优化的代码来加深对尾调用优化的理解。下面是一个通过递归计算斐波纳契数列的函数：
+```javascript
+"use strict";
+// 基础框架
+function fib(n) {
+    return fibImpl(0, 1, n);
+}
+// 执行递归
+function fibImpl(a, b, n) {
+    if (n === 0) {
+        return a;
+    }
+    return fibImpl(b, a + b, n - 1);
 } 
 ```
 
-#### [6.2 call()](#)
-接收一系列参数，直接传递给函数。
+### [8. 闭包](#)
+匿名函数经常被人误认为是闭包（closure）。闭包指的是那些引用了另一个函数作用域中变量的函数，通常是在嵌套函数中实现的。
+
+> 闭包（closure）是一个函数以及其捆绑的周边环境状态（lexical environment，词法环境）的引用的组合。
+> 换而言之，闭包让开发者可以从内部函数访问外部函数的作用域。在 JavaScript 中，闭包会随着函数的创建而被同时创建。
+
+**在一个作用域中可以访问另一个函数内部的局部变量的函数。**
+
+```javascript
+function makeFunc() {
+    var name = "Mozilla";
+    function displayName() {
+        console.log(name);
+    }
+    return displayName;
+}
+
+var myFunc = makeFunc();
+myFunc();//Mozilla
+
+function createComparisonFunction(propertyName) {
+    return function(object1, object2) {
+        let value1 = object1[propertyName];
+        let value2 = object2[propertyName];
+        if (value1 < value2) {
+            return -1;
+        } else if (value1 > value2) {
+            return 1;
+        } else {
+            return 0;
+        }
+    };
+} 
+```
+
+#### [8.1 闭包的特性](#)
+闭包的实现，实际上是利用了JavaScript中作用域链的概念，简单理解就是：在JavaScript中，如果在某个作用域下访问某个变量的时候，如果不存在，就一直向外层寻找，直到在全局作用域下找到对应的变量为止，这里就形成了所谓的作用域链。
+* 闭包可以访问到父级函数的变量
+* 访问到父级函数的变量不会销毁
+
+```javascript
+var age = 18;
+
+function person(){
+    age++;
+    console.log(age);
+}
+    
+person(); // 19
+person(); // 20
+person(); // 21
+```
+可以看到这里调用了3次函数，age的值也从18增长到了21，但是这么写会导致全局变量被污染，所以将age的定义移
+动到person函数内部，代码如下：
+```javascript
+function person() {
+  var age = 18;
+  age++;
+  console.log(age);
+}
+
+person(); // 19
+person(); // 19
+person(); // 19
+```
+但是这又导致了另一个问题，变为局部变量的age不会自增了，所以那么就可以利用闭包的这个特性将每次调用时的age保存起来这样就可以实现变量的自增了，代码如下：
+```javascript
+function person() {
+  var age = 18;
+  return function(){
+    age++;
+    console.log(age);
+  }
+}
+
+let getPersonAge = person();
+getPersonAge(); // 19
+getPersonAge(); // 20
+getPersonAge(); // 21
+```
+
+#### [8.2 this 对象](#)
+在闭包中使用 this 会让代码变复杂。如果内部函数没有使用箭头函数定义，则 this 对象会在运
+行时绑定到执行函数的上下文。
+
+```javascript
+window.identity = 'The Window';
+let object = {
+    identity: 'My Object',
+    getIdentityFunc() {
+        return function() {
+            return this.identity;
+        };
+    }
+};
+console.log(object.getIdentityFunc()()); // 'The Window' 
+```
+
+### [9. 立即调用的函数表达式](#)
+立即调用的匿名函数又被称作 **立即调用的函数表达式**（IIFE，Immediately Invoked Function Expression）。
+
+```javascript
+(function() {
+ // 块级作用域
+})(); 
+```
