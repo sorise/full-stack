@@ -8,7 +8,7 @@
 * npm、npx
 * [html](./PL.Learning/html)、css
 * scss、less
-* JavaScript/TypeScript
+* [JavaScript](./PL.Learning/javascript)/TypeScript
 * webpack 编译构建打包
 
 
