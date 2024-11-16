@@ -11,12 +11,13 @@
 ----
 
 ### [1. 代理 Proxy](#)
-[Proxy](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Proxy) 对象用于定义自定义行为（也称为**拦截器或陷阱**）以处理对其他对象的基本操作（如属性查找、赋值、枚举、函数调用等）。通过使用new Proxy()构造函数，可以创建一个代理对象，该对象可以拦截对目标对象的各种操作，并允许你定义如何响应这些操作。
+[Proxy](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Proxy) 对象用于定
+义自定义行为（也称为**拦截器或陷阱**）以处理对其他对象的基本操作（如属性查找、赋值、枚举、函数调用等）。
+通过使用new Proxy()构造函数，可以创建一个代理对象，该对象可以拦截对目标对象的各种操作，并允许你定义如何响应这些操作。
 
 ```javascript
 const p = new Proxy(target, handler)
 ```
-
 > 代理是目标对象的抽象,代理类似 C++指针，因为它可以用作目标对象的替身，但又完全独立于目标对象。
 
 ```javascript
@@ -40,9 +41,10 @@ console.log(proxy.name); // 触发get陷阱，输出 "John"
 在这个例子中，handler对象定义了当尝试获取或设置proxy对象上的属性时应执行的操作。target是我们想要代理的实际对象，而proxy则是我们通过new Proxy()创建的代理对象。
 
 #### [1.1 创建空代理](#)
-最简单的代理是空代理，即除了作为一个抽象的目标对象，什么也不做。默认情况下，在代理对象上执行的所有操作都会无障碍地传播到目标对象。
+最简单的代理是空代理，即除了作为一个抽象的目标对象，什么也不做。默认情况下，在代理对象上执行的所有操作都会无障碍地传播到
+目标对象。
 
-代理是使用 Proxy 构造函数创建的。这个构造函数接收两个参数：目标对象和处理程序对象,缺少其中任何一个参数都会抛出 TypeError。
+代理是使用 **Proxy** 构造函数创建的。这个构造函数接收两个参数：目标对象和处理程序对象,缺少其中任何一个参数都会抛出 **TypeError**。
 
 ```javascript
 const target = {
@@ -67,7 +69,7 @@ console.log(target instanceof Proxy); // TypeError: Function has non-object prot
 console.log(proxy instanceof Proxy); // TypeError: Function has non-object prototype
 //'undefined' in instanceof check 
 ```
-**Proxy.prototype 是 undefined**,因此不能使用 instanceof 操作符。
+**Proxy.prototype 是 undefined**,因此不能使用 **instanceof** 操作符。
 
 **严格相等可以用来区分代理和目标**
 ```javascript
