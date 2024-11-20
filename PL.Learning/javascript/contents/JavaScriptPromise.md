@@ -197,7 +197,7 @@ let pVal = new Promise((resolve, reject) => {
 ```
 
 
-### [2.2 Promise.prototype.catch](#)
+#### [2.2 Promise.prototype.catch](#)
 catch只接受一个参数: onRejected处理程序。事实上,这个方法就是一个语法糖 
 Promise.prototype.catch方法是.then(null, rejection)的别名，用于指定发生错误时的回调函数。
 
@@ -214,7 +214,7 @@ let promise = new Promise(function(resolve, reject) {
 ```
 
 
-### [2.3 Promise.prototype.finally](#)
+#### [2.3 Promise.prototype.finally](#)
 finally:该方法用来制定不管Promise对象最后状态如何，都会执行的操作 该方法是 **ES2018** 引入标准的。
 
 finally方法的回调函数不接受任何参数，这意味着没有办法知道，前面的promise状态到底是fulfilled（成功）还是rejected（失败），这表明，finally方法里面的操作，应该
@@ -365,10 +365,226 @@ Promise.try(database.users.get({id: userId}))
   .catch(...)
 ```
 
+#### [3.5 非重入期约方法](#)
+当期约进入落定状态时，与该状态相关的处理程序仅仅会被 **排期**，而非立即执行。跟在添加这个处
+理程序的代码之后的同步代码一定会在处理程序之前先执行。
+
+```javascript
+// 创建解决的期约
+let p = Promise.resolve();
+// 添加解决处理程序
+// 直觉上，这个处理程序会等期约一解决就执行
+p.then(() => console.log('onResolved handler'));
+// 同步输出，证明 then()已经返回
+console.log('then() returns');
+// 实际的输出：
+// then() returns
+// onResolved handler 
+```
+决期约上调用 then()会把 onResolved 处理程序推进消息队列。
+在一个解决期约上调用 then()会把 onResolved 处理程序推进消息队列。但这个
+处理程序在当前线程上的同步代码执行完成前不会执行。因此，跟在 then()后面的同步代码一定先于
+处理程序执行。
+
+```javascript
+let p1 = Promise.resolve('foo');
+p1.then((value) => console.log(value)); // foo
+
+let p2 = Promise.reject('bar');
+p2.catch((reason) => console.log(reason)); // bar 
+```
+到了落定状态后，期约会提供其解决值（如果兑现）或其拒绝理由（如果拒绝）给相关状态的处理
+程序。拿到返回值后，就可以进一步对这个值进行操作。
+
+#### [3.6 拒绝期约与拒绝错误处理](#)
+拒绝期约类似于 throw()表达式，因为它们都代表一种程序状态，即需要中断或者特殊处理。在期
+约的执行函数或处理程序中抛出错误会导致拒绝，对应的错误对象会成为拒绝的理由。因此以下这些期
+约都会以一个错误对象为由被拒绝：
+
+```javascript
+let p1 = new Promise((resolve, reject) => reject(Error('foo')));
+let p2 = new Promise((resolve, reject) => { throw Error('foo'); });
+let p3 = Promise.resolve().then(() => { throw Error('foo'); });
+let p4 = Promise.reject(Error('foo'));
+
+setTimeout(console.log, 0, p1); // Promise <rejected>: Error: foo
+setTimeout(console.log, 0, p2); // Promise <rejected>: Error: foo
+setTimeout(console.log, 0, p3); // Promise <rejected>: Error: foo
+setTimeout(console.log, 0, p4); // Promise <rejected>: Error: foo
+// 也会抛出 4 个未捕获错误
+```
+
+#### [3.7 期约图](#)
+一个期约可以有任意多个处理程序，可以构建有向非循环图的结构。
+
+每个期约都是图中的一个节点，使用实例方法添加的处理程序是有向节点。图的方向就是期约的解决或拒绝顺序。
+```javascript
+//     A
+//    /  \
+//   B    C
+//  / \  / \
+// D  E  F   G
+let A = new Promise((resolve, reject) => {
+  console.log('A');
+  resolve();
+ });
+ let B = A.then(() => console.log('B'));
+ let C = A.then(() => console.log('C'));
+ B.then(() => console.log('D'));
+ B.then(() => console.log('E'));
+ C.then(() => console.log('F'));
+ C.then(() => console.log('G')); 
+
+```
+
 ### [4. 期约扩展](#)
 ES6 期约实现是很可靠的，但它也有不足之处。比如，很多第三方期约库实现中具备而 ECMAScript
 规范却未涉及的两个特性：**期约取消**和**进度追踪**。
 
+#### [4.1 期约取消](#)
+我们经常会遇到期约正在处理过程中，程序却不再需要其结果的情形。这时候如果能够取消期约就好了。
+
+> 实际上，TC39 委员会也曾准备增加这个特性，但相关提案最终被撤回了。
+> 结果，ES6 期约被认为是“激进的”：只要期约的逻辑开始执行，就没有办法阻止它执行到完成。
+
+实际上，可以在现有实现基础上提供一种临时性的封装，以实现取消期约的功能。
+
+```javascript
+class CancelToken {
+	constructor(cancelFn) {
+    this.promise = new Promise((resolve, reject)=> {
+      cancelFn(resolve)
+    })
+  }
+}
+function cancelableDelayResolve() {
+  
+}
+const id = setTimeout(()=> {
+  resolve()
+}, delay)
+const cancelToken = new CancelToken((cancelCb)=> {
+	xxxx.addEventListener('click', cancelCb)
+}) 
+cancelToken.promise.then(()=>clearTimeout(id))
+```
+
+#### [4.2 期约进度通知](#)
+通过扩展监控期约执行进度。
+
+扩展Promise类，为它添加notify()方法
+
+```javascript
+class TrackablePromise extends Promise {
+  constructor(executor) {
+    const notifyHandlers = []
+    
+    super((resolve, reject)=> {
+      return executor(resolve, reject, (status) => {
+        notifyHandlers.map((handler) => handler(status))
+      })
+    })
+    this.notifyHandlers = notifyHandlers
+  }
+  
+  notify(notifyHandler) {
+    this.notifyHandlers.push(notifyHandler)
+    return this
+  }
+}
+
+// 这样就可以执行函数时使用notify了。
+let p = new TrackablePromise((resolve, reject, notify)=> {
+  function countdown(x) {
+    if(x > 0) {
+      notify(`${20 * x}% remaining`)
+      setTimeout(() => countdown(x - 1), 1000)
+    }else {
+      resolve()
+    }
+  }
+  countdown(5)
+})
+
+p.notify((x)=> setTimeout(console.log, 0, 'progress:', x))
+p.then(()=> setTimeout(console.log, 0 , 'completed'))
+// （约 1 秒后）80% remaining
+// （约 2 秒后）60% remaining
+// （约 3 秒后）40% remaining
+// （约 4 秒后）20% remaining
+// （约 5 秒后）completed 
+```
+
+### [5. async和await](#)
+async和await是建立在Promise之上的高级抽象，使得异步代码的编写和阅读更加接近于同步代码的风格。
+
+#### [5.1 Async 函数](#)
+通过在函数声明前加上async关键字，可以将任何函数转换为返回Promise的异步函数。这意味着你可以使用 `.then()`和`.catch()`来处理它们的结果。
+
+代码示例：创建一个async函数
+```javascript
+async function asyncFunction() {
+    return "异步操作完成";
+}
+
+asyncFunction().then(value => console.log(value)); // 输出：异步操作完成
+```
+
+**await** 关键字
+
+await关键字只能在async函数内部使用。它可以暂停async函数的执行，等待Promise的解决（resolve），然后以Promise的值继续执行函数。
+
+在async函数中使用await
+```javascript
+async function asyncFunction() {
+  let promise = new Promise((resolve, reject) => {
+    setTimeout(() => resolve("完成"), 1000)
+  });
+
+  let result = await promise; // 等待，直到promise解决 (resolve)
+  console.log(result); // "完成"
+}
+
+asyncFunction();
+```
+await 表示强制等待的意思，await 关键字的后面要跟一个Promise 对象，他总是等到该Promise 对象 resolve 成功之后执行，并且会返回resolve 的结果
+```javascript
+async function test () {
+    // await 总是会等到后面的 Promise 执行完 resolve
+    // async  /  await 就是让我们用同步的方法去写异步
+    const result = await new Promise(function (resolve , reject){
+        setTimeout(function(){
+            resolve(5)
+        },5000)
+        alert(result)
+    })
+}
+```
+
+#### [5.2 错误处理](#)
+在 `async/await` 中，错误处理可以通过传统的 `try...catch` 语句实现，这使得异步代码的错误处理更加直观。
+
+代码示例：使用 `try...catch` 处理错误。
+```javascript
+async function asyncFunction() {
+  try {
+    let response = await fetch('http://example.com');
+    let data = await response.json();
+    // 处理数据
+  } catch (error) {
+    console.log('捕获到错误：', error);
+  }
+}
+
+asyncFunction();
+```
+在实际应用中，async和await使得处理复杂的异步逻辑更加简单，尤其是在涉及多个依次执行的异步操作时。
+
+前几年的版本时，浏览器执行过程中await 会阻塞后续代码，将后续的代码放入微任务队列中，但是现在的浏览器执行代码时会给紧跟在await关键字后的代码开小灶，相当于紧随在await关键字后的代码变成同步代码，但是再往后的代码依旧会被推入微任务队列。
+
+
+**参考引用**
+* [浅谈JavaScript中的Promise、Async和Await](https://juejin.cn/post/7320288262400311333?searchId=2024112022005837C301FF756361A8742E)
 
 -----
 时间: 2022/2/3 12:22
