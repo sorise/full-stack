@@ -115,7 +115,7 @@ Module.prototype.require = function (id) {
 };
 ```
 通过上面的源码我们应该知道了，module是通过new Module()实例化得到的一个CommonJS模块实例，它包含了该模块的一些信息，下面我打印了一下module：
-```json lines
+```
 {
   id: '.',
   path: 'F:\\GitRepo\\front-end\\ponder\\scripts',
