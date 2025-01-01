@@ -5,8 +5,8 @@
 
 ### 必知必会
 * nvm
-* npm、npx
-* [html](./PL.Learning/html)、css
+* [npm](./env/npm)、npx
+* [html](./PL.Learning/html)、[css](./PL.Learning/css)
 * scss、less
 * [JavaScript](./PL.Learning/javascript)/TypeScript
 * webpack 编译构建打包

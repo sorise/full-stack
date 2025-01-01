@@ -65,3 +65,46 @@ display: revert;
 display: revert-layer;
 display: unset;
 ```
+
+#### [1.2 清楚浮动](#)
+使用**伪元素** 来清除浮动。
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <style>
+        main{
+            width: 1200px;
+            margin: 0 auto;
+            background-color: yellow;
+        }
+        main > div{
+            height: 100px;
+            width: 100px;
+            float: left;
+        }
+        main:after{
+            content: "";
+            clear: both;
+            display: table;
+        }
+        main > div:nth-of-type(even){
+            background-color: #E64A19;
+        }
+        main > div:nth-of-type(odd){
+            background-color: green;
+        }
+    </style>
+</head>
+<body>
+    <main>
+        <div>1</div>
+        <div>2</div>
+        <div>3</div>
+    </main>
+</body>
+</html>
+```
