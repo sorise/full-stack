@@ -85,7 +85,6 @@ let failed = Promise.reject('因为网络问题').catch(reason => {console.log(r
 ```
 
 #### [1.3 封装一个json 请求](#)
-
 ```javascript
 const getJSON = function(url) {
     const promise = new Promise(function(resolve, reject){
@@ -120,6 +119,9 @@ getJSON("/posts.json").then(function(json) {
 #### [1.4 错误处理](#)
 Promise的设计很大程度上会导致一种完全不同于JavaScript的设计模式。
 
+1. 在Promise中抛出的错误，不会被外部 `try/catch` 捕获,**只能通过catch捕获**。
+2. 不能在Promise中使用 `try/catch`,里面抛出的错误可以使用catch捕获处理。
+
 ```javascript
 try {
   throw new Error('We got Error!');
@@ -133,9 +135,6 @@ try {
   console.log(e); // Uncaught (in promise) Error: We got Error!
 }
 ```
-1. 在Promise中抛出的错误，不会被外部 `try/catch` 捕获 只能通过catch捕获。
-2. 不能在Promise中使用 `try/catch`,里面抛出的错误可以使用catch捕获处理。
-
 这种写法会报错无法执行了。
 ```javascript
 let p1 = new Promise((resolve, reject) => {
@@ -146,7 +145,7 @@ let p1 = new Promise((resolve, reject) => {
     }
 });
 ```
-正确写法
+**正确写法**
 ```javascript
 let p1 = new Promise((resolve, reject) => {
     reject(new Error('oh 出错了'));

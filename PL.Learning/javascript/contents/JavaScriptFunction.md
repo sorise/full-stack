@@ -1,4 +1,4 @@
-## [Javasript 函数](#)
+## [JavaScript 函数](#)
 > **介绍**：JavaScript函数是ECMAScript中最有意思的部分之一，这主要是因为函数实际上是对象。
 
 -----

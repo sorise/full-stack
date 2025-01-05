@@ -1,4 +1,4 @@
-## [Javasript 集合类型](#)
+## [JavaScript 集合类型](#)
 > **介绍**：JavaScript 提供了多种内置的集合类型，包括数组（Array）、对象（Object）、Map 和 Set。
 
 -----

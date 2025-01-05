@@ -1,4 +1,4 @@
-## [Javasript 迭代器（Iterators）和生成器（Generators）](#)
+## [JavaScript 迭代器（Iterators）和生成器（Generators）](#)
 > **介绍**：迭代器提供了一种访问集合元素的标准方式，而生成器是一种特殊的函数，可以生成迭代器。
 
 -----

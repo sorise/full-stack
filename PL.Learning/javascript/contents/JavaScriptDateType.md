@@ -1,4 +1,4 @@
-## [Javasript 基础](#)
+## [JavaScript 基础](#)
 > **介绍**：ECMAScript 的语法很大程度上借鉴了 C 语言和其他类 C 语言，如 Java 和 Perl。熟悉这些语言的开
 发者，应该很容易理解 ECMAScript 宽松的语法。
 
