@@ -25,7 +25,7 @@ JavaScript/ECMAScript（JS）是一种具有函数优先特性的轻量级、解
 - [JavaScript 代理与反射](./contents/JavaScriptProxy.md) 迭代器提供了一种访问集合元素的标准方式，而生成器是一种特殊的生成迭代器的函数。
 - [JavaScript Promise 期约](./contents/JavaScriptPromise.md) Promise 对象 resolve、reject， async, await。
 - [JavaScript 模块化](./contents/JavaScriptModules.md) import export。
-- [JavaScript 异常、错误处理](./contents/JavaScriptException.md) Error。
+- [JavaScript 异常、错误处理](./contents/JavaScriptException.md) Error， try、catch、finally。
 
 
 ### Links
