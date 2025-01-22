@@ -26,7 +26,7 @@ JavaScript/ECMAScript（JS）是一种具有函数优先特性的轻量级、解
 - [JavaScript Promise 期约](./contents/JavaScriptPromise.md) Promise 对象 resolve、reject， async, await。
 - [JavaScript 模块化](./contents/JavaScriptModules.md) import export。
 - [JavaScript 异常、错误处理](./contents/JavaScriptException.md) Error， try、catch、finally。
-
+- [JavaScript BOM 浏览器对象](./contents/JavaScriptBOM.md) 操作浏览器 navigator、location、窗口、定时器、浏览器窗口。
 
 ### Links
 - [《JavaScript高级程序设计》（第4版）](https://nonfan.github.io/javascript-docs/)
