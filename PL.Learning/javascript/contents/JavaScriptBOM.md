@@ -413,3 +413,142 @@ location.port = 8080;
 ```
 除了 hash 之外，只要修改 location 的一个属性，就会导致页面重新加载新 URL。
 
+#### [2.3 replace()方法](#)
+在以前面提到的方式修改 URL 之后，浏览器历史记录中就会增加相应的记录。当用户单击“后退”按钮时，就会导航到前一个页面。**如果不希望增加历史记录，可以使用 replace()方法**。 
+
+这个方法接收一个 URL 参数，但重新加载后不会增加历史记录。 **调用replace()之后，用户不能回到前一页**。
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+ <title>You won't be able to get back here</title>
+</head>
+<body>
+ <p>Enjoy this page for a second, because you won't be coming back here.</p>
+ <script>
+   setTimeout(() => location.replace("https://juejin.cn/"), 1000);
+ </script>
+</body>
+</html> 
+```
+
+#### [2.4 reload()方法](#)
+reload能重新加载当前显示的页面。调用 reload()而不传参数，页面会以最有效的方式重新加载。
+
+```javascript
+location.reload(); // 重新加载，可能是从缓存加载
+location.reload(true); // 重新加载，从服务器加载
+```
+
+
+### [3. navigator](#)
+window.navigator属性指向一个包含浏览器和系统信息的 Navigator 对象。脚本通过这个属性了解用户的环境信息。
+
+navigator 对象实现了 NavigatorID 、 NavigatorLanguage 、 NavigatorOnLine 、
+NavigatorContentUtils 、 NavigatorStorage 、 NavigatorStorageUtils 、 NavigatorConcurrentHardware、NavigatorPlugins 和 NavigatorUserMedia 接口定义的属性和方法。
+
+| 属性/方法                         | 说 明 |
+|:------------------------------|:----|
+| activeVrDisplays              | 返回数组，包含 ispresenting 属性为 true 的 VRDisplay 实例|
+| appCodeName                   | 即使在非 Mozilla 浏览器中也会返回"Mozilla"|
+| appName                       | 浏览器全名|
+| appVersion                    | 浏览器版本。通常与实际的浏览器版本不一致|
+| battery                       | 返回暴露 Battery Status API 的 BatteryManager 对象|
+| buildId                       | 浏览器的构建编号|
+| connection                    | 返回暴露 Network Information API 的 NetworkInformation 对象|
+| cookieEnabled                 | 返回布尔值，表示是否启用了 cookie|
+| credentials                   | 返回暴露 Credentials Management API 的 CredentialsContainer 对象|
+| deviceMemory                  | 返回单位为 GB 的设备内存容量|
+| doNotTrack                    | 返回用户的“不跟踪”（do-not-track）设置|
+| geolocation()                 | 返回暴露 Geolocation API 的 Geolocation 对象|
+| getVRDisplays()               | 返回数组，包含可用的每个 VRDisplay 实例|
+| getUserMedia()                | 返回与可用媒体设备硬件关联的流|
+| hardwareConcurrency           | 返回设备的处理器核心数量|
+| javaEnabled()                 | 返回布尔值，表示浏览器是否能运行 Java Applet 小程序。|
+| language                      | 返回浏览器的主语言|
+| languages                     | 返回浏览器偏好的语言数组|
+| locks                         | 返回暴露 Web Locks API 的 LockManager 对象 |
+| mediaCapabilities             | 返回暴露 Media Capabilities API 的 MediaCapabilities 对象 |
+| mediaDevices                  | 返回可用的媒体设备|                                                
+| maxTouchPoints                | 返回设备触摸屏支持的最大触点数|                                        
+| mimeTypes                     | 返回浏览器中注册的 MIME 类型数组                    |                                        
+| onLine                        | 返回布尔值，表示浏览器是否联网|                            
+| oscpu                         | 返回浏览器运行设备的操作系统和（或）CPU|                       
+| permissions                   | 返回暴露 Permissions API 的 Permissions 对象 | 
+| platform                      | 返回浏览器运行的系统平台|
+| plugins                       | 返回浏览器安装的插件数组。在 IE 中，这个数组包含页面中所有<embed>元素|
+| product                       | 返回产品名称（通常是"Gecko"）|
+| productSub                    | 返回产品的额外信息（通常是 Gecko 的版本）|
+| registerProtocolHandler()     | 将一个网站注册为特定协议的处理程序|
+| requestMediaKeySystemAccess() | 返回一个期约，解决为 MediaKeySystemAccess 对象|
+| sendBeacon()                  | 方法用于向服务器异步发送数据|
+| serviceWorker                 | 返回用来与 ServiceWorker 实例交互的 ServiceWorkerContainer|
+| share()                       | 返回当前平台的原生共享机制|
+| storage                       | 返回暴露 Storage API 的 StorageManager 对象 |
+| userAgent                     | 返回浏览器的用户代理字符串|
+| vendor                        | 返回浏览器的厂商名称|
+| vendorSub                     | 返回浏览器厂商的更多信息|
+| vibrate()                     | 触发设备振动 |
+| webdriver                     | 返回浏览器当前是否被自动化程序控制 |
+
+**Geolocation** 对象提供下面三个方法。
+* Geolocation.getCurrentPosition()：得到用户的当前位置
+* Geolocation.watchPosition()：监听用户位置变化
+* Geolocation.clearWatch()：取消watchPosition()方法指定的监听函数 
+
+#### [3.1 检测插件](#)
+检测浏览器是否安装了某个插件是开发中常见的需求。除 IE10 及更低版本外的浏览器，都可以通过 plugins 数组来确定。这个数组中的每一项都包含如下属性。
+
+* name：插件名称。
+* description：插件介绍。
+* filename：插件的文件名。
+* length：由当前插件处理的 MIME 类型数量。
+
+通常，name 属性包含识别插件所需的必要信息，尽管不是特别准确。检测插件就是遍历浏览器中
+可用的插件，并逐个比较插件的名称，如下所示：
+
+```javascript
+// 插件检测，IE10 及更低版本无效
+let hasPlugin = function(name) {
+    name = name.toLowerCase();
+    for (let plugin of window.navigator.plugins){
+        if (plugin.name.toLowerCase().indexOf(name) > -1){
+            return true;
+        }
+    }
+    return false;
+}
+// 检测 Flash
+alert(hasPlugin("Flash"));
+// 检测 QuickTime
+alert(hasPlugin("QuickTime"));
+```
+在ie中检测插件可以使用专有的ActiveXObject 类型，并创建一个特定的插件实例。ie中是以com对象的方式实现的插件的，而com对象使用唯一标识符来标识。因此，检测插件必须知道其com标识符。如：
+```javascript
+// 检测ie中插件
+function hasIEPlugin(name) {
+  try {
+    new ActiveXObject(name);
+    return true;
+  } catch(e) {
+    return false;
+  }
+}
+// 检测flash
+hasIEPlugin('ShockwaveFlash.ShockwaveFlash')
+```
+上例中之所以用try...catch是因为创建未知com对象会导致抛出错误。这样，如果实例化成功返回true,否则抛出错误,返回false。由于两种检测方式差异比较大，所以针对每一个插件分别创建检测函数。如：
+```javascript
+// 检测所有浏览器flash
+
+function hasFlash() {
+  var result = hasPlugin('Flash');
+  if (!result) {
+    result = hasIEPlugin('ShockwaveFlash.ShockwaveFlash')
+  }
+  return result;
+}
+// 检测flash 
+hasFlash() 
+```

@@ -3,6 +3,7 @@
 发者，应该很容易理解 ECMAScript 宽松的语法。
 
 -----
+
 - [1. Javasript语法基础](#1-javasript语法基础)
 - [2. 变量声明](#2-变量声明)
 - [3. javasript原生数据类型](#3-javasript原生数据类型)
@@ -17,6 +18,7 @@
 - [12. Symbol 类型](#12-symbol-类型)
 - [13. Object 类型](#13-object-类型)
 - [14. 函数](#14-函数)
+
 -----
 
 ### [1. Javasript语法基础](#)
