@@ -4,7 +4,10 @@
 ---
 
 - [1. window 对象](#)
-- 
+- [2. location](#2-location)
+- [3. navigator](#3-navigator)
+- [4. screen](#4-screen)
+- [5. history](#5-history)
 
 ---
 
@@ -443,59 +446,61 @@ location.reload(true); // 重新加载，从服务器加载
 
 
 ### [3. navigator](#)
-window.navigator属性指向一个包含浏览器和系统信息的 Navigator 对象。脚本通过这个属性了解用户的环境信息。
+[window.navigator](https://developer.mozilla.org/zh-CN/docs/Web/API/Navigator) 属性指向一个包含浏览器和系统信息的 Navigator 对象。脚本通过这个属性了解用户的环境信息。
 
 navigator 对象实现了 NavigatorID 、 NavigatorLanguage 、 NavigatorOnLine 、
 NavigatorContentUtils 、 NavigatorStorage 、 NavigatorStorageUtils 、 NavigatorConcurrentHardware、NavigatorPlugins 和 NavigatorUserMedia 接口定义的属性和方法。
 
-| 属性/方法                         | 说 明 |
-|:------------------------------|:----|
-| activeVrDisplays              | 返回数组，包含 ispresenting 属性为 true 的 VRDisplay 实例|
-| appCodeName                   | 即使在非 Mozilla 浏览器中也会返回"Mozilla"|
-| appName                       | 浏览器全名|
-| appVersion                    | 浏览器版本。通常与实际的浏览器版本不一致|
-| battery                       | 返回暴露 Battery Status API 的 BatteryManager 对象|
-| buildId                       | 浏览器的构建编号|
-| connection                    | 返回暴露 Network Information API 的 NetworkInformation 对象|
-| cookieEnabled                 | 返回布尔值，表示是否启用了 cookie|
-| credentials                   | 返回暴露 Credentials Management API 的 CredentialsContainer 对象|
-| deviceMemory                  | 返回单位为 GB 的设备内存容量|
-| doNotTrack                    | 返回用户的“不跟踪”（do-not-track）设置|
-| geolocation()                 | 返回暴露 Geolocation API 的 Geolocation 对象|
-| getVRDisplays()               | 返回数组，包含可用的每个 VRDisplay 实例|
-| getUserMedia()                | 返回与可用媒体设备硬件关联的流|
-| hardwareConcurrency           | 返回设备的处理器核心数量|
-| javaEnabled()                 | 返回布尔值，表示浏览器是否能运行 Java Applet 小程序。|
-| language                      | 返回浏览器的主语言|
-| languages                     | 返回浏览器偏好的语言数组|
-| locks                         | 返回暴露 Web Locks API 的 LockManager 对象 |
-| mediaCapabilities             | 返回暴露 Media Capabilities API 的 MediaCapabilities 对象 |
-| mediaDevices                  | 返回可用的媒体设备|                                                
-| maxTouchPoints                | 返回设备触摸屏支持的最大触点数|                                        
-| mimeTypes                     | 返回浏览器中注册的 MIME 类型数组                    |                                        
-| onLine                        | 返回布尔值，表示浏览器是否联网|                            
-| oscpu                         | 返回浏览器运行设备的操作系统和（或）CPU|                       
-| permissions                   | 返回暴露 Permissions API 的 Permissions 对象 | 
-| platform                      | 返回浏览器运行的系统平台|
-| plugins                       | 返回浏览器安装的插件数组。在 IE 中，这个数组包含页面中所有<embed>元素|
-| product                       | 返回产品名称（通常是"Gecko"）|
-| productSub                    | 返回产品的额外信息（通常是 Gecko 的版本）|
-| registerProtocolHandler()     | 将一个网站注册为特定协议的处理程序|
-| requestMediaKeySystemAccess() | 返回一个期约，解决为 MediaKeySystemAccess 对象|
-| sendBeacon()                  | 方法用于向服务器异步发送数据|
-| serviceWorker                 | 返回用来与 ServiceWorker 实例交互的 ServiceWorkerContainer|
-| share()                       | 返回当前平台的原生共享机制|
-| storage                       | 返回暴露 Storage API 的 StorageManager 对象 |
-| userAgent                     | 返回浏览器的用户代理字符串|
-| vendor                        | 返回浏览器的厂商名称|
-| vendorSub                     | 返回浏览器厂商的更多信息|
-| vibrate()                     | 触发设备振动 |
-| webdriver                     | 返回浏览器当前是否被自动化程序控制 |
+| 属性/方法                         | 说 明                                                          |
+|:------------------------------|:-------------------------------------------------------------|
+| activeVrDisplays              | 返回数组，包含 ispresenting 属性为 true 的 VRDisplay 实例                 |
+| appCodeName                   | 即使在非 Mozilla 浏览器中也会返回"Mozilla"                               |
+| appName                       | 浏览器全名                                                        |
+| appVersion                    | 浏览器版本。通常与实际的浏览器版本不一致                                         |
+| battery                       | 返回暴露 Battery Status API 的 BatteryManager 对象                  |
+| buildId                       | 浏览器的构建编号                                                     |
+| connection                    | 返回暴露 Network Information API 的 NetworkInformation 对象,返回网络对象。 |
+| cookieEnabled                 | 返回布尔值，表示是否启用了 cookie                                         |
+| credentials                   | 返回暴露 Credentials Management API 的 CredentialsContainer 对象    |
+| deviceMemory                  | 返回单位为 GB 的设备内存容量                                             |
+| doNotTrack                    | 返回用户的“不跟踪”（do-not-track）设置                                   |
+| geolocation()                 | 返回暴露 Geolocation API 的 Geolocation 对象                        |
+| getVRDisplays()               | 返回数组，包含可用的每个 VRDisplay 实例                                    |
+| getUserMedia()                | 返回与可用媒体设备硬件关联的流                                              |
+| hardwareConcurrency           | 返回设备的处理器核心数量                                                 |
+| javaEnabled()                 | 返回布尔值，表示浏览器是否能运行 Java Applet 小程序。                            |
+| language                      | 返回浏览器的主语言                                                    |
+| languages                     | 返回浏览器偏好的语言数组                                                 |
+| locks                         | 返回暴露 Web Locks API 的 LockManager 对象                          |
+| mediaCapabilities             | 返回暴露 Media Capabilities API 的 MediaCapabilities 对象           |
+| mediaDevices                  | 返回可用的媒体设备                                                    |                                                
+| maxTouchPoints                | 返回设备触摸屏支持的最大触点数                                              |                                        
+| mimeTypes                     | 返回浏览器中注册的 MIME 类型数组                                          |                                        
+| onLine                        | 返回布尔值，表示浏览器是否联网                                              |                            
+| oscpu                         | 返回浏览器运行设备的操作系统和（或）CPU                                        |                       
+| permissions                   | 返回暴露 Permissions API 的 Permissions 对象                        | 
+| platform                      | 返回浏览器运行的系统平台                                                 |
+| plugins                       | 返回浏览器安装的插件数组。在 IE 中，这个数组包含页面中所有 `<embed>` 元素                 |
+| product                       | 返回产品名称（通常是"Gecko"）                                           |
+| productSub                    | 返回产品的额外信息（通常是 Gecko 的版本）                                     |
+| registerProtocolHandler()     | 将一个网站注册为特定协议的处理程序                                            |
+| requestMediaKeySystemAccess() | 返回一个期约，解决为 MediaKeySystemAccess 对象                           |
+| sendBeacon()                  | 方法用于向服务器异步发送数据                                               |
+| serviceWorker                 | 返回用来与 ServiceWorker 实例交互的 ServiceWorkerContainer             |
+| share()                       | 返回当前平台的原生共享机制                                                |
+| storage                       | 返回暴露 Storage API 的 StorageManager 对象                         |
+| userAgent                     | 返回浏览器的用户代理字符串                                                |
+| vendor                        | 返回浏览器的厂商名称                                                   |
+| vendorSub                     | 返回浏览器厂商的更多信息                                                 |
+| vibrate()                     | 触发设备振动                                                       |
+| webdriver                     | 返回浏览器当前是否被自动化程序控制                                            |
 
 **Geolocation** 对象提供下面三个方法。
 * Geolocation.getCurrentPosition()：得到用户的当前位置
 * Geolocation.watchPosition()：监听用户位置变化
 * Geolocation.clearWatch()：取消watchPosition()方法指定的监听函数 
+
+[使用navigator.connection.downlink前端测网速](https://www.zhangxinxu.com/wordpress/2021/04/navigator-connection-downlink/)
 
 #### [3.1 检测插件](#)
 检测浏览器是否安装了某个插件是开发中常见的需求。除 IE10 及更低版本外的浏览器，都可以通过 plugins 数组来确定。这个数组中的每一项都包含如下属性。
@@ -552,3 +557,176 @@ function hasFlash() {
 // 检测flash 
 hasFlash() 
 ```
+
+#### [3.2 注册处理程序](#)
+**想象百度网盘下载，请求启动电脑上的百度网盘程序**，现代浏览器支持 navigator 上的（在 HTML5 中定义的）registerProtocolHandler()方法。这个方法可以把一个网站注册为处理某种特定类型信息应用程序。随着在线 RSS 阅读器和电子邮件客户
+端的流行，可以借助这个方法将 Web 应用程序注册为像桌面软件一样的默认应用程序。
+
+要使用 [registerProtocolHandler()](https://developer.mozilla.org/zh-CN/docs/Web/API/Navigator/registerProtocolHandler)方法，必须传入 3 个参数：要处理的协议（如"mailto"或"ftp"）、处理该协议的 URL，以及应用名称。
+
+```javascript
+navigator.registerProtocolHandler("web+mailto",
+    "http://www.somemailclient.com?cmd=%s",
+"Some Mail Client"); 
+```
+
+这个例子为"mailto"协议注册了一个处理程序，这样邮件地址就可以通过指定的 Web 应用程序打开。注意，第二个参数是负责处理请求的 URL，%s 表示原始的请求。
+
+[**如何使用请看 click here.**](https://www.zhangxinxu.com/wordpress/2023/08/js-registerprotocolhandler/)
+
+所有自定义的协议头，一定要是web+开头，后面至少跟随一个英文字母（不能有数字，否则会报错）。
+
+否则只能使用下面之一的协议。
+bitcoin、ftp、ftps 、geo 、im 、irc 、ircs 、magnet 、mailto 、matrix 、mms
+、news 、nntp 、openpgp4fpr 、sftp 、sip 、sms 、smsto 、ssh 、tel 、urn 、webcal 、wtai 、xmpp
+
+而上面很多协议，浏览器是内置原生行为的，例如tel、mailto、ftps等，看起来是不能随便定义的，否则有可能会冲突。
+
+使用完全自定义的协议看看。
+
+代码如下（注意，后面的地址不能跨域，否则也会报错）：
+
+```javascript
+navigator.registerProtocolHandler('web+zxx', 'https://www.zhangxinxu.com/wordpress?s=%s');
+```
+我一开始以为是这样的，`%s` 表示使用时候协议冒号后面的变量，所以如果有链接：
+```html
+<a href="web+zxx:css">CSS标签</a>
+```
+在Windows Chrome下，还会呼起系统窗口，让你选择呼起的本地软件。
+
+### [4. screen](#)
+这个对象中保存的纯粹是客户端能力信息，也就是浏览器窗口外面的客户端显示器的信息，比如像素宽度和像 素高度。每个浏览器都会在 screen 对象上暴露不同的属性。
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>JavaScript</title>
+  </head>
+  <body>
+    <script>
+      document.write("availTop = " + screen.availTop + "<br />"); // 输出：0
+      document.write("availLeft = " + screen.availLeft + "<br />"); // 输出：0
+      document.write("availHeight = " + screen.availHeight + "<br />"); // 输出：1050
+      document.write("availWidth = " + screen.availWidth + "<br />"); // 输出：1920
+      document.write("height = " + screen.height + "<br />"); // 输出：1080
+      document.write("width = " + screen.width + "<br />"); // 输出：1920
+      document.write("colorDepth = " + screen.colorDepth + "<br />"); // 输出：24
+      document.write("pixelDepth = " + screen.pixelDepth + "<br />"); // 输出：24
+      console.log(screen.orientation); // 输出：ScreenOrientation {angle: 0, type:"landscape-primary", onchange: null}
+    </script>
+  </body>
+</html>
+```
+
+| 属 性         | 说 明                              |
+|:------------|:---------------------------------|
+| **availHeight** | 屏幕像素高度减去系统组件高度（只读）               |
+| availLeft | 没有被系统组件占用的屏幕的最左侧像素（只读）           |
+| availTop    | 没有被系统组件占用的屏幕的最顶端像素（只读）           |
+| **availWidth**  | 屏幕像素宽度减去系统组件宽度（只读）               |
+| colorDepth  | 表示屏幕颜色的位数；多数系统是 32（只读）           |
+| height      | 屏幕像素高度                           |
+| left        | 当前屏幕左边的像素距离                      |
+| pixelDepth  | 屏幕的位深（只读）                        |
+| top         | 当前屏幕顶端的像素距离                      |
+| width       | 屏幕像素宽度                           |
+| orientation | 返回 Screen Orientation API 中屏幕的朝向 |
+
+只读属性 **Screen.colorDepth** 返回屏幕的颜色深度（color depth），某些实现为了兼容性原因总是返回 24。
+```javascript
+// 检测屏幕的颜色深度
+if (window.screen.colorDepth < 8) {
+  // 使用低色彩版本页面
+} else {
+  // 使用常规的彩色版页面
+}
+```
+
+### [5. history](#)
+history 对象表示当前窗口首次使用以来用户的导航历史记录。因为 history 是 window 的属性，
+所以每个 window 都有自己的 history 对象。出于安全考虑，这个对象不会暴露用户访问过的 URL，
+但可以通过它在不知道实际 URL 的情况下前进和后退。
+
+go()方法可以在用户历史记录中沿任何方向导航，可以前进也可以后退。这个方法只接收一个参数，
+这个参数可以是一个整数，表示前进或后退多少步。
+
+```javascript
+// 后退一页
+history.go(-1);
+// 前进一页
+history.go(1);
+// 前进两页
+history.go(2);
+```
+go()方法的参数也可以是一个字符串，这种情况下浏览器会导航到历
+史中包含该字符串的第一个位置。
+```javascript
+// 导航到最近的 wrox.com 页面
+history.go("wrox.com");
+// 导航到最近的 nczonline.net 页面
+history.go("nczonline.net"); 
+```
+go()有两个简写方法：back()和 forward()。顾名思义，这两个方法模拟了浏览器的后退按钮和前进按钮：
+
+history 对象还有一个 length 属性，表示历史记录中有多个条目。
+```javascript
+if (history.length == 1){
+ // 这是用户窗口中的第一个页面
+} 
+```
+
+看看 navigator.replace方法，区分开理解。
+
+如果页面 URL 发生变化，则会在历史记录中生成一个新条目。对于 2009 年以来发
+布的主流浏览器，这包括改变 URL 的散列值（因此，把 location.hash 设置为一个新值会在这些浏览器的历史记录中增加一条记录）。
+
+**这个行为常被单页应用程序框架用来模拟前进和后退，这样做是为了不会因导航而触发页面刷新**。
+
+#### [5.1 历史状态管理](#)
+现代 Web 应用程序开发中最难的环节之一就是历史记录管理。用户每次点击都会触发页面刷新的
+时代早已过去，“后退”和“前进”按钮对用户来说就代表“帮我切换一个状态”的历史也就随之结束
+了。
+
+为解决这个问题，首先出现的是 hashchange 事件（第 17 章介绍事件时会讨论）。HTML5 也为history 对象增加了方便的状态管理特性。
+
+hashchange 会在页面 URL 的散列变化时被触发，开发者可以在此时执行某些操作。而状态管理
+API 则可以让开发者改变浏览器 URL 而不会加载新页面。为此，可以使用 history.pushState()方
+法。这个方法接收 3 个参数：一个 state 对象、一个新状态的标题和一个（可选的）相对 URL。例如：
+
+```javascript
+let stateObject = {foo:"bar"};
+history.pushState(stateObject, "My title", "baz.html");
+```
+pushState()方法执行后，状态信息就会被推到历史记录中，浏览器地址栏也会改变以反映新的相对URL。
+
+除了这些变化之外，即使 location.href 返回的是地址栏中的内容，浏览器页不会向服务器发送请求。第二个参数并未被当前实现所使用，因此既可以传一个空字符串也可以传一个短标题。
+
+第一
+个参数应该包含正确初始化页面状态所必需的信息。为防止滥用，这个状态的对象大小是有限制的，通 常在 500KB～1MB 以内。
+
+因为 pushState()会创建新的历史记录，所以也会相应地启用“后退”按钮。此时单击“后退” 按钮，就会触发 window 对象上的 popstate 事件。popstate 事件的事件对象有一个 state 属性，其
+中包含通过 pushState()第一个参数传入的 state 对象：
+
+```javascript
+window.addEventListener("popstate", (event) => {
+ let state = event.state;
+ if (state) { // 第一个页面加载时状态是 null
+    processState(state);
+ }
+}); 
+```
+基于这个状态，应该把页面重置为状态对象所表示的状态（因为浏览器不会自动为你做这些）。记住，页面初次加载时没有状态。因此点击“后退”按钮直到返回最初页面时，event.state 会为 null。
+可以通过 history.state 获取当前的状态对象，也可以使用 replaceState()并传入与pushState()同样的前两个参数来更新状态。更新状态不会创建新历史记录，只会覆盖当前状态：
+```javascript
+history.replaceState({newFoo: "newBar"}, "New title");
+```
+
+传给 pushState()和 replaceState()的 state 对象应该只包含可以被序列化的信息。因此，DOM 元素之类并不适合放到状态对象里保存。
+
+> 使用 HTML5 状态管理时，要确保通过 pushState()创建的每个“假”URL 背后
+都对应着服务器上一个真实的物理 URL。否则，单击“刷新”按钮会导致 404 错误。所有
+单页应用程序（SPA，Single Page Application）框架都必须通过服务器或客户端的某些配
+置解决这个问题。
