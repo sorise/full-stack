@@ -408,7 +408,8 @@ console.log(array3);
 // Expected output: Array ["a", "b", "c", "d", "e", "f"]
 ```
 
-[**slice()**](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Array/slice) 用于创建一个包含原有数组中一个或多个元素的新数组。
+[**slice(start, end)**](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Array/slice)
+方法返回一个新的数组对象，这一对象是一个由 start 和 end 决定的原数组的浅拷贝（包括 start，不包括 end），其中 start 和 end 代表了数组元素的索引。原始数组不会被改变。
 ```javascript
 slice()
 slice(start)
