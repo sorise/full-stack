@@ -313,7 +313,7 @@ let p = Promise.all([p1,p2,p3]).then( result=>{
     console.log(error);
     /*
     error:
-    index.html:28 SyntaxError: Identifier 'x' has already been declared
+    _index.html:28 SyntaxError: Identifier 'x' has already been declared
         at new Promise (<anonymous>)
         at index.html:9
 
