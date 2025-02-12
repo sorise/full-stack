@@ -498,7 +498,6 @@ ul.innerHTML = values.map(value => '<li>${value}</li>').join('');
 
 ### [10. 滚动](#)
 
-
 #### [10.1 scrollIntoView](#)
 DOM 规范中没有涉及的一个问题是如何滚动页面中的某个区域。为填充这方面的缺失，不同浏览
 器实现了不同的控制滚动的方式。在所有这些专有方法中，HTML5 选择了标准化 scrollIntoView()。
