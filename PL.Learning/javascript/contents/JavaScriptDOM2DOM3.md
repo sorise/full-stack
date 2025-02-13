@@ -1,9 +1,18 @@
 ## [JavaScript DOM2、DOM3](#)
-**介绍**：
+**介绍**：DOM1（DOM Level 1）主要定义了 HTML 和 XML 文档的底层结构。DOM2（DOM Level 2）和
+DOM3（DOM Level 3）在这些结构之上加入更多交互能力，提供了更高级的 XML 特性。
 
 -----
 
-- [1. DOM 的演进](#)
+- [1. DOM 的演进](#1-dom-的演进)
+- [2. XML 命名空间](#2-xml-命名空间)
+- [3. 其他变化](#3-其他变化)
+- [4. Node 的变化](#4-node-的变化)
+- [5. 内嵌窗格iframe](#5-内嵌窗格iframe的变化)
+- [6. 样式](#6-样式)
+- [7. 元素尺寸](#7-元素尺寸)
+- [8. 遍历](#8-遍历)
+- [9. 范围](#9-范围)
 
 ----
 
@@ -661,8 +670,201 @@ DOM2 Traversal and Range 模块定义了两个类型用于辅助顺序遍历 DOM
 
 #### [8.1 NodeIterator](#)
 NodeIterator 类型是两个类型中比较简单的，可以通过 document.createNodeIterator()方
-法创建其实例。这个方法接收以下 4 个参数。
+法创建其实例。这个方法接收以下 4 个参数,在浏览器中其实只有3个参数会生效。
 - root，作为遍历根节点的节点。
 - whatToShow，数值代码，表示应该访问哪些节点。
 - filter，NodeFilter 对象或函数，表示是否接收或跳过特定节点。
 - entityReferenceExpansion，布尔值，表示是否扩展实体引用。这个参数在 HTML 文档中没有效果，因为实体引用永远不扩展。
+
+```javascript
+createNodeIterator(root)
+createNodeIterator(root, whatToShow)
+createNodeIterator(root, whatToShow, filter)
+```
+
+whatToShow 参数是一个位掩码，通过应用一个或多个过滤器来指定访问哪些节点。这个参数对应
+的常量是在 NodeFilter 类型中定义的。
+- NodeFilter.SHOW_ALL，所有节点。
+- NodeFilter.SHOW_ELEMENT，元素节点。
+- NodeFilter.SHOW_ATTRIBUTE，属性节点。由于 DOM 的结构，因此实际上用不上。
+- NodeFilter.SHOW_TEXT，文本节点。
+- NodeFilter.SHOW_CDATA_SECTION，CData 区块节点。不是在 HTML 页面中使用的。
+- NodeFilter.SHOW_ENTITY_REFERENCE，实体引用节点。不是在 HTML 页面中使用的。
+- NodeFilter.SHOW_ENTITY，实体节点。不是在 HTML 页面中使用的。
+- NodeFilter.SHOW_PROCESSING_INSTRUCTION，处理指令节点。不是在 HTML 页面中使用的。
+- NodeFilter.SHOW_COMMENT，注释节点。
+- NodeFilter.SHOW_DOCUMENT，文档节点。
+- NodeFilter.SHOW_DOCUMENT_TYPE，文档类型节点。
+- NodeFilter.SHOW_DOCUMENT_FRAGMENT，文档片段节点。不是在 HTML 页面中使用的。
+- NodeFilter.SHOW_NOTATION，记号节点。不是在 HTML 页面中使用的。
+
+这些值除了 NodeFilter.SHOW_ALL 之外，都可以组合使用。比如，可以像下面这样使用按位或操作组合多个选项：
+```javascript
+let whatToShow = NodeFilter.SHOW_ELEMENT | NodeFilter.SHOW_TEXT; 
+```
+
+createNodeIterator()方法的 filter 参数可以用来指定自定义 NodeFilter 对象，或者一个
+作为节点过滤器的函数。NodeFilter 对象只有一个方法 acceptNode()，如果给定节点应该访问就返
+回 NodeFilter.FILTER_ACCEPT，否则返回 NodeFilter.FILTER_SKIP。
+
+> 因为 NodeFilter 是一个抽象类型，所以不可能创建它的实例。只要创建一个包含 acceptNode()的对象，然后把它传给createNodeIterator()就可以了。
+
+```javascript
+//以下代码定义了只接收<p>元素的节点过滤器对象：
+let filter = {
+  acceptNode(node) {
+    return node.tagName.toLowerCase() === "p" ? 
+            NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_SKIP;
+  }
+};
+
+let root = document.body;
+let iterator = document.createNodeIterator(root, NodeFilter.SHOW_ELEMENT, filter);
+```
+要创建一个简单的遍历所有节点的 NodeIterator，可以使用以下代码：
+```javascript
+let iterator = document.createNodeIterator(document, NodeFilter.SHOW_ALL, null);
+```
+NodeIterator 的两个主要方法是 nextNode()和 previousNode()。nextNode()方法在 DOM
+子树中以深度优先方式进前一步，而 previousNode()则是在遍历中后退一步。
+
+创建 NodeIterator对象的时候，会有一个内部指针指向根节点，因此第一次调用 nextNode()返回的是根节点。当遍历到
+达 DOM 树最后一个节点时，nextNode()返回 null。previousNode()方法也是类似的。当遍历到达
+DOM 树最后一个节点时，调用 previousNode()返回遍历的根节点后，再次调用也会返回 null。
+
+```html
+<div id="div1">
+ <p><b>Hello</b> world!</p>
+ <ul>
+   <li>List item 1</li>
+   <li>List item 2</li>
+   <li>List item 3</li>
+ </ul>
+</div>
+```
+
+假设想要遍历<div>元素内部的所有元素，那么可以使用如下代码：
+```javascript
+let div = document.getElementById("div1");
+let iterator = document.createNodeIterator(div, NodeFilter.SHOW_ELEMENT, null, false);
+let node = iterator.nextNode();
+while (node !== null) {
+   console.log(node.tagName); // 输出标签名
+   node = iterator.nextNode();
+} 
+//DIV P B UL LI LI LI 
+```
+如果只想遍历`<li>`元素，可以传入一个过滤器，比如：
+
+在这个例子中，遍历只会输出`<li>`元素的标签。nextNode()和 previousNode()方法共同维护 NodeIterator 对 DOM 结构的内部指针，因此修
+改 DOM 结构也会体现在遍历中。
+
+#### [8.2 TreeWalker](#)
+TreeWalker 是 NodeIterator 的高级版。除了包含同样的 nextNode()、previousNode()方法，
+TreeWalker 还添加了如下在 DOM 结构中向不同方向遍历的方法。
+- parentNode()，遍历到当前节点的父节点。
+- firstChild()，遍历到当前节点的第一个子节点。
+- lastChild()，遍历到当前节点的最后一个子节点。
+- nextSibling()，遍历到当前节点的下一个同胞节点。
+- previousSibling()，遍历到当前节点的上一个同胞节点。
+
+TreeWalker 对象要调用 **document.createTreeWalker**()方法来创建，这个方法接收与
+document.createNodeIterator()同样的参数：作为遍历起点的根节点、要查看的节点类型、节点
+过滤器和一个表示是否扩展实体引用的布尔值。因为两者很类似，所以 TreeWalker 通常可以取代
+NodeIterator，比如：
+```javascript
+let div = document.getElementById("div1");
+let filter = function(node) {
+   return node.tagName.toLowerCase() == "li" ?
+   NodeFilter.FILTER_ACCEPT :
+   NodeFilter.FILTER_SKIP;
+};
+
+let walker = document.createTreeWalker(div, NodeFilter.SHOW_ELEMENT,
+        filter, false);
+let node = iterator.nextNode();
+while (node !== null) {
+  console.log(node.tagName); // 输出标签名
+  node = iterator.nextNode();
+}
+```
+
+不同的是，节点过滤器（filter）除了可以返回 NodeFilter.FILTER_ACCEPT 和 NodeFilter.
+FILTER_SKIP，还可以返回 NodeFilter.FILTER_REJECT。而 NodeFilter.FILTER_REJECT 则表示**跳过该节点以及该节点的整个子树**。
+
+当然，TreeWalker 真正的威力是可以在 DOM 结构中四处游走。如果不使用过滤器，单纯使用
+TreeWalker 的漫游能力同样可以在 DOM 树中访问<li>元素，比如：
+
+```javascript
+let div = document.getElementById("div1");
+let walker = document.createTreeWalker(div, NodeFilter.SHOW_ELEMENT, null, false);
+
+walker.firstChild(); // 前往<p>
+walker.nextSibling(); // 前往<ul>
+
+let node = walker.firstChild(); // 前往第一个<li>
+while (node !== null) {
+  console.log(node.tagName);
+  node = walker.nextSibling();
+}
+```
+
+TreeWalker 类型也有一个名为 currentNode 的属性，表示遍历过程中上一次返回的节点（无论
+使用的是哪个遍历方法）。可以通过修改这个属性来影响接下来遍历的起点，如下面的例子所示：
+
+```javascript
+let node = walker.nextNode();
+console.log(node === walker.currentNode); // true
+walker.currentNode = document.body; // 修改起点
+```
+相比于 NodeIterator，TreeWalker 类型为遍历 DOM 提供了更大的灵活性。
+
+### [9. 范围](#)
+为了支持对页面更细致的控制，DOM2 Traversal and Range 模块定义了范围接口。范围可用于在文
+档中选择内容，而不用考虑节点之间的界限。（选择在后台发生，用户是看不到的。）范围在常规 DOM
+操作的粒度不够时可以发挥作用。
+
+**尽管DOM2 范围非常强大，但在现代Web开发中，它的直接使用并不常见**。这是因为许多常见的用例已经
+被更高层次的API或库所封装，例如jQuery或其他JavaScript框架提供的功能。此外，随着浏览器原
+生支持的功能日益增强，开发者通常会优先使用这些更为便捷的方法来进行DOM操作。
+#### [9.1 DOM 范围](#)
+DOM2 在 Document 类型上定义了一个 createRange()方法，暴露在 document 对象上。使用这
+个方法可以创建一个 DOM 范围对象，如下所示：
+```javascript
+let range = document.createRange(); 
+```
+每个范围都是 Range 类型的实例，拥有相应的属性和方法。
+- startContainer，范围起点所在的节点（选区中第一个子节点的父节点）。
+- startOffset，范围起点在 startContainer 中的偏移量。如果 startContainer 是文本节
+点、注释节点或 CData 区块节点，则 startOffset 指范围起点之前跳过的字符数；否则，表示
+范围中第一个节点的索引。
+- endContainer，范围终点所在的节点（选区中最后一个子节点的父节点）。
+- endOffset，范围起点在 startContainer 中的偏移量（与 startOffset 中偏移量的含义相同）。
+- commonAncestorContainer，文档中以startContainer和endContainer为后代的最深的节点。
+
+这些属性会在范围被放到文档中特定位置时获得相应的值。
+
+#### [9.2 简单选择](#)
+通过范围选择文档中某个部分最简单的方式，就是使用 selectNode()或 selectNodeContents()方法。
+```html
+<!DOCTYPE html>
+<html>
+ <body>
+ <p id="p1"><b>Hello</b> world!</p>
+ </body>
+</html>
+```
+以下 JavaScript 代码可以访问并创建相应的范围：这两个方法都接收一个节点作为参数，并将该节点的信息添加到调用它的范围。selectNode()方
+法选择整个节点，包括其后代节点，而 selectNodeContents()只选择节点的后代。
+```javascript
+let range1 = document.createRange(),
+range2 = document.createRange(),
+p1 = document.getElementById("p1");
+range1.selectNode(p1);
+range2.selectNodeContents(p1); 
+```
+例子中的这两个范围包含文档的不同部分。range1 包含`<p>`元素及其所有后代，而 range2 包含
+`<b>`元素、文本节点"Hello"和文本节点" world!"，
+
+<img src="static/tingisworldneedmetofuimg.png" width="400">
+
