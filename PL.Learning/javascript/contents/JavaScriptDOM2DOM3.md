@@ -536,7 +536,6 @@ function getElementTop(element) {
 > 所有这些偏移尺寸属性都是只读的，每次访问都会重新计算。因此，应该尽量减少
 查询它们的次数。比如把查询的值保存在局量中，就可以避免影响性能。
 
-
 #### [7.2 元素的客户端尺寸](#)
 元素的客户端尺寸（client dimensions）包含元素内容及其内边距所占用的空间。客户端尺寸只有两
 个相关属性：clientWidth 和 clientHeight。其中，clientWidth 是内容区宽度加左、右内边距宽
@@ -547,6 +546,69 @@ function getElementTop(element) {
 客户端尺寸实际上就是元素内部的空间，因此不包含滚动条占用的空间。这两个属性最常用于确定
 浏览器视口尺寸，即检测 document.documentElement 的 clientWidth 和 clientHeight。这两个
 属性表示视口（`<html>`或`<body>`元素）的尺寸。
+
+```html
+<body>
+    <div class="container">
+        <div class="content">
+
+        </div>
+    </div>
+</body>
+<style>
+    *{
+        padding: 0;
+        margin: 0;
+    }
+    :root {
+        --containerWidth: 1000px;
+        --containerHeight: 500px;
+    }
+    .container{
+        background-color: rgba(0,0,0,0.01);
+        height: var(--containerHeight);
+        width: var(--containerWidth);
+        margin: 15px auto;
+
+        --contentHW: 200px;
+        .content{
+            height: var(--contentHW);
+            width: var(--contentHW);
+            background-color: red;
+            box-sizing: border-box;
+            border: 5px solid green;
+            padding: 10px;
+            margin-top: 15px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+    }
+</style>
+<script>
+  let content = document.querySelector(".content");
+  if (content){
+    console.log(`content.offsetWidth: ${content.offsetWidth}`);
+    //content.offsetWidth: 230
+    console.log(`content.offsetHeight: ${content.offsetHeight}`);
+    //content.offsetHeight: 230
+    console.log(`content.clientWidth: ${content.clientWidth}`);
+    //content.clientWidth: 220
+    console.log(`content.clientHeight: ${content.clientHeight}`);
+    //content.clientHeight: 220
+  }
+</script>
+```
+如果盒子模型为 `box-sizing: border-box;`
+```javascript
+console.log(`content.offsetWidth: ${content.offsetWidth}`);
+//content.offsetWidth: 200
+console.log(`content.offsetHeight: ${content.offsetHeight}`);
+//content.offsetHeight: 200
+console.log(`content.clientWidth: ${content.clientWidth}`);
+//content.clientWidth: 190
+console.log(`content.clientHeight: ${content.clientHeight}`);
+//content.clientHeight: 190
+```
 
 #### [7.3 滚动尺寸](#)
 最后一组尺寸是滚动尺寸（scroll dimensions），提供了元素内容滚动距离的信息。有些元素，比如
@@ -559,3 +621,48 @@ function getElementTop(element) {
 - scrollWidth，没有滚动条出现时，元素内容的总宽度。
 
 <img src="static/imasddddddddddddddaasaweqwe213123g.png" width="500px">
+
+scrollWidth 和 scrollHeight 可以用来确定给定元素内容的实际尺寸。
+
+`<html>` 元素是浏览器中滚动视口的元素。因此，document.documentElement.scrollHeight 就是整个页面垂直方向的总高度。
+
+> scrollWidth 和 scrollHeight 与 clientWidth 和 clientHeight 之间的关系在不需要滚动的
+文档上是分不清的。如果文档尺寸超过视口尺寸，则在所有主流浏览器中这两对属性都不相等，scrollWidth 和 scollHeight 等于文档内容的宽度，而 clientWidth 和 clientHeight 等于视口的大小。
+
+#### [7.4 确定元素尺寸](#)
+浏览器在每个元素上都暴露了 getBoundingClientRect()方法，返回一个 DOMRect 对象，包含
+6 个属性：left、top、right、bottom、height 和 width。这些属性给出了元素在页面中相对于视
+口的位置。下图展示了这些属性的含义：
+
+<img src="static/asdqweqvgsr248jul242img.png" width="450px">
+
+
+### [8. 遍历](#)
+DOM2 Traversal and Range 模块定义了两个类型用于辅助顺序遍历 DOM 结构。这两个类型——NodeIterator 和 TreeWalker——从某个起点开始执行对 DOM 结构的 **深度优先遍历**。
+
+如前所述，DOM 遍历是对 DOM 结构的深度优先遍历，至少允许朝两个方向移动（取决于类型）。 遍历以给定节点为根，不能在 DOM 中向上超越这个根节点。
+
+```html
+<!DOCTYPE html>
+<html>
+ <head>
+    <title>Example</title>
+ </head>
+ <body>
+    <p><b>Hello</b> world!</p>
+ </body>
+</html> 
+```
+这段代码构成的 DOM 树如图:
+
+<img src="static/issdafsafgsesg24234ssssssss1mg.png" width="500px">
+
+其中的任何节点都可以成为遍历的根节点。
+
+#### [8.1 NodeIterator](#)
+NodeIterator 类型是两个类型中比较简单的，可以通过 document.createNodeIterator()方
+法创建其实例。这个方法接收以下 4 个参数。
+- root，作为遍历根节点的节点。
+- whatToShow，数值代码，表示应该访问哪些节点。
+- filter，NodeFilter 对象或函数，表示是否接收或跳过特定节点。
+- entityReferenceExpansion，布尔值，表示是否扩展实体引用。这个参数在 HTML 文档中没有效果，因为实体引用永远不扩展。
