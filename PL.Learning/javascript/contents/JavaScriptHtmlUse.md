@@ -268,3 +268,23 @@ ES5 引入了文档模式的概念，通过使用DOCTYPE实现模式切换，它
 * 图片的布局
     * 当一个块元素div中包含的内容只有图片时，在标准模式下，不管IE还是标准，在图片底部都有3像素的空白。但在混杂模式下，标准浏览器（Chrome）中div距图片底部默认没有空白
 
+document.compatMode用来判断当前浏览器采用的渲染方式。
+* **BackCompat**：标准兼容模式关闭。document.documentElement.scrollLeft scrollTop 检测滚动。
+* **CSS1Compat**：标准兼容模式开启。可以通过body检测 scrollLeft scrollTop 属性的变化
+
+```javascript
+function GetViewportWidthAndHeight(){
+    let [width,height] = [window.innerWidth, window.innerHeight];
+    if (typeof width != "number"){
+        if (document.compatMode == "CSS1Compat"){
+            width = document.documentElement.clientWidth;
+            height =document.documentElement.clientHeight;
+        }else {
+            //混杂模式下使用 body访问视口大小
+            width = document.body.clientWidth;
+            height =document.body.clientHeight;
+        }
+    }
+    return [width, height];
+}
+```
