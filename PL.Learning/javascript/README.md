@@ -4,7 +4,7 @@
 
 ----
 
-### 内容目录
+### 必学内容目录
 JavaScript/ECMAScript（JS）是一种具有函数优先特性的轻量级、解释型或者说即时编译型的编程语言,是一种
 基于原型、多范式、单线程的动态语言，并且支持面向对象、命令式和声明式（如函数式编程）风格。
 
@@ -32,8 +32,13 @@ JavaScript/ECMAScript（JS）是一种具有函数优先特性的轻量级、解
 - [JavaScript DOM MutationObserver](./contents/JavaScriptMutationObserver.md) 理解 MutationObserver 如何用于监听 DOM 树变化。 
 - [JavaScript DOM 扩展](./contents/JavaScriptDOMExpand.md) DOM扩展、Selectors API、CSS 类扩展、自定义数据属性、滚动等。
 - [JavaScript DOM2、DOM3 ](./contents/JavaScriptDOM2DOM3.md) DOM2与DOM3、XML 命名空间、Node 的变化、内嵌窗格iframe的变化、操作样式、元素尺寸与位置。
-- [JavaScript Event 事件](./contents/JavaScriptEvent.md) 
+- [JavaScript Event 事件](./contents/JavaScriptEvent.md) 绑定事件、事件对象、事件类型
 - [JavaScript Event 内存与性能](./contents/JavaScriptEventDelegate.md) 事件委托、模拟事件。
+- [JavaScript RequestAnimationFrame](./contents/JavaScriptRequestAnimationFrame.md) 。
+
+### [Web 3D/2D 图像](#)
+- [Canvas 教程](#) 
+- [WebGL 教程](#)
 
 ### Links
 - [《JavaScript高级程序设计》（第4版）](https://nonfan.github.io/javascript-docs/)
