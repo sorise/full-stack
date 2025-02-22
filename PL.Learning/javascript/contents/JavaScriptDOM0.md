@@ -644,14 +644,14 @@ let allElements = document.getElementsByTagName("*");
 #### [2.4 Document的特殊集合](#)
 document 对象上还暴露了几个特殊集合，这些集合也都是 HTMLCollection 的实例。这些集合是
 访问文档中公共部分的快捷方式，列举如下。
-* document.anchors 包含文档中所有带 name 属性的 `<a>`元素。
-* document.applets 包含文档中所有 `<applet>` 元素（因为`<applet>`元素已经不建议使用，所
+* **document.anchors** 包含文档中所有带 name 属性的 `<a>`元素。
+* **document.applets** 包含文档中所有 `<applet>` 元素（因为`<applet>`元素已经不建议使用，所
 以这个集合已经废弃）。
-* document.forms 包含文档中所有 `<form>` 元素（与 document.getElementsByTagName ("form")
+* **document.forms** 包含文档中所有 `<form>` 元素（与 document.getElementsByTagName ("form")
 返回的结果相同）。
-* document.images 包含文档中所有 `<img>` 元素（与 document.getElementsByTagName ("img")
+* **document.images** 包含文档中所有 `<img>` 元素（与 document.getElementsByTagName ("img")
 返回的结果相同）。
-* document.links 包含文档中所有带 href 属性的 `<a>` 元素。
+* **document.links** 包含文档中所有带 href 属性的 `<a>` 元素。
 
 > 这些特殊集合始终存在于 HTMLDocument 对象上，而且与所有 HTMLCollection 对象一样，其内
 容也会实时更新以符合当前文档的内容。

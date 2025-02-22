@@ -15,7 +15,3 @@
 ### links
 [JavaScript | MDN](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript)、[印记中文](https://docschina.org/) 、[阮一峰 ECMAScript 6 入门](https://es6.ruanyifeng.com/)
 
-### 世界人类文化遗产瑰宝
-- 《是，首相》、《是、大臣》
-- 苏联笑话
-- 第五共和国
