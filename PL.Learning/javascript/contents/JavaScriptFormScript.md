@@ -3,6 +3,10 @@
 
 ----
 
+- [1. 表单基础](#1-表单基础)
+- [2. 文本框编程](#2-文本框编程)
+- [3. 输入过滤](#3-输入过滤)
+- [4. HTML5 约束验证 API](#4-html5-约束验证-api)
 
 ----
 
@@ -432,6 +436,243 @@ range.moveEnd("character", 6);
 range.select(); // "o w" 
 ```
 与其他浏览器一样，如果想要看到选中的效果，则必须让文本框获得焦点，部分选中文本对自动完成建议项等高级文本输入框是很有用的。
+
+### [3. 输入过滤](#)
+不同文本框经常需要保证输入特定类型或格式的数据。或许数据需要包含特定字符或必须匹配某个特定模式。
+由于文本框默认并未提供什么验证功能，因此必须通过 JavaScript 来实现这种输入过滤。
+
+```javascript
+textbox.addEventListener("keypress", (event) => {
+    event.preventDefault();
+}); 
+```
+组合使用相关事件及 DOM 能力，可以把常规的文本框转换为能够理解自己所收集数据的智能输入框。
+
+运行以上代码会让文本框变成只读，因为所有按键都被屏蔽了。如果想只屏蔽特定字符，则需要检查事件的
+charCode 属性，以确定正确的回应方式。
+```javascript
+textbox.addEventListener("keypress", (event) => {
+ if (!/\d/.test(String.fromCharCode(event.charCode))){
+     event.preventDefault();
+ }
+}); 
+```
+这个例子先用String.fromCharCode()把事件的charCode 转换为字符串，再用正则表达式 `/\d/` 来测试。
+这个正则表达式匹配所有数字字符，如果测试失败就调用 preventDefault()屏蔽事件默认行为。
+这样就可以让文本框忽略非数字输入。
+
+#### [3.1 屏蔽字符](#)
+虽然 keypress 事件应该只在按下字符键时才触发，但某些浏览器会在按下其他键时也触发这个事件。
+
+Firefox 和 Safari（3.1 之前）会在按下上、下箭头键、退格键和删除键时触发 keypress 事件。Safari 3.1 及之后版本对这些键则不会再触发 keypress 事件。这意味着简单地屏蔽所有非数字字符还不够好，
+因为这样也屏蔽了上述这些非常有用的且必要的键。好在我们可以轻松检测到是否按下了这些键。在Firefox 中，所有触发 keypress 事件的非字符键的 charCode 都是 0，而在 Safari 3 之前这些键的
+charCode 都是 8。
+
+综合考虑这些情况，就是不能屏蔽 charCode 小于 10 的键。为此，上面的函数可以改进为：
+```javascript
+textbox.addEventListener("keypress", (event) => {
+ if (!/\d/.test(String.fromCharCode(event.charCode)) && event.charCode > 9){
+     event.preventDefault();
+ }
+}); 
+```
+这个事件处理程序可以在所有浏览器中使用，屏蔽非数字字符但允许同样会触发 keypress 事件的所有基础按键。
+
+还有一个问题需要处理：复制、粘贴及涉及 `Ctrl 键` 的其他功能。在除 IE 外的所有浏览器中，前面代码会
+屏蔽快捷键 `Ctrl+C`、`Ctrl+V` 及其他使用 `Ctrl 的组合键`。
+
+因此，最后一项检测是确保没有按下 `Ctrl` 键，如下面的例子所示：
+```javascript
+textbox.addEventListener("keypress", (event) => {
+ if (!/\d/.test(String.fromCharCode(event.charCode)) && event.charCode > 9 && !event.ctrlKey){
+    event.preventDefault();
+ }
+});
+```
+最后这个改动可以确保所有默认的文本框行为不受影响。这个技术可以用来自定义是否允许在文本框中输入某些字符。
+
+#### [3.2 处理剪贴板](#)
+IE 是第一个支持剪贴板相关事件及通过 JavaScript 访问剪贴板数据的浏览器。IE 的实现成为了事实
+标准，这是因为 Safari、Chrome、Opera 和 Firefox 都实现了相同的事件和剪贴板访问机制，后来 HTML5
+也增加了剪贴板事件 。以下是与剪贴板相关的 6 个事件。
+
+- beforecopy：复制操作发生前触发。
+- copy：复制操作发生时触发。
+- beforecut：剪切操作发生前触发。
+- cut：剪切操作发生时触发。
+- beforepaste：粘贴操作发生前触发。
+- paste：粘贴操作发生时触发。
+
+这是一个比较新的控制剪贴板访问的标准，事件的行为及相关对象会因浏览器而异。在 Safari、
+Chrome 和 Firefox 中，beforecopy、beforecut 和 beforepaste 事件只会在显示文本框的上下文菜
+单（预期会发生剪贴板事件）时触发，但 IE 不仅在这种情况下触发，也会在 copy、cut 和 paste 事
+件之前触发。无论是在上下文菜单中做出选择还是使用键盘快捷键，copy、cut 和 paste 事件在所有浏览器中都会按预期触发。
+
+通过 beforecopy、beforecut 和 beforepaste 事件可以在向剪贴板发送或从中检索数据前修改
+数据。不过，取消这些事件并不会取消剪贴板操作。要阻止实际的剪贴板操作，必须取消 copy、cut 和 paste 事件。
+
+剪贴板上的数据可以通过 window 对象（IE）或 event 对象（Firefox、Safari 和 Chrome）上的
+clipboardData 对象来获取。在 Firefox、Safari 和 Chrome 中，为防止未经授权访问剪贴板，只能在剪
+贴板事件期间访问 clipboardData 对象；IE 则在任何时候都会暴露 clipboardData 对象。为了跨浏
+览器兼容，最好只在剪贴板事件期间使用这个对象。
+
+clipboardData 对象上有 3 个方法：getData()、setData()和 clearData()，其中 getData()
+方法从剪贴板检索字符串数据，并接收一个参数，该参数是要检索的数据的格式。IE 为此规定了两个选
+项："text"和"URL"。Firefox、Safari 和 Chrome 则期待 MIME 类型，不过会将"text"视为等价于 "text/plain"。
+
+setData()方法也类似，其第一个参数用于指定数据类型，第二个参数是要放到剪贴板上的文本。
+同样，IE 支持"text"和"URL"，Safari 和 Chrome 则期待 MIME 类型。不过，与 getData()不同的是，
+Safari 和 Chrome 不认可"text"类型。只有在 IE8 及更早版本中调用 setData()才有效，其他浏览器会
+忽略对这个方法的调用。为抹平差异，可以使用以下跨浏览器的方法：
+```javascript
+function getClipboardText(event){
+    var clipboardData = (event.clipboardData || window.clipboardData);
+    return clipboardData.getData("text");
+}
+
+function setClipboardText (event, value){
+ if (event.clipboardData){
+    return event.clipboardData.setData("text/plain", value);
+ } else if (window.clipboardData){
+    return window.clipboardData.setData("text", value);
+ }
+} 
+```
+这里的 getClipboardText()函数相对简单，它只需要知道 clipboardData 对象在哪里，然后
+便可以通过"text"类型调用 getData()。相应的，setClipboardText()函数则要复杂一些。在确定
+clipboardData 对象的位置之后，需要根据实现以相应的类型（Firefox、Safari 和 Chrome 是
+"text/plain"，而 IE 是"text"）调用 setData()。
+
+如果文本框期待某些字符或某种格式的文本，那么从剪贴板中读取文本是有帮助的。比如，如果文
+本框只允许输入数字，那么就必须检查粘贴过来的值，确保其中只包含数字。在 paste 事件中，可以
+确定剪贴板上的文本是否无效，如果无效就取消默认行为，如下面的例子所示：
+
+```javascript
+textbox.addEventListener("paste", (event) => {
+ let text = getClipboardText(event);
+ if (!/^\d*$/.test(text)){
+    event.preventDefault(); 
+ }
+});
+```
+这个 onpaste 事件处理程序确保只有数字才能粘贴到文本框中。如果剪贴板中的值不符合指定模
+式，则取消粘贴操作。Firefox、Safari 和 Chrome 只允许在 onpaste 事件处理程序中访问 getData()方法。
+
+因为不是所有浏览器都支持剪贴板访问，所以有时候更容易屏蔽一个或多个剪贴板操作。在支持
+copy、cut 和 paste 事件的浏览器（IE、Safari、Chrome 和 Firefox）中，很容易阻止事件的默认行为。
+在 Opera 中，则需要屏蔽导致相应事件的按键，同时阻止显示相应的上下文菜单。
+
+#### [3.3 自动切换](#)
+JavaScript 可以通过很多方式来增强表单字段的易用性。最常用的是在当前字段完成时自动切换到下一个字段。
+对于要收集数据的长度已知（比如电话号码）的字段是可以这样处理的。
+
+在美国，电话号码通常分为 3 个部分：区号、交换局号，外加 4 位数字。在网页中，可以通过 3 个文本框来表示这几个部分，比如：
+```html
+<input type="text" name="tel1" id="txtTel1" maxlength="3">
+<input type="text" name="tel2" id="txtTel2" maxlength="3">
+<input type="text" name="tel3" id="txtTel3" maxlength="4"> 
+```
+为增加这个表单的易用性并加速数据输入，可以在每个文本框输入到最大允许字符数时自动把焦点
+切换到下一个文本框。因此，当用户在第一个文本框中输入 3 个字符后，就把焦点移到第二个文本框，
+当用户在第二个文本框中输入 3 个字符后，把焦点再移到第三个文本框。这种自动切换文本框的行为可以通过如下代码实现：
+
+```javascript
+function tabForward(event){
+    let target = event.target;
+    if (target.value.length == target.maxLength){
+        let form = target.form;
+        for (let i = 0, len = form.elements.length; i < len; i++) {
+            if (form.elements[i] == target) {
+                if (form.elements[i+1]) {
+                    form.elements[i+1].focus();
+                }
+                return;
+            }
+        }
+    }
+}
+let inputIds = ["txtTel1", "txtTel2", "txtTel3"];
+for (let id of inputIds) {
+    let textbox = document.getElementById(id);
+    textbox.addEventListener("keyup", tabForward);
+}
+let textbox1 = document.getElementById("txtTel1");
+let textbox2 = document.getElementById("txtTel2");
+let textbox3 = document.getElementById("txtTel3");
+```
+
+### [4. HTML5 约束验证 API](#)
+HTML5为浏览器新增了在提交表单前验证数据的能力。这些能力实现了基本的验证，即使JavaScript不可用或加载失败也没关系。
+
+这是因为浏览器自身会基于指定的规则进行验证，并在出错时显示适当的错误消息（无须 JavaScript）。这些能力只有支持 HTML5 这部分的浏览器才有，包括所有现代浏览器（除了 Safari）和 IE10+。
+
+验证会根据某些条件应用到表单字段。可以使用 HTML 标记指定对特定字段的约束，然后浏览器会根据这些约束自动执行表单验证。
+
+#### [4.1 必填字段](#)
+第一个条件是给表单字段添加 required 属性，如下所示：
+```html
+<input type="text" name="username" required>
+```
+任何带有 required 属性的字段都必须有值，否则无法提交表单。这个属性适用于`<input>`、`<textarea>`和`<select>`字段
+（Opera 直到版本 11 都不支持`<select>`的 required 属性）。可以通过JavaScript 检测对应元素的 required 属性来判断表单字段是否为必填：
+```javascript
+let isUsernameRequired = document.forms[0].elements["username"].required;
+```
+还可以使用下面的代码检测浏览器是否支持 required 属性：
+```javascript
+let isRequiredSupported = "required" in document.createElement("input");
+```
+这行代码使用简单的特性检测来确定新创建的`<input>`元素上是否存在 required 属性。
+注意，不同浏览器处理必填字段的机制不同。Firefox、Chrome、IE 和 Opera 会阻止表单提交并在相
+应字段下面显示有帮助信息的弹框，而 Safari 什么也不做，也不会阻止提交表单。
+
+#### [4.2 更多输入类型](#)
+HTML5 为 `<input>` 元素增加了几个新的 type 值。这些类型属性不仅表明了字段期待的数据类型，
+而且也提供了一些默认验证，其中两个新的输入类型是已经得到广泛支持的"email"和"url"，二者都
+有浏览器提供的自定义验证。比如：
+
+```html
+<input type="email" name="email">
+<input type="url" name="homepage">
+```
+`"email"` 类型确保输入的文本匹配电子邮件地址，而 `"url"` 类型确保输入的文本匹配 URL。注意，
+浏览器在匹配模式时都存在问题。最明显的是文本 `"-@-"` 会被认为是有效的电子邮件地址。浏览器厂商仍然在解决这些问题。
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
