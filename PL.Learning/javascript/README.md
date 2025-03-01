@@ -36,6 +36,8 @@ JavaScript/ECMAScript（JS）是一种具有函数优先特性的轻量级、解
 - [JavaScript Event 内存与性能](./contents/JavaScriptEventDelegate.md) 事件委托、模拟事件。
 - [JavaScript RequestAnimationFrame](./contents/JavaScriptRequestAnimationFrame.md) requestAnimationFrame 是一个用于浏览器动画渲染的API。
 - [JavaScript 表单脚本](./contents/JavaScriptFormScript.md) 表单处理、文本框选项、选项框编程、表单序列化。
+- [JavaScript JSON和 XMLHttpRequest](./contents/JavaScriptJSONAndXMLHttpRequest.md) JSON处理，使用、处理 XMLHttpRequest 对象，源域 Ajax 限制。
+- [JavaScript Fetch API、Streams API](./contents/JavaScriptFetchAPIAndStreamsAPI.md) Fetch API、Streams API
 
 ### [Web 3D/2D 图像](#)
 - [Canvas 教程](#) 
