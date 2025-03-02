@@ -10,13 +10,13 @@
 * [HTML5](./PL.Learning/html)  
 * [CSS](./PL.Learning/css)
 * Scss、Less
-* [JavaScript](./PL.Learning/javascript)/TypeScript
+* [JavaScript](./PL.Learning/javascript)/[TypeScript](./PL.Learning/typescript) ：编程语言。
+* [React](./PL.Learning/framework/react) : 一个用于构建用户界面的 JavaScript 库。
 
 #### 打包构建
 - [Vite](./scaffold/vite) : 基于原生ESM、模块热更新（HMR）的打包工具。
 - [WebPack](./scaffold/webpack) ：一个用于现代 JavaScript 应用程序的静态模块打包工具。
 包括：模块打包、代码分割、按需加载、HMR、Tree-shaking、文件监听、sourcemap、Module Federation、devServer、DLL、多进程等等。
-
 
 ### links
 [JavaScript | MDN](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript)、[印记中文](https://docschina.org/) 、[阮一峰 ECMAScript 6 入门](https://es6.ruanyifeng.com/)
