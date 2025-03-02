@@ -3,14 +3,19 @@
 
 ----
 
-### 必知必会
-* nvm
-* [npm](./env/npm)、npx
-* [html](./PL.Learning/html)、[css](./PL.Learning/css)
+#### 目录
+* [nvm](https://nvm.p6p.net/)
+* [npm](./env/npm)
+
+#### 编程语言 
+* [Html5](./PL.Learning/html)
+* [CSS](./PL.Learning/css)
 * scss、less
 * [JavaScript](./PL.Learning/javascript)/TypeScript
-* webpack 编译构建打包
 
+#### 打包构建
+- [vite](./scaffold/vite)
+- [webpack](./scaffold/webpack)
 
 ### links
 [JavaScript | MDN](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript)、[印记中文](https://docschina.org/) 、[阮一峰 ECMAScript 6 入门](https://es6.ruanyifeng.com/)
