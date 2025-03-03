@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Move</title>
+</head>
+<body>
+    <main class="container">
+        <div class="box"></div>
+    </main>
+</body>
+<style>
+    *{
+        padding: 0;
+        margin: 0;
+    }
+    :root{
+        --height--box: 100px
+    }
+    .container{
+        width: 1200px;
+        background-color: ghostwhite;
+        border: 1px solid black;
+        height: var(--height--box);
+        margin: 0 auto;
+        padding: 2px;
+        box-sizing: content-box;
+        >.box{
+            height: var(--height--box);
+            width: var(--height--box);
+            background-color: deepskyblue;
+            animation-name: ani-move;
+            animation-duration: 2s;
+            animation-timing-function: linear;
+            animation-iteration-count: initial;
+        }
+    }
+    /* 定义一个动画 */
+    @keyframes ani-move {
+        from{
+            transform: translate(0px);
+        }
+        to{
+            transform: translate(1100px);
+            background-color: ghostwhite;
+        }
+    }
+</style>
+</html>
