@@ -195,7 +195,85 @@ let bookCopy = JSON.parse(jsonText,
  (key, value) => key == "releaseDate" ? new Date(value) : value);
 ```
 
-#### [2. Ajax XMLHttpRequest](#)
-IE5 是第一个引入 XHR 对象的浏览器。这个对象是通过 ActiveX 对象实现并包含在 MSXML 库中
-的。为此，XHR 对象的 3 个版本在浏览器中分别被暴露为 MSXML2.XMLHttp、MSXML2.XMLHttp.3.0
-和 MXSML2.XMLHttp.6.0。
+### [2. Ajax XMLHttpRequest](#)
+IE5 是第一个引入 XHR 对象的浏览器。这个对象是通过 ActiveX 对象实现并包含在 MSXML 库中的。
+为此，XHR 对象的 3 个版本在浏览器中分别被暴露为 MSXML2.XMLHttp、MSXML2.XMLHttp.3.0 和 MXSML2.XMLHttp.6.0。
+
+所有现代浏览器都通过 XMLHttpRequest 构造函数原生支持 XHR 对象：
+```javascript
+let xhr = new XMLHttpRequest(); 
+```
+
+#### [2.1 使用 XHR](#)
+使用 XHR 对象首先要调用 open()方法，这个方法接收 3 个参数：**请求类型**（"get"、"post"等）、**请求 URL**，
+**以及表示请求是否异步的布尔值**。下面是一个例子：
+```javascript
+xhr.open("get", "example.php", false); 
+```
+这行代码就可以向 example.php 发送一个同步的 GET 请求。关于这行代码需要说明几点。首先，这
+里的 URL 是相对于代码所在页面的，当然也可以使用绝对 URL。其次，调用 open()不会实际发送请
+求，只是为发送请求做好准备。
+
+要发送定义好的请求，必须像下面这样调用 send()方法：
+```javascript
+xhr.open("get", "example.txt", false);
+xhr.send(null); 
+```
+send()方法接收一个参数，是作为请求体发送的数据。如果不需要发送请求体，则必须传 null，
+因为这个参数在某些浏览器中是必需的。调用 send()之后，请求就会发送到服务器。
+
+因为这个请求是同步的，所以 JavaScript 代码会等待服务器响应之后再继续执行。收到响应后，XHR对象的以下属性会被填充上数据。
+- responseText：作为响应体返回的文本。
+- responseXML：如果响应的内容类型是"text/xml"或"application/xml"，那就是包含响应数据的 XML DOM 文档。
+- status：响应的 HTTP 状态。
+- statusText：响应的 HTTP 状态描述。
+
+收到响应后，第一步要检查 status 属性以确保响应成功返回。一般来说，HTTP 状态码为 2xx 表示成功。
+
+```javascript
+xhr.open("get", "example.txt", false);
+xhr.send(null);
+if ((xhr.status >= 200 && xhr.status < 300) || xhr.status == 304) {
+    alert(xhr.responseText);
+} else {
+    alert("Request was unsuccessful: " + xhr.status);
+} 
+```
+以上代码可能显示服务器返回的内容，也可能显示错误消息，取决于 HTTP 响应的状态码。为确定下一步该执
+行什么操作，最好检查 status 而不是 statusText 属性，因为后者已经被证明在跨浏览器的情况下不可靠。
+无论是什么响应内容类型，responseText 属性始终会保存响应体，而 responseXML则对于非 XML 数据是 null。
+
+虽然可以像前面的例子一样发送同步请求，但多数情况下最好使用异步请求，这样可以不阻塞
+JavaScript 代码继续执行。XHR 对象有一个 readyState 属性，表示当前处在请求/响应过程的哪个阶段。
+这个属性有如下可能的值。
+
+- 0：未初始化（Uninitialized）。尚未调用 open()方法。
+- 1：已打开（Open）。已调用 open()方法，尚未调用 send()方法。
+- 2：已发送（Sent）。已调用 send()方法，尚未收到响应。
+- 3：接收中（Receiving）。已经收到部分响应。
+- 4：完成（Complete）。已经收到所有响应，可以使用了。
+
+每次 readyState 从一个值变成另一个值，都会触发 readystatechange 事件。可以借此机会检
+查 readyState 的值。一般来说，我们唯一关心的 readyState 值是 4，表示数据已就绪。为保证跨浏
+览器兼容，onreadystatechange 事件处理程序应该在调用 open()之前赋值。来看下面的例子：
+```javascript
+let xhr = new XMLHttpRequest();
+xhr.onreadystatechange = function() {
+    if (xhr.readyState == 4) {
+        if ((xhr.status >= 200 && xhr.status < 300) || xhr.status == 304) {
+            alert(xhr.responseText);
+        } else {
+            alert("Request was unsuccessful: " + xhr.status);
+        }
+    }
+};
+xhr.open("get", "example.txt", true);
+xhr.send(null); 
+```
+
+
+
+
+
+
+
