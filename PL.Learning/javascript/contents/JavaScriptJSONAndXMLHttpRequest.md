@@ -3,7 +3,7 @@
 
 ---
 
--[](#)
+- [1. JSON 序列化选项](#1-json-序列化选项)
 
 ---
 
@@ -82,3 +82,120 @@ let jsonText = JSON.stringify(book, (key, value) => {
 console.log(jsonText);
 //{"title":"Professional JavaScript","authors":"Nicholas C. Zakas,Matt Frisbie","year":5000}
 ```
+
+#### [1.2 字符串缩进](#)
+JSON.stringify()方法的第三个参数控制缩进和空格。在这个参数是数值时，表示每一级缩进的
+空格数。例如，每级缩进 4 个空格，可以这样：
+
+```javascript
+let book = {
+    title: "Professional JavaScript",
+    authors: [
+        "Nicholas C. Zakas",
+        "Matt Frisbie"
+    ],
+    edition: 4,
+    year: 2017
+};
+let jsonText = JSON.stringify(book, null, 4);
+
+console.log(jsonText);
+/*
+{
+    "title": "Professional JavaScript",
+    "authors": [
+        "Nicholas C. Zakas",
+        "Matt Frisbie"
+    ],
+    "edition": 4,
+    "year": 2017
+}
+* */
+```
+也可以将缩进字符设置为 Tab 或任意字符，如两个连字符 `--`。
+```javascript
+let jsonText = JSON.stringify(book, null, "--" );
+
+/*
+{
+    --"title": "Professional JavaScript",
+    --"authors": [
+    ----"Nicholas C. Zakas",
+    ----"Matt Frisbie"
+    --],
+    --"edition": 4,
+    --"year": 2017
+} */
+```
+
+#### [1.3 toJSON()方法](#)
+有时候，对象需要在 JSON.stringify()之上自定义 JSON 序列化。此时，可以在要序列化的对象
+中添加 toJSON()方法，序列化时会基于这个方法返回适当的 JSON 表示。事实上，原生 Date 对象就
+有一个 toJSON()方法，能够自动将 JavaScript 的 Date 对象转换为 ISO 8601 日期字符串（本质上与在
+Date 对象上调用 toISOString()方法一样）。
+
+```javascript
+
+let book = {
+    title: "Professional JavaScript",
+    authors: [
+        "Nicholas C. Zakas",
+        "Matt Frisbie"
+    ],
+    edition: 4,
+    year: 2017,
+    toJSON: function() {
+        return {
+            me: this.authors[0],
+            year: this.year,
+        };
+    }
+};
+let jsonText = JSON.stringify(book, null, 2);
+
+console.log(jsonText);
+/*
+{
+  "me": "Nicholas C. Zakas",
+  "year": 2017
+}
+* */
+```
+toJSON()方法可以与过滤函数一起使用，因此理解不同序列化流程的顺序非常重要。在把对象传
+给 JSON.stringify()时会执行如下步骤。
+* (1) 如果可以获取实际的值，则调用 toJSON()方法获取实际的值，否则使用默认的序列化。
+* (2) 如果提供了第二个参数，则应用过滤。传入过滤函数的值就是第(1)步返回的值。
+* (3) 第(2)步返回的每个值都会相应地进行序列化。
+* 如果提供了第三个参数，则相应地进行缩进。
+
+理解这个顺序有助于决定是创建 toJSON()方法，还是使用过滤函数，抑或是两者都用
+
+#### [1.4 解析选项](#)
+JSON.parse()方法也可以接收一个额外的参数，这个函数会针对每个键/值对都调用一次。为区别
+于传给 JSON.stringify()的起过滤作用的替代函数（replacer），这个函数被称为还原函数（reviver）。
+实际上它们的格式完全一样，即还原函数也接收两个参数，属性名（key）和属性值（value），另外也
+需要返回值。
+
+如果还原函数返回 undefined，则结果中就会删除相应的键。如果返回了其他任何值，则该值就
+会成为相应键的值插入到结果中。还原函数经常被用于把日期字符串转换为 Date 对象。例如：
+
+```javascript
+let book = {
+ title: "Professional JavaScript",
+ authors: [
+ "Nicholas C. Zakas",
+ "Matt Frisbie"
+ ],
+ edition: 4,
+ year: 2017,
+ releaseDate: new Date(2017, 11, 1)
+};
+let jsonText = JSON.stringify(book);
+let bookCopy = JSON.parse(jsonText,
+ (key, value) => key == "releaseDate" ? new Date(value) : value);
+```
+
+#### [2. Ajax XMLHttpRequest](#)
+IE5 是第一个引入 XHR 对象的浏览器。这个对象是通过 ActiveX 对象实现并包含在 MSXML 库中
+的。为此，XHR 对象的 3 个版本在浏览器中分别被暴露为 MSXML2.XMLHttp、MSXML2.XMLHttp.3.0
+和 MXSML2.XMLHttp.6.0。
