@@ -4,6 +4,7 @@
 ---
 
 - [1. JSON 序列化选项](#1-json-序列化选项)
+- [2. Ajax XmlHttpRequest](#2-ajax-xmlhttprequest)
 
 ---
 
@@ -386,6 +387,13 @@ POST 请求，用于向服务器发送应该保存的数据。每个 POST 请求
 ```javascript
 xhr.open("post", "example.php", true); 
 ```
+默认情况下，对服务器而言，POST 请求与提交表单是不一样的。服务器逻辑需要读取原始 POST
+数据才能取得浏览器发送的数据。不过，可以使用 XHR 模拟表单提交。为此，第一步需要把 ContentType 头部设置为"application/x-www-formurlencoded"，这是提交表单时使用的内容类型。第二
+步是创建对应格式的字符串。POST 数据此时使用与查询字符串相同的格式。
+
+如果网页中确实有一个表单需要序列化并通过 XHR 发送到服务器，则可以使用[serialize()](./JavaScriptFormScript.md#6-表单序列化)函数来创建相应的字符串，如下所示：
+
+
 接下来就是要给 send()方法传入要发送的数据。因为 XHR 最初主要设计用于发送 XML，所以可
 以传入序列化之后的 XML DOM 文档作为请求体。当然，也可以传入任意字符串。
 ```javascript
@@ -401,13 +409,23 @@ xhr.open("post", "example.php", true);
       }
     };
 
-    xhr.open("post", "postexample.php", true);
+    xhr.open("post", "https://tr.mt.com/chat/user", true);
     xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
     let form = document.getElementById("user-info");
     xhr.send(serialize(form));
   }
 ```
-默认情况下，对服务器而言，POST 请求与提交表单是不一样的。服务器逻辑需要读取原始 POST
-数据才能取得浏览器发送的数据。不过，可以使用 XHR 模拟表单提交。为此，第一步需要把 ContentType 头部设置为"application/x-www-formurlencoded"，这是提交表单时使用的内容类型。第二
-步是创建对应格式的字符串。POST 数据此时使用与查询字符串相同的格式。如果网页中确实有一个表
-单需要序列化并通过 XHR 发送到服务器，则可以使用[serialize()](./JavaScriptFormScript.md#6-表单序列化)函数来创建相应的字符串，如下所示：
+在这个函数中，来自 ID 为"user-info"的表单中的数据被序列化之后发送给了服务器。nest.js后段如何使用代码取得 POST 的数据。
+```typescript
+import { Controller, Post, Body } from '@nestjs/common';
+
+@Controller('user')
+export class UserController {
+  @Post()
+  createUser(@Body() formData: any) {
+    // formData 会自动解析为键值对对象
+    console.log('Received form data:', formData);
+    return { success: true, data: formData };
+  }
+}
+```
