@@ -415,7 +415,7 @@ xhr.open("post", "example.php", true);
     xhr.send(serialize(form));
   }
 ```
-在这个函数中，来自 ID 为"user-info"的表单中的数据被序列化之后发送给了服务器。nest.js后段如何使用代码取得 POST 的数据。
+在这个函数中，来自 ID 为"user-info"的表单中的数据被序列化之后发送给了服务器。nest.js可以使用如下类似代码取得 POST 的数据。
 ```typescript
 import { Controller, Post, Body } from '@nestjs/common';
 
@@ -429,3 +429,209 @@ export class UserController {
   }
 }
 ```
+
+### [3. XMLHttpRequest Level 2](#)
+并非所有浏览器都实现了 XMLHttpRequest Level 2 的所有部分，但所有浏览器都实现了其中部分功能。
+
+#### [3.1 FormData](#)
+现代 Web 应用程序中经常需要对表单数据进行序列化，因此 XMLHttpRequest Level 2 新增了 FormData 类型。
+
+**FormData** 类型便于表单序列化，也便于创建与表单类似格式的数据然后通过 XHR 发送。下面的代码创建了一个 FormData 对象，并填充了一些数据：
+```javascript
+let data = new FormData();
+data.append("name", "Nicholas"); 
+```
+通过直接给 FormData 构造函数传入一个表单元素，也可以将表单中的数据作为键/值对填充进去：
+```javascript
+let data = new FormData(document.forms[0]); 
+```
+有了 FormData 实例，可以像下面这样直接传给 XHR 对象的 send()方法:
+```javascript
+let xhr = new XMLHttpRequest();
+
+xhr.onreadystatechange = function() {
+    if (xhr.readyState == 4) {
+        if ((xhr.status >= 200 && xhr.status < 300) || xhr.status == 304) {
+            alert(xhr.responseText);
+        } else {
+            alert("Request was unsuccessful: " + xhr.status);
+        }
+    }
+};
+
+xhr.open("post", "postexample.php", true);
+let form = document.getElementById("user-info");
+xhr.send(new FormData(form));
+```
+使用 FormData 的另一个方便之处是不再需要给 XHR 对象显式设置任何请求头部了。XHR 对象能够识别作为
+FormData 实例传入的数据类型并自动配置相应的头部。
+
+#### [3.2 超时](#)
+IE8 给 XHR 对象增加了一个 timeout 属性，用于表示发送请求后等待多少毫秒，如果响应不成功就中断请求。
+**之后所有浏览器都在自己的 XHR 实现中增加了这个属性**。
+
+在给 timeout 属性设置了一个时间且在该时间过后没有收到响应时，XHR 对象就会触发 timeout 事件，调用 ontimeout 事件处理
+程序。这个特性后来也被添加到了 XMLHttpRequest Level 2 规范。
+
+```javascript
+let xhr = new XMLHttpRequest();
+xhr.onreadystatechange = function() {
+    if (xhr.readyState == 4) {
+        try {
+            if ((xhr.status >= 200 && xhr.status < 300) || xhr.status == 304) {
+                alert(xhr.responseText);
+            } else {
+                alert("Request was unsuccessful: " + xhr.status);
+            }
+        } catch (ex) {
+            // 假设由 ontimeout 处理
+        }
+    }
+};
+xhr.open("get", "timeout.php", true);
+xhr.timeout = 1000; // 设置 1 秒超时
+xhr.ontimeout = function() {
+    alert("Request did not return in a second.");
+};
+xhr.send(null);
+```
+这个例子演示了使用 timeout 设置超时。给 timeout 设置 1000 毫秒意味着，如果请求没有在 1 秒钟内返回则会中断。
+
+此时则会触发 ontimeout 事件处理程序，readyState 仍然会变成 4，因此也会调用 onreadystatechange 事件处理程序。不过，如果在超时之后访问 status 属性则会发生错误。
+为做好防护，可以把检查 status 属性的代码封装在 try/catch 语句中。
+
+#### [3.3 overrideMimeType() 方法](#)
+Firefox 首先引入了 overrideMimeType()方法用于重写 XHR 响应的 MIME 类型。这个特性后来
+也被添加到了 XMLHttpRequest Level 2。因为响应返回的 MIME 类型决定了 XHR 对象如何处理响应，
+所以如果有办法覆盖服务器返回的类型，那么是有帮助的。
+
+假设服务器实际发送了 XML 数据，但响应头设置的 MIME 类型是 text/plain。**结果就会导致虽然数据是 XML，但 responseXML 属性值是 null**。此时调用 overrideMimeType()可以保证将响应
+当成 XML 而不是纯文本来处理：
+```javascript
+let xhr = new XMLHttpRequest();
+
+xhr.open("get", "text.php", true);
+xhr.overrideMimeType("text/xml");
+xhr.send(null); 
+```
+这个例子强制让 XHR 把响应当成 XML 而不是纯文本来处理。为了正确覆盖响应的 MIME 类型，
+必须在调用 send()之前调用 overrideMimeType()。
+
+### [4. 进度事件](#)
+Progress Events 是 W3C 的工作草案，定义了客户端服务器端通信。这些事件最初只针对 XHR，现
+在也推广到了其他类似的 API。有以下 6 个进度相关的事件。
+
+- loadstart：在接收到响应的第一个字节时触发。
+- progress：在接收响应期间反复触发。
+- error：在请求出错时触发。
+- abort：在调用 abort()终止连接时触发。
+- load：在成功接收完响应时触发。
+- loadend：在通信完成时，且在 error、abort 或 load 之后触发。
+
+每次请求都会首先触发 loadstart 事件，之后是一个或多个 progress 事件，接着是 error、abort
+或 load 中的一个，最后以 loadend 事件结束。
+
+**这些事件大部分都很好理解，但其中有两个需要说明一下，load 和progress 事件**。
+#### [4.1 load 事件](#)
+Firefox 最初在实现 XHR 的时候，曾致力于简化交互模式。最终，增加了一个 load 事件用于替代readystatechange 事件。
+
+load 事件在响应接收完成后立即触发，这样就不用检查 readyState 属性了。onload 事件处理程序会收到一个 event 对象，其 target 属性设置为 XHR 实例，在这个实例上
+可以访问所有 XHR 对象属性和方法。
+
+> 不过，并不是所有浏览器都实现了这个事件的 event 对象。考虑到跨浏览器兼容，还是需要像下面这样使用 XHR 对象变量：
+
+```javascript
+let xhr = new XMLHttpRequest();
+xhr.onload = function() {
+    if ((xhr.status >= 200 && xhr.status < 300) || xhr.status == 304) {
+        alert(xhr.responseText);
+    } else {
+        alert("Request was unsuccessful: " + xhr.status);
+    }
+};
+xhr.open("get", "altevents.php", true);
+xhr.send(null);
+``` 
+只要是从服务器收到响应，无论状态码是什么，都会触发 load 事件。这意味着还需要检查 status属性才能确定数据是否有效。Firefox、Opera、Chrome 和 Safari 都支持 load 事件。
+
+#### [4.2 progress 事件](#)
+Mozilla 在 XHR 对象上另一个创新是 progress 事件，在浏览器接收数据期间，这个事件会反复触发。
+
+每次触发时，onprogress 事件处理程序都会收到 event 对象，其 target 属性是 XHR 对象，且
+包含 3 个额外属性：lengthComputable、position 和 totalSize。
+
+* lengthComputable 是一个布尔值，表示进度信息是否可用；
+* position 是接收到的字节数；
+* totalSize 是响应的 ContentLength 头部定义的总字节数。
+
+```javascript
+let xhr = new XMLHttpRequest();
+xhr.onload = function(event) {
+    if ((xhr.status >= 200 && xhr.status < 300) ||
+        xhr.status == 304) {
+        alert(xhr.responseText);
+    } else {
+        alert("Request was unsuccessful: " + xhr.status);
+    }
+};
+
+xhr.onprogress = function(event) {
+    let divStatus = document.getElementById("status");
+    if (event.lengthComputable) {
+        divStatus.innerHTML = "Received " + event.position + " of " +
+            event.totalSize +
+            " bytes";
+    }
+};
+
+xhr.open("get", "altevents.php", true);
+xhr.send(null); 
+```
+为了保证正确执行，必须在调用 open()之前添加 onprogress 事件处理程序。在前面的例子中，
+每次触发 progress 事件都会更新 HTML 元素中的信息。假设响应有 Content-Length 头部，就可以
+利用这些信息计算出已经收到响应的百分比。
+
+### [5. 跨源资源共享](#)
+通过 XHR 进行 Ajax 通信的一个主要限制是跨源安全策略。默认情况下，XHR 只能访问与发起请
+求的页面在同一个域内的资源。这个安全限制可以防止某些恶意行为。不过，浏览器也需要支持合法跨源访问的能力。
+
+跨源资源共享（**CORS**，Cross-Origin Resource Sharing）定义了浏览器与服务器如何实现跨源通信。
+CORS 背后的基本思路就是使用自定义的 HTTP 头部允许浏览器和服务器相互了解，以确实请求或响应应该成功还是失败。
+
+对于简单的请求，比如 GET 或 POST 请求，没有自定义头部，而且请求体是 text/plain 类型，
+这样的请求在发送时会有一个额外的头部叫 Origin。Origin 头部包含发送请求的页面的源（协议、
+域名和端口），以便服务器确定是否为其提供响应。下面是 Origin 头部的一个示例：
+```
+Origin: http://www.jiangxilaobiao38w.net 
+```
+如果服务器决定响应请求，那么应该发送 Access-Control-Allow-Origin 头部，包含相同的源； 
+或者如果资源是公开的，那么就包含 `"*"` 。比如：
+```
+Access-Control-Allow-Origin: Origin: http://www.jiangxilaobiao38w.net 
+```
+如果没有这个头部，或者有但源不匹配，则表明不会响应浏览器请求。否则，服务器就会处理这个
+请求。注意，无论请求还是响应都不会包含 cookie 信息。
+
+**现代浏览器通过 XMLHttpRequest 对象原生支持 CORS**。在尝试访问不同源的资源时，这个行为
+会被自动触发。要向不同域的源发送请求，可以使用标准 XHR对象并给 open()方法传入一个绝对 URL， 比如：
+
+```javascript
+let xhr = new XMLHttpRequest();
+xhr.onreadystatechange = function() {
+    if (xhr.readyState == 4) {
+        if ((xhr.status >= 200 && xhr.status < 300) || xhr.status == 304) {
+            alert(xhr.responseText);
+        } else {
+            alert("Request was unsuccessful: " + xhr.status);
+        }
+    }
+};
+
+xhr.open("get", "http://www.somewhere-else.com/page/", true);
+xhr.send(null);
+```
+跨域 XHR 对象允许访问 status 和 statusText 属性，也允许同步请求。出于安全考虑，跨域 XHR对象也施加了一些额外限制。
+- 不能使用 setRequestHeader()设置自定义头部。
+- 不能发送和接收 cookie。
+- getAllResponseHeaders()方法始终返回空字符串。
+
