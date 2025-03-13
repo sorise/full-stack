@@ -635,3 +635,39 @@ xhr.send(null);
 - 不能发送和接收 cookie。
 - getAllResponseHeaders()方法始终返回空字符串。
 
+#### [5.1 预检请求](#)
+**CORS** 通过一种叫预检请求（preflighted request）的服务器验证机制，允许使用自定义头部、除 GET
+和 POST 之外的方法，以及不同请求体内容类型。在要发送涉及上述某种高级选项的请求时，会先向服务器发送一个“预检”请求。
+
+- Origin：与简单请求相同。
+- Access-Control-Request-Method：请求希望使用的方法。
+- Access-Control-Request-Headers：（可选）要使用的逗号分隔的自定义头部列表。
+
+下面是一个假设的 POST 请求，包含自定义的 NCZ 头部：
+```
+Origin: http://www.nczonline.net
+Access-Control-Request-Method: POST
+Access-Control-Request-Headers: NCZ 
+```
+在这个请求发送后，服务器可以确定是否允许这种类型的请求。服务器会通过在响应中发送如下头部与浏览器沟通这些信息。
+- Access-Control-Allow-Origin：与简单请求相同。
+- Access-Control-Allow-Methods：允许的方法（逗号分隔的列表）。
+- Access-Control-Allow-Headers：服务器允许的头部（逗号分隔的列表）。
+- Access-Control-Max-Age：缓存预检请求的秒数。
+```
+Access-Control-Allow-Origin: http://www.nczonline.net
+Access-Control-Allow-Methods: POST, GET
+Access-Control-Allow-Headers: NCZ
+Access-Control-Max-Age: 1728000 
+```
+预检请求返回后，结果会按响应指定的时间缓存一段时间。换句话说，只有第一次发送这种类型的请求时才会多发送一次额外的 HTTP 请求。
+
+#### [5.2 凭据请求](#)
+默认情况下，跨源请求不提供凭据（cookie、HTTP 认证和客户端 SSL 证书）。可以通过将withCredentials 属性设置为 true 来表明请求会发送凭据。
+如果服务器允许带凭据的请求，那么可以在响应中包含如下 HTTP 头部：
+```
+Access-Control-Allow-Credentials: true
+```
+如果发送了凭据请求而服务器返回的响应中没有这个头部，则浏览器不会把响应交给 JavaScript （responseText 是空字符串，status 是 0，onerror()被调用）。
+
+注意，服务器也可以在预检请求的响应中发送这个 HTTP 头部，以表明这个源允许发送凭据请求。
