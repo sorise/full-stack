@@ -116,8 +116,10 @@ document.body.innerHTML = greeter(user);
 让我们创建一个Student类，它带有一个构造函数和一些公共字段。 
 注意类和接口可以一起共作，程序员可以自行决定抽象的级别。
 
-重新运行tsc greeter.ts，你会看到生成的JavaScript代码和原先的一样。 
-TypeScript里的类只是JavaScript里常用的基于原型面向对象编程的简写。
+重新运行tsc greeter.ts，你会看到生成的JavaScript代码和原先的一样，TypeScript里的类只是JavaScript里常用的基于原型面向对象编程的简写。
+
+
+
 
 
 
