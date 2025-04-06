@@ -3,17 +3,42 @@
 
 ----
 
-- 
+- [一、入门介绍](#一-入门介绍)
 
 ----
-### [一、](#)
-TypeScript（简称 TS）是微软公司开发的一种基于 JavaScript （简称 JS）语言的编程语言。
+### [一、入门介绍](#)
+TypeScript（简称 TS）是微软公司开发的一种基于 JavaScript （简称 JS）语言的编程语言, 具有强大的**静态类型检查功能**。
+TS 的发展形势非常好，至今很多 JavaScript 项目都支持 TS，比如 Vue3 和 React17+ 前端两大框架都支持 TS。
 
-命令行的TypeScript编译器可以使用Node.js包来安装:
+**静态类型的好处**: 
+- 有了静态类型，不必运行代码，就可以确定变量的类型，从而推断代码有没有错误。这就叫做代码的静态分析。
+- 由于每个值、每个变量、每个运算符都有严格的类型约束，TypeScript 就能轻松发现拼写错误、语义错误和方法调用错误，节省程序员的时间。
 
-**安装**:
+
+```javascript
+function hello() {
+  return "hello world";
+}
+
+hello().find("hello"); // 报错
+```
+上面示例中，hello()返回的是一个字符串，TypeScript 发现字符串没有find()方法，所以报错了。如果是 JavaScript，只有到运行阶段才会报错。
+
+**静态类型的缺点**:
+- 丧失了动态类型的代码灵活性, 动态类型有非常高的灵活性，给予程序员很大的自由，静态类型将这些灵活性都剥夺了。
+- 增加了编程工作量，有了类型之后，程序员不仅需要编写功能，还需要编写类型声明，确保类型正确。这增加了不少工作量，有时会显著拖长项目的开发时间。
+- 引入了独立的编译步骤。 原生的 JavaScript 代码，可以直接在 JavaScript 引擎运行。添加类型系统以后，就多出了一个单独的编译步骤，检查类型是否正确，并将 TypeScript 代码转成 JavaScript 代码，这样才能运行。
+
+
+**安装**: 命令行的TypeScript编译器可以使用Node.js包来安装:
+
 ```shell
 npm install -g typescript
+
+# 或者 tsc --version
+$ tsc -v
+
+#Version 5.1.6
 ```
 **编译**:
 ```shell
@@ -69,7 +94,8 @@ type 'string'.
 要注意的是尽管有错误，greeter.js文件还是被创建了。 就算你的代码里有错误，你仍然可以使用TypeScript。
 但在这种情况下，TypeScript会警告你代码可能不会按预期执行。
 
-#### [1.1 接口](#)
+**接口**
+
 让我们开发这个示例应用。这里我们使用接口来描述一个拥有firstName和lastName字段的对象。 
 在TypeScript里，只在两个类型内部的结构兼容那么这两个类型就是兼容的。 这就允许我们在
 实现接口时候只要保证包含了接口要求的结构就可以，而不必明确地使用 implements语句。
@@ -89,7 +115,8 @@ let user = { firstName: "Jane", lastName: "User" };
 document.body.innerHTML = greeter(user);
 ```
 
-#### [1.2 类](#)
+**类**
+
 使用类来改写这个例子。 TypeScript支持JavaScript的新特性，比如支持基于类的面向对象编程。
 
 ```typescript
@@ -119,9 +146,269 @@ document.body.innerHTML = greeter(user);
 重新运行tsc greeter.ts，你会看到生成的JavaScript代码和原先的一样，TypeScript里的类只是JavaScript里常用的基于原型面向对象编程的简写。
 
 
+### [二、编译方式](#)
+TypeScript 想要运行首先需要编译为JavaScript，官方提供了两种编译方式，命令行编译（手动编译），自动化编译方式。
+
+> TypeScript 编译器（ tsc ）是随 TypeScript 安装的官方 TypeScript 编译器。它可用于将 TypeScript 文件编译为 JavaScript 文件。可以使用 --watch 选项与 tsc 一起，以监听 .ts 文件的更改，然后自动编译它们。
+
+手动编译方式就是直接使用tsc命令,首先需要全局安装 typescript 
+```shell
+#安装编译器
+npm i typescript -g
+#编译
+tsc index.ts
+```
 
 
+#### [2.1 自动化编译](#)
+TypeScript 允许将tsc的编译参数，写在配置文件tsconfig.json。只要当前目录有这个文件，tsc就会自动读取，所以运行时可以不写参数。
+
+首先打开目标文件夹，打开cmd，输入命令：
+
+```shell
+tsc --init
+```
+然后会生成一个json文件。
+```json
+{
+  "compilerOptions": {
+    "target": "es2016",
+    "module": "commonjs",
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "skipLibCheck": true,
+    "outDir": "dist"
+  },
+  "include": ["src"]
+}
+```
+在 tsconfig.json 文件中找到 “outDir”，并且修改其值为刚刚新建的文件夹路径。
+
+```shell
+tsc --watch
+```
+当出现错误的时候不提交。
+```shell
+tsc --noEmitOnError --watch
+```
+
+#### [2.2 什么是 tsconfig.json](#)
+目录中存在 tsconfig.json 文件表明该目录是 TypeScript 项目的根目录。tsconfig.json 文件指定编译项目所需的根文件和编译器选项。
+
+- 通过在没有输入文件的情况下调用 tsc，在这种情况下，编译器会从当前目录开始搜索 tsconfig.json 文件，并继续沿父目录链向上。
+- 通过在没有输入文件和 --project（或只是 -p）命令行选项的情况下调用 tsc，该选项指定包含 tsconfig.json 文件的目录的路径，或包含配置的有效 .json 文件的路径。
+
+> 在命令行上指定输入文件时，tsconfig.json 文件将被忽略。
 
 
+**示例**
+
+```json
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "noImplicitAny": true,
+    "removeComments": true,
+    "preserveConstEnums": true,
+    "sourceMap": true
+  },
+  "files": [
+    "core.ts",
+    "sys.ts",
+    "types.ts",
+    "scanner.ts",
+    "parser.ts",
+    "utilities.ts",
+    "binder.ts",
+    "checker.ts",
+    "emitter.ts",
+    "program.ts",
+    "commandLineParser.ts",
+    "tsc.ts",
+    "diagnosticInformationMap.generated.ts"
+  ]
+}
+```
+使用 `include` 和 `exclude` 属性
+
+```json
+{
+  "compilerOptions": {
+    "module": "system",
+    "noImplicitAny": true,
+    "removeComments": true,
+    "preserveConstEnums": true,
+    "outFile": "../../built/local/tsc.js",
+    "sourceMap": true
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "**/*.spec.ts"]
+}
+```
+
+#### [2.3 tsc CLI 选项](#)
+[tsc CLI 选项](https://nodejs.cn/typescript/project-config/compiler-options/) 在本地运行 tsc 将编译由 tsconfig.json 定义的最接近的项目，您可以通过传入一个您想要的文件来编译一组 TypeScript 文件。
+
+```shell
+## Run a compile based on a backwards look through the fs for a tsconfig.json
+tsc
+
+## Emit JS for just the index.ts with the compiler defaults
+tsc index.ts
+
+## Emit JS for any .ts files in the folder src, with the default settings
+tsc src/*.ts
+
+## Emit files referenced in with the compiler settings from tsconfig.production.json
+tsc --project tsconfig.production.json
+
+## Emit d.ts files for a js file with showing compiler options which are booleans
+tsc index.js --declaration --emitDeclarationOnly
+
+## Emit a single .js file from two files via compiler options which take string arguments
+tsc app.ts util.ts --target esnext --outfile index.js
+```
+
+### [3. 基本用法](#)
+TypeScript 代码最明显的特征，就是为 JavaScript 变量加上了类型声明。
+
+```typescript
+let foo: string;
+```
+上面示例中，变量foo的后面使用冒号，声明了它的类型为string。
+
+类型声明的写法，一律为在标识符后面添加“冒号 + 类型”。函数参数和返回值，也是这样来声明类型。
+
+```typescript
+function toString(num: number): string {
+  return String(num);
+}
+
+function count(x: number, y: number) {
+    return x + y;
+}
+```
+上面示例中，函数toString()的参数num的类型是number。参数列表的圆括号后面，声明了返回值的类型是string。更详细的介绍，参见《函数》一章。
+
+注意，变量的值应该与声明的类型一致，如果不一致，TypeScript 就会报错。
+
+```typescript
+// 报错
+let foo: string = 123;
+```
+上面示例中，变量foo的类型是字符串，但是赋值为数值123，TypeScript 就报错了。
+
+另外，TypeScript 规定，**变量只有赋值后才能使用，否则就会报错**。
 
 
+```typescript
+let x: number;
+console.log(x); // 报错
+```
+上面示例中，变量x没有赋值就被读取，导致报错。而 JavaScript 允许这种行为，不会报错，没有赋值的变量会返回 undefined。
+
+#### [3.1 字面量类型](#)
+TypeScript中的字面量类型是一种非常强大的特性，它允许你使用具体的值作为类型。这可以用于限制变量只能取某些特定的值，从而使得代码更加健壮和易于理解。
+
+TypeScript中的字面量类型是一种非常强大的特性，它允许你使用具体的值作为类型。这可以用于限制变量只能取某些特定的值，从而使得代码更加健壮和易于理解。
+
+#### [3.2 字面量类型](#)
+除了通用类型 string 和 number 之外，我们还可以在类型位置引用特定的字符串和数字。var 和 let 都允许更改变量中保存的内容，而 const 不允许。这反映在 TypeScript 如何为字面创建类型。
+
+```typescript
+let a: 75|65 = 65;
+
+console.log(a);
+```
+
+**字符串字面量类型**：你可以指定一个或多个字符串作为类型。
+```typescript
+type EDirection = "North" | "South" | "East" | "West";
+let direction: EDirection = "North"; // 正确
+direction = "Northwest"; // 错误
+```
+
+**数字字面量类型**：类似于字符串字面量，但是是用数字来定义的。
+```typescript
+type HTTPStatusCode = 200 | 404 | 500;
+let statusCode: HTTPStatusCode = 200; // 正确
+statusCode = 300; // 错误
+```
+
+**布尔字面量类型**：虽然不常见，但也可以使用`true`或`false`作为类型。
+```typescript
+type WindowState = true | false;
+let isOpen: WindowState = true; // 正确
+```
+
+**枚举成员类型**：当与枚举一起使用时，可以将枚举的值作为类型的一部分。
+```typescript
+enum Status {
+    Ready,
+    Waiting
+}
+
+let status: Status.Ready | Status.Waiting = Status.Ready;
+```
+但是通过将字面组合成联合，你可以表达一个更有用的概念——例如，只接受一组已知值的函数：
+```typescript
+function compare(a: string, b: string): -1 | 0 | 1 {
+  return a === b ? 0 : a > b ? 1 : -1;
+}
+```
+数字字面类型的工作方式相同：
+```typescript
+function printText(s: string, alignment: "left" | "right" | "center") {
+  // ...
+}
+```
+当然，您可以将这些与非字面类型结合使用：
+```typescript
+interface Options {
+  width: number;
+}
+
+function configure(x: Options | "auto") {
+  // ...
+}
+configure({ width: 100 });
+configure("auto");
+configure("automatic");
+```
+
+### [4. 类型推断](#)
+类型声明并不是必需的，如果没有，TypeScript 会自己推断类型。
+```typescript
+let foo = 123;
+```
+上面示例中，变量foo并没有类型声明，TypeScript 就会推断它的类型。由于它被赋值为一个数值，因此 TypeScript 推断它的类型为number。
+
+后面，如果变量foo更改为其他类型的值，跟推断的类型不一致，TypeScript 就会报错。
+```typescript
+let foo = 123;
+foo = "hello"; // 报错
+```
+上面示例中，变量foo的类型推断为number，后面赋值为字符串，TypeScript 就报错了。
+
+TypeScript 也可以推断函数的返回值。
+
+```typescript
+function toString(num: number) {
+  return String(num);
+}
+```
+上面示例中，函数toString()没有声明返回值的类型，但是 TypeScript 推断返回的是字符串。正是因为 TypeScript 的类型推断，所以函数返回值的类型通常是省略不写的。
+
+#### [4.1 值与类型](#)
+学习 TypeScript 需要分清楚“值”（value）和“类型”（type）。
+
+“类型”是针对“值”的，可以视为是后者的一个元属性。每一个值在 TypeScript 里面都是有类型的。比如，3是一个值，它的类型是number。
+
+TypeScript 代码只涉及类型，不涉及值。所有跟“值”相关的处理，都由 JavaScript 完成。
+
+TypeScript 项目里面，其实存在两种代码，一种是底层的“值代码”，另一种是上层的“类型代码”。前者使用 JavaScript 语法，后者使用 TypeScript 的类型语法。
+
+它们是可以分离的，TypeScript 的编译过程，实际上就是把“类型代码”全部拿掉，只保留“值代码”。
+
+编写 TypeScript 项目时，不要混淆哪些是值代码，哪些是类型代码。

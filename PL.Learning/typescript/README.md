@@ -12,6 +12,6 @@
 ---
 
 #### links
-[typeScript 中文文档](https://nodejs.cn/typescript/) 、[TypeScript 教程阮一峰](https://typescript.p6p.net/)
+[TypeScript 中文文档](https://nodejs.cn/typescript/) 、[TypeScript 教程阮一峰](https://typescript.p6p.net/)
 #### 日志
-- TypeScript、C#语言、Delphi语言之父Anders Hejlsberg今日在Microsoft开发者博客宣布重大消息，TypeScript编译器以及工具链将移植到Go语言，性能提升高达10倍！
+1.TypeScript、C#语言、Delphi语言之父Anders Hejlsberg今日在Microsoft开发者博客宣布重大消息，TypeScript编译器以及工具链将移植到Go语言，性能提升高达10倍！  
