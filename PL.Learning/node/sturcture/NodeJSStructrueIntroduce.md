@@ -1,18 +1,24 @@
 ## [Node.JS 架构](#)
 Node.js 在浏览器之外运行 V8 JavaScript 引擎，即 Google Chrome 的核心。这使 Node.js 的性能非常出色。
 
+----
 
 
+- [1. Node.js 简介](#1-nodejs-简介)
+- [2. 基本组件](#2-基本组件)
+- [3. Node.js工作流程](#3-nodejs工作流程)
+
+
+
+---
 
 ### [1. Node.js 简介](#)
-Node.js 是一个开源和跨平台的 JavaScript 运行时环境。它是几乎所有类型项目的流行工具！
+Node.js 是一个开源和跨平台的 JavaScript 运行时环境。它是几乎所有类型项目的流行工具！Node.js主要分为四大部分，Node Standard Library，Node Bindings，V8，Libuv，架构图如下:
 
-Node.js主要分为四大部分，Node Standard Library，Node Bindings，V8，Libuv，架构图如下:
+<img src="./static/LLLLLLL123A156SDimage.png" width="400" />
 
-<img src="./static/LLLLLLL123A156SDimage.png" width="500" />
-
-- Node Standard Library 是我们每天都在用的标准库，如Http, Buffer 模块。
-- Node Bindings 是沟通JS 和 C++的桥梁，封装V8和Libuv的细节，向上层提供基础API服务。
+- `Node Standard Library` 是我们每天都在用的标准库，如Http, Buffer 模块。
+- `Node Bindings` 是沟通JS 和 C++的桥梁，封装V8和Libuv的细节，向上层提供基础API服务。
 - 这一层是支撑 Node.js 运行的关键，由 C/C++ 实现。
   - V8 是Google开发的JavaScript引擎，提供JavaScript运行环境，可以说它就是 Node.js 的发动机。
   - Libuv 是专门为Node.js开发的一个封装库，提供跨平台的异步I/O能力.
@@ -20,17 +26,14 @@ Node.js主要分为四大部分，Node Standard Library，Node Bindings，V8，L
   - http_parser、OpenSSL、zlib 等：提供包括 http 解析、SSL、数据压缩等其他的能力。
 
 nodejs v1.0 也就是最早发布的 node 版本下的 deps 文件，也就是 nodejs 所用到的依赖:
-- cares：用 C-ares 做域名解析
-- gtest：是 C/C++ 的单元测试框架
-- http-parser：用来解析 HTTP
-- npm：包管理工具
-- openssl：用来解析 HTTPS
-- uv：一个跨平台的异步 I/O 库
-- v8：google 开发的js引擎，为 js 提供运行环境
-- zlib：用来做加密
-
-**非阻塞/异步**：当一项请求发来，应用程序会处理这个请求，其他操作需要等这个请求处理完成才能执行。这个流程的问题是：当大量请求并发时每个请求都需要等待前一个完成，也就是说每个请求都会阻塞后面的所有请求，最糟糕的是如果前一个请求花了很长时间（比如从数据库读取 3GB 的数据）后面所有请求都跟着悲剧了。解决办法可以是引入多处理器和（或）多线程架构，这些办法各有优劣。Node.js 采用了另一种方式，不再为每个请求开启一个新的线程，而是所有请求都在单一的主线程中处理，也只做这么一件事情：处理请求——请求中包含的 I/O 操作如文件系统访问、数据库读写等，都会转发给由 libuv 管理的工作线程去执行。也就是说，请求中的 I/O 操作是异步处理的，而非在主线程上进行。这个办法就使得主线程从不会阻塞，因为所有耗时的任务都分配到了别处。你需要面对的只有唯一的主线程，所有 libuv 管理的工作线程都与你隔离开来，无需操心，Node.js 会处理好那部分。在这个架构之上重 I/O 操作变得格外高效，那些重 CPU、重内存的也一样。Node.js 提供了开箱即用的异步 I/O 调度，还有一些针对重 CPU 执行的处理，不过这已经超出本文话题范畴了。
-
+- `cares`：用 C-ares 做域名解析
+- `gtest`：是 C/C++ 的单元测试框架
+- `http-parser`：用来解析 HTTP
+- `npm`：包管理工具
+- `openssl`：用来解析 HTTPS
+- `uv`：一个跨平台的异步 I/O 库
+- `v8`：google 开发的js引擎，为 js 提供运行环境
+- `zlib`：用来做加密
 
 
 #### [1.1 Node bindings](#)
