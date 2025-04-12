@@ -12,6 +12,7 @@
 * Scss、Less
 * [JavaScript](./PL.Learning/javascript)/[TypeScript](./PL.Learning/typescript) ：编程语言。
 * [React](./PL.Learning/framework/react) : 一个用于构建用户界面的 JavaScript 库。
+* [Node.JS](./PL.Learning/node) : 一个JavaScript 运行时环境。
 
 #### 打包构建
 - [Vite](./scaffold/vite) : 基于原生ESM、模块热更新（HMR）的打包工具。
@@ -21,7 +22,7 @@
 ### links
 [JavaScript | MDN](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript)、[印记中文](https://docschina.org/) 、[阮一峰 ECMAScript 6 入门](https://es6.ruanyifeng.com/)
 
-### UI
+### UI Tool
 - [标小智 免费Favicon.ico图标在线生成器](https://www.logosc.cn/favicon-generator)
 
 

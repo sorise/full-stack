@@ -19,6 +19,11 @@ JavaScript 是一种轻量级的、解释型的编程语言，以其在网页浏
 * ECMAScript (ES) 语言核心。
 * Document Object Model (DOM) 文档对象模型。 
 * Browser Object Model (BOM) 浏览器对象模型。
+* **单线程**
+
+JavaScript的单线程，与它的用途有关。作为浏览器脚本语言，JavaScript的主要用途是与用户互动，以及操作DOM。这决定了它只能是单线程，否则会带来很复杂的同步问题。比如，假定JavaScript同时有两个线程，一个线程在某个DOM节点上添加内容，另一个线程删除了这个节点，这时浏览器应该以哪个线程为准？
+
+**为了避免复杂性，从一诞生，JavaScript就是单线程，这已经成了这门语言的核心特征，将来也不会改变。**
 
 #### [1.1 ECMAScript (ES)](#)
 ECMAScript 是 JavaScript 的核心语言规范，由欧洲计算机制造商协会（ECMA）制定并维护。
