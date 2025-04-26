@@ -4,6 +4,9 @@
 ----
 
 - [一、入门介绍](#一-入门介绍)
+- [二、编译方式](#二编译方式)
+- [三、基本用法](#三-基本用法)
+- [四、类型推断](#四-类型推断)
 
 ----
 ### [一、入门介绍](#)
@@ -247,8 +250,8 @@ tsc --noEmitOnError --watch
 }
 ```
 
-#### [2.3 tsc CLI 选项](#)
-[tsc CLI 选项](https://nodejs.cn/typescript/project-config/compiler-options/) 在本地运行 tsc 将编译由 tsconfig.json 定义的最接近的项目，您可以通过传入一个您想要的文件来编译一组 TypeScript 文件。
+#### [2.3 tsc cli 选项](#)
+[tsc cli 选项](https://nodejs.cn/typescript/project-config/compiler-options/) 在本地运行 tsc 将编译由 tsconfig.json 定义的最接近的项目，您可以通过传入一个您想要的文件来编译一组 TypeScript 文件。
 
 ```shell
 ## Run a compile based on a backwards look through the fs for a tsconfig.json
@@ -270,7 +273,30 @@ tsc index.js --declaration --emitDeclarationOnly
 tsc app.ts util.ts --target esnext --outfile index.js
 ```
 
-### [3. 基本用法](#)
+**noImplicitAny**: 然而，使用 any 通常会破坏使用 TypeScript 的初衷。您的程序类型越多，您获得的验证和工具就越多，这意味着您在编写代码时遇到的错误就越少。打开 noImplicitAny 标志将对任何类型隐式推断为 any 的变量触发错误。
+
+**strictNullChecks**:  默认情况下，像 null 和 undefined 这样的值可以分配给任何其他类型。这可以使编写一些代码更容易，但忘记处理 null 和 undefined 是世界上无数错误的原因 - 有些人认为它是 十亿美元的错误！strictNullChecks 标志使处理 null 和 undefined 更加明确，让我们不必担心是否忘记处理 null 和 undefined。
+
+#### [2.4 tsconfig.json 常用属性说明](#)
+以下参数既可以通过tsc命令传递，也可以通过  `tsconfig.json`， 有了这个配置文件，编译时直接调用tsc命令就可以了，不必再传递参数。
+
+**--outFile** ： 如果想将多个 TypeScript 脚本编译成一个 JavaScript 文件，使用--outFile参数。
+```shell
+ tsc file1.ts file2.ts --outFile app.js
+ #上面命令将file1.ts和file2.ts两个脚本编译成一个 JavaScript 文件app.js。
+```
+**--outDir** : 编译结果默认都保存在当前目录，--outDir参数可以指定保存到其他目录。
+```shell
+tsc app.ts --outDir dist
+#上面命令会在dist子目录下生成app.js。
+```
+**--target**: 为了保证编译结果能在各种 JavaScript 引擎运行，tsc 默认会将 TypeScript 代码编译成很低版本的 JavaScript，即 3.0 版本（以es3表示）。这通常不是我们想要的结果。这时可以使用--target参数，指定编译后的 JavaScript 版本。建议使用es2015，或者更新版本。
+```shell
+tsc --target es2015 app.ts
+```
+
+
+### [三. 基本用法](#)
 TypeScript 代码最明显的特征，就是为 JavaScript 变量加上了类型声明。
 
 ```typescript
@@ -377,7 +403,7 @@ configure("auto");
 configure("automatic");
 ```
 
-### [4. 类型推断](#)
+### [四. 类型推断](#)
 类型声明并不是必需的，如果没有，TypeScript 会自己推断类型。
 ```typescript
 let foo = 123;
