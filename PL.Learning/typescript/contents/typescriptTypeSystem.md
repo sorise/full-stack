@@ -50,8 +50,8 @@ TypeScript它是JavaScript的超集，增加了静态类型定义，TypeScript�
 
 > 这些类型共同构成了TypeScript强大的类型系统
 
-### [二、常用类型](#)
-介绍 any、unknown、never类型。
+### [二、特殊类型](#)
+介绍 any、unknown、never、void类型。
 
 #### [2.1 any 类型](#)
 any 类型表示没有任何限制，该类型的变量可以赋予任意类型的值。
@@ -152,4 +152,234 @@ if (typeof s === "string") {
   s.length; // 正确
 }
 ```
+
+#### [2.3 never 类型](#)
+TypeScript中的never类型是一个比较特殊的类型，它表示那些永不存在的值的类型。具体来说，never类型是所有类型的子类型，但没有类型是never的子类型（包括它自己）。这意味着声明为never类型的变量只能被赋值为never类型的值，并且不能有任何实际的值。
+
+**以下是never类型的一些主要用途和特点**：
+
+**函数无返回值**：当一个函数执行过程中总是抛出异常而不会正常结束时，或者存在无限循环的情况下，该函数被认为返回never类型。
+```typescript
+function throwError(message: string): never {
+    throw new Error(message);
+}
+```
+**代码块永远无法到达**：在某些情况下，TypeScript编译器能够推断出一段代码逻辑永远不会被执行到，这时它会将这种情形的类型推断为never。
+```typescript
+type A = string | number;
+
+function controlFlowAnalysis(a: A) {
+    if (typeof a === "string") {
+        console.log("It's a string");
+    } else if (typeof a === "number") {
+        console.log("It's a number");
+    } else {
+        // 这里的 'a' 被推断为类型 'never'
+        const exhaustiveCheck: never = a;
+    }
+}
+```
+
+#### [2.4 void类型](#)
+void通常用于函数返回值声明，含义：`函数不返回任何值`，**调用者也不应依赖其返回值进行任何操作**。 void 类型在 TypeScript 中主要用于清晰地标记那些预期不返回任何有意义值的函数，帮助开发者更好地理解和管理代码中的数据流和逻辑。
+
+理解void与 undefined
+- void是一个广泛的概念，用来表达“空”，而undefined则是这种“空”的具体实现之一，因此可以说undefined是void能接受的“空”状态的一种具体形式。
+- 换句话说：void包含undefined，但void表达的语义超越了单纯的undefined，它是一种
+意图上的约定，而不仅仅是特定值的限制。
+
+> **注意**： 在JavaScript 如果函数中没有明确使用return关键字返回 "返回值" , 那么函数会默认返回undefined 值 ;
+
+
+**函数返回值**： 最常见的用法是标记一个函数不返回任何有意义的值。
+```typescript
+function logMessage(message: string): void {
+    console.log(message);
+}
+
+const result = logMessage("Hello, world!");
+// result 的类型是 undefined，但通常不会被使用。
+
+function logInfo(message: string): void{
+    let now = new Date().toLocaleString();
+    console.log(`[INFO ${now}] ${message}`);
+}
+
+let re = logInfo('Hello World');
+//re void 类型
+```
+
+**变量声明**：虽然不太常见，但你也可以将变量声明为 void 类型。在这种情况下，这个变量只能被赋予 undefined 或 null（如果启用了严格的 null 检查）。不过，这种用法并不推荐，因为它很少有实际意义。
+```typescript
+let unusable: void = undefined;
+// 如果启用了严格模式，并且编译选项中包含了 "strictNullChecks"，
+// 那么还可以赋值为 null：
+unusable = null; // 可能需要启用特定编译选项才有效
+```
+
+特性与限制
+- 不能直接赋值：除了 undefined 和可能的 null（取决于你的 TypeScript 编译选项），你不能给一个 void 类型的变量赋予其他类型的值。
+- 无返回值 vs 返回 undefined：值得注意的是，TypeScript 中的 void 类型不同于显式返回 undefined。虽然两者在实践中可能看起来相似，但是它们有不同的含义。例如，你可以有一个函数明确返回 undefined，这与该函数具有 void 返回类型是不同的概念。
+
+```typescript
+function logInfo(message: string): void{
+    let now = new Date().toLocaleString();
+    console.log(`[INFO ${now}] ${message}`);
+}
+
+function logInfoError(message: string): void{
+    let now = new Date().toLocaleString();
+    let info = `[INFO ${now}] ${message}`;
+    console.log(info);
+    return;
+}
+
+function logInfoUndefined(message: string): void{
+    let now = new Date().toLocaleString();
+    let info = `[INFO ${now}] ${message}`;
+    console.log(info);
+    return undefined;
+}
+
+function logInfoNull(message: string): void{
+    let now = new Date().toLocaleString();
+    let info = `[INFO ${now}] ${message}`;
+    console.log(info);
+    return null; //错误
+}
+```
+**作为函数返回值时不要关注返回值**,调用者也不应依赖其返回值进行任何操作
+```typescript
+//any Type
+
+function logInfo(message: string): void{
+    let now = new Date().toLocaleString();
+    console.log(`[INFO ${now}] ${message}`);
+}
+
+let t = logInfo("test");
+
+if (t){
+    //An expression of type void cannot be tested for truthiness.
+    console.log(`never`);
+}
+```
+
+总结：若函数返回类型为void，那么：
+1. 从语法上讲：函数是可以返回undefined的，至于显示返回，还是隐式返回，这无所谓！
+2. 从语义上讲：函数调用者不应关心函数返回的值，也不应依赖返回值进行任何操作！即使返回了undefined值。
+
+### [三、基本类型](#)
+JavaScript 语言（注意，不是 TypeScript）将值分成 8 种类型（boolean、string、number、bigint、symbol、object（function）、undefined、nul）。 TypeScript 继承了 JavaScript 的类型设计，以上 8 种类型可以看作 TypeScript 的基本类型。
+
+> **注意**，上面所有类型的名称都是小写字母，首字母大写的Number、String、Boolean等在 JavaScript 语言中都是内置对象，而不是类型名称。
+
+**JavaScript的8种类型之中**，undefined和null其实是两个特殊值，object属于复合类型，剩下的五种属于原始类型（primitive value），代表最基本的、不可再分的值。
+
+- **boolean**
+- **string**
+- **number**
+- **bigint**
+- **symbol**
+
+五种包装对象之中，symbol 类型和 bigint 类型无法直接获取它们的包装对象（即Symbol()和BigInt()不能作为构造函数使用），但是剩下三种可以。
+* Boolean()
+* String()
+* Number()
+
+#### [3.1 包装对象类型与字面量类型](#)
+由于包装对象的存在，导致每一个原始类型的值都有包装对象和字面量两种情况。
+
+为了区分这两种情况，TypeScript 对五种原始类型分别提供了大写和小写两种类型。
+
+- Boolean 和 boolean
+- String 和 string
+- Number 和 number
+- BigInt 和 bigint
+- Symbol 和 symbol
+
+其中，大写类型同时包含包装对象和字面量两种情况，小写类型只包含字面量，不包含包装对象。
+```typescript
+const s1: String = "hello"; // 正确
+const s2: String = new String("hello"); // 正确
+
+const s3: string = "hello"; // 正确
+const s4: string = new String("hello"); // 报错
+```
+
+#### [3.2 Object 类型与 object 类型](#)
+TypeScript 的对象类型也有大写Object和小写object两种。
+
+| 特性                | `Object` 类型（大写）                          | `object` 类型（小写）                      |
+|---------------------|-----------------------------------------------|-------------------------------------------|
+| **范围**            | 所有值（除 `null` 和 `undefined`）            | 仅非原始类型（对象、数组、函数等）        |
+| **类型安全性**      | 较低（允许原始类型）                          | 较高（仅允许对象）                        |
+| **适用场景**        | 需要兼容所有值时                              | 需要确保变量是对象时                      |
+| **是否允许原始类型**| V                                             | X                                        |
+| **是否允许 `null`** | X                                             | X                                        |
+| **推荐程度**        | ! 不推荐用于类型安全场景                     | V 推荐使用                               |
+
+通过合理选择 `Object` 和 `object` 类型，可以更安全、更灵活地处理 TypeScript 中的对象和值。
+
+| 类型        | 可接受的值类型                     | 是否允许原始类型 | 是否允许 `null` |
+|-------------|-----------------------------------|------------------|-----------------|
+| `Object`    | 所有值（除 `null` 和 `undefined`）| ✅               | ❌              |
+| `object`    | 仅非原始类型（对象、数组、函数等）| ❌               | ❌              |
+
+#### [3.3 Object 类型](#)
+大写的 `Object` 类型代表 JavaScript 语言里面的广义对象。所有可以转成对象的值，都是Object类型，这囊括了几乎所有的值。
+
+**`Object` 类型（大写）** :
+- **语义**：`Object` 是 JavaScript 中所有对象的基类（原型链的顶端），表示“广义对象”。  
+- **范围**：几乎可以接受任何值（除了 `null` 和 `undefined`）。  
+  - 原始类型（如 `number`、`string`、`boolean` 等）会被自动装箱为对应的包装对象（如 `Number`、`String`、`Boolean`）。  
+  - 包括对象、数组、函数、日期、正则表达式等。  
+
+```typescript
+let obj: Object;
+
+obj = true;
+obj = "hi";
+obj = 1;
+obj = { foo: 123 };
+obj = [1, 2];
+obj = (a: number) => a + 1;
+```
+上面示例中，原始类型值、对象、数组、函数都是合法的Object类型。
+
+事实上，除了 `undefined` 和 `null` 这两个值不能转为对象，其他任何值都可以赋值给 `Object` 类型。
+```typescript
+let obj: Object;
+
+obj = undefined; // 报错
+obj = null; // 报错
+```
+
+#### [3.4 object 类型](#)
+小写的 `object` 类型代表 JavaScript 里面的狭义对象，即可以用字面量表示的对象，只包含对象、数组和函数，不包括原始类型的值。
+
+
+**`object` 类型（小写）** :
+- **语义**：`object` 是 TypeScript 中的“狭义对象”类型，表示**非原始类型**。  
+- **范围**：仅包含对象、数组、函数等非原始类型，**排除所有原始类型**（`number`、`string`、`boolean`、`symbol`、`null`、`undefined`）。  
+
+```typescript
+let obj: object;
+
+obj = { foo: 123 };
+obj = [1, 2];
+obj = (a: number) => a + 1;
+obj = true; // 报错
+obj = "hi"; // 报错
+obj = 1; // 报错
+```
+上面示例中，object类型不包含原始类型值，只包含对象、数组和函数。
+
+大多数时候，我们使用对象类型，只希望包含真正的对象，不希望包含原始类型。所以，建议总是使用小写类型object，不使用大写类型Object。
+
+注意，无论是大写的Object类型，还是小写的object类型，都只包含 JavaScript 内置对象原生的属性和方法，用户自定义的属性和方法都不存在于这两个类型之中。
+
+
+
+
 
