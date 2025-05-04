@@ -310,24 +310,25 @@ const s4: string = new String("hello"); // 报错
 #### [3.2 Object 类型与 object 类型](#)
 TypeScript 的对象类型也有大写Object和小写object两种。
 
-| 特性                | `Object` 类型（大写）                          | `object` 类型（小写）                      |
-|---------------------|-----------------------------------------------|-------------------------------------------|
-| **范围**            | 所有值（除 `null` 和 `undefined`）            | 仅非原始类型（对象、数组、函数等）        |
-| **类型安全性**      | 较低（允许原始类型）                          | 较高（仅允许对象）                        |
-| **适用场景**        | 需要兼容所有值时                              | 需要确保变量是对象时                      |
-| **是否允许原始类型**| V                                             | X                                        |
-| **是否允许 `null`** | X                                             | X                                        |
-| **推荐程度**        | ! 不推荐用于类型安全场景                     | V 推荐使用                               |
+| **特性**  | Object 类型（大写）  | object 类型（小写） |
+|---------------------|-----------------------------------------------|------------------------------------|
+| **范围**   | 所有值（除 `null` 和 `undefined`）| 仅非原始类型（对象、数组、函数等） |
+| **类型安全性**| 较低（允许原始类型）| 较高（仅允许对象）  |
+| **适用场景** | 需要兼容所有值时 | 需要确保变量是对象时 |
+| **是否允许原始类型**| V  | X |
+| **是否允许 `null`** | X  | X |
+| **推荐程度**        | ! 不推荐用于类型安全场景   | V 推荐使用 |
 
 通过合理选择 `Object` 和 `object` 类型，可以更安全、更灵活地处理 TypeScript 中的对象和值。
 
-| 类型        | 可接受的值类型                     | 是否允许原始类型 | 是否允许 `null` |
-|-------------|-----------------------------------|------------------|-----------------|
-| `Object`    | 所有值（除 `null` 和 `undefined`）| ✅               | ❌              |
-| `object`    | 仅非原始类型（对象、数组、函数等）| ❌               | ❌              |
+| 类型        | 可接受的值类型  | 是否允许原始类型 | 是否允许 `null` |
+|-------------|----------------|------------------|---------|
+| `Object`    | 所有值（除 `null` 和 `undefined`）| ✅ | ❌ |
+| `object`    | 仅非原始类型（对象、数组、函数等）| ❌  | ❌ |
 
 #### [3.3 Object 类型](#)
 大写的 `Object` 类型代表 JavaScript 语言里面的广义对象。所有可以转成对象的值，都是Object类型，这囊括了几乎所有的值。
+**Object是能存储的类型是可以调用到object方法的类型**。
 
 **`Object` 类型（大写）** :
 - **语义**：`Object` 是 JavaScript 中所有对象的基类（原型链的顶端），表示“广义对象”。  
@@ -379,7 +380,290 @@ obj = 1; // 报错
 
 注意，无论是大写的Object类型，还是小写的object类型，都只包含 JavaScript 内置对象原生的属性和方法，用户自定义的属性和方法都不存在于这两个类型之中。
 
+```typescript
+const o1: Object = { foo: 0 };
+const o2: object = { foo: 0 };
+
+o1.toString(); // 正确
+o1.foo; // 报错
+
+o2.toString(); // 正确
+o2.foo; // 报错
+```
+上面示例中，toString()是对象的原生方法，可以正确访问。foo是自定义属性，访问就会报错。
+
+#### [3.5 undefined 和 null 的特殊性](#)
+undefined 和 null 既是**值**，**又是类型**，作为值，它们有一个特殊的地方：任何其他类型的变量都可以赋值为 `undefined` 或 `null`。
+
+```typescript
+let age: number = 24;
+
+age = null; // 正确
+age = undefined; // 正确
+```
+上面代码中，变量age的类型是number，但是赋值为 `null` 或`undefined`并不报错。
+
+这并不是因为undefined和null包含在number类型里面，而是故意这样设计，任何类型的变量都可以赋值为undefined和null，以便跟 JavaScript 的行为保持一致。
+
+JavaScript 的行为是，变量如果等于undefined就表示还没有赋值，如果等于null就表示值为空。所以，TypeScript 就允许了任何类型的变量都可以赋值为这两个值。
+
+但是有时候，这并不是开发者想要的行为，也不利于发挥类型系统的优势。
+```typescript
+const obj: object = undefined;
+obj.toString(); // 编译不报错，运行就报错
+```
+为了避免这种情况，及早发现错误，TypeScript 提供了一个编译选项strictNullChecks。
+只要打开这个选项，undefined和null就不能赋值给其他类型的变量（除了any类型和unknown类型）。
+
+```typescript
+// tsc --strictNullChecks app.ts
+
+let age: number = 24;
+
+age = null; // 报错
+age = undefined; // 报错
+```
+上面示例中，打开 `--strictNullChecks` 以后，number类型的变量age就不能赋值为 `undefined` 和 `null`。
+
+这个选项在配置文件tsconfig.json的写法如下。
+```json
+{
+  "compilerOptions": {
+    "strictNullChecks": true
+    // ...
+  }
+}
+```
+打开strictNullChecks以后，undefined和null这两种值也不能互相赋值了。
+```typescript
+// 打开 strictNullChecks
+
+let x: undefined = null; // 报错
+let y: null = undefined; // 报错
+```
+上面示例中，undefined类型的变量赋值为null，或者null类型的变量赋值为undefind，都会报错。
+
+总之，打开strictNullChecks以后，undefined和null只能赋值给自身，或者any类型和unknown类型的变量。
+```typescript
+let x: any = undefined;
+let y: unknown = null;
+```
+
+#### [3.5 声明对象类型](#)
+在实际开发中，可以限制一般对象，一般使用如下形式。
+```typescript
+//声明
+let student : {name: string, age: number};
+
+//student只能写以上两个属性，不可以少写也不可以多写
+student = {
+    name: "Lzm",
+    age: 5,
+}
+```
+使用 `?`来实现 **约束可选属性**, 如下所示sex属性可以实现也可以不实现。
+```typescript
+let student : {name: string, age: number; sex?: boolean};
+
+student = {
+    name: "Lzm",
+    age: 5,
+}
+```
+**实现任意追加属性**, `[key:typeName]:any` ,如下所示 key必须是 string类型，值可以是任意类型。
+```typescript
+let student : {
+    name: string
+    age: number
+    [key:string]: any
+};
+
+student = {
+    name: "Lzm",
+    age: 5,
+    sex: "male",
+    city: "CD",
+}
+```
+
+#### [3.6 声明函数类型](#)
+声明函数类型。
+
+```typescript
+function logInfo(message: string): void{
+    let now = new Date().toLocaleString();
+    console.log(`[INFO ${now}] ${message}`);
+}
+
+let info: (message: string) => void;
+
+info = logInfo;
+
+
+let plus: (pro: number, next: number) => number;
+
+plus = function (a,b) {
+    return a + b
+};
+```
+
+### [四、值类型](#)
 
 
 
+### [五、数组类型](#)
+TypeScript 数组有一个根本特征：所有成员的类型必须相同，但是成员数量是不确定的，可以是无限数量的成员，也可以是零成员。
 
+#### [5.1 数组声明](#)
+数组的类型有两种写法。第一种写法是在数组成员的类型后面，加上一对 `[]`。
+```typescript
+let arr: number[] = [1, 2, 3];
+```
+上面示例中，数组arr的类型是 `number[]`，其中number表示数组成员类型是 `number`。
+
+如果数组成员的类型比较复杂，可以写在圆括号里面。
+```typescript
+let arr: (number | string)[];
+
+let numsName: (string|number)[];
+
+numsName = ["tick", 75.75, "million", 45.63];
+```
+如果数组成员可以是任意类型，写成 `any[]`。当然，这种写法是应该避免的。
+```typescript
+let arr: any[];
+```
+
+数组类型的第二种写法是使用 TypeScript 内置的 Array 接口。
+```typescript
+let arr: Array<number> = [1, 2, 3];
+```
+这种写法对于成员类型比较复杂的数组，代码可读性会稍微好一些。
+```typescript
+let arr: Array<number | string>;
+```
+**数组类型声明了以后，成员数量是不限制的，任意数量的成员都可以，也可以是空数组**。
+```typescript
+let arr: number[];
+arr = [];
+arr = [1];
+arr = [1, 2];
+arr = [1, 2, 3];
+```
+正是由于成员数量可以动态变化，所以 TypeScript 不会对数组边界进行检查，越界访问数组并不会报错。
+```typescript
+let arr: number[] = [1, 2, 3];
+let foo = arr[3]; // 正确
+```
+
+TypeScript 允许使用方括号读取数组成员的类型。
+```typescript
+type Names = string[];
+type Name = Names[0]; // string
+```
+上面示例中，类型Names是字符串数组，那么Names[0]返回的类型就是string。
+
+由于数组成员的索引类型都是number，所以读取成员类型也可以写成下面这样。
+```typescript
+type Names = string[];
+type Name = Names[number]; // string
+```
+上面示例中，Names[number]表示数组Names所有数值索引的成员类型，所以返回string。
+
+
+#### [5.2 数组的类型推断](#)
+如果数组变量没有声明类型，TypeScript 就会推断数组成员的类型。这时，推断行为会因为值的不同，而有所不同。
+
+如果变量的初始值是空数组，那么 TypeScript 会推断数组类型是any[]。
+```typescript
+// 推断为 any[]
+const arr = [];
+```
+后面，为这个数组赋值时，TypeScript 会自动更新类型推断。
+```typescript
+const arr = [];
+arr; // 推断为 any[]
+
+arr.push(123);
+arr; // 推断类型为 number[]
+
+arr.push("abc");
+arr; // 推断类型为 (string|number)[]
+```
+上面示例中，数组变量arr的初始值是空数组，然后随着新成员的加入，TypeScript 会自动修改推断的数组类型。
+
+但是，类型推断的自动更新只发生初始值为空数组的情况。如果初始值不是空数组，**类型推断就不会更新**。
+```typescript
+// 推断类型为 number[]
+const arr = [123];
+
+arr.push("abc"); // 报错
+```
+上面示例中，数组变量arr的初始值是[123]，TypeScript 就推断成员类型为number。新成员如果不是这个类型，TypeScript 就会报错，而不会更新类型推断。
+
+#### [5.3 多维数组](#)
+TypeScript 使用 `T[][]` 的形式，表示二维数组，T是最底层数组成员的类型。
+
+```typescript
+var multi: number[][] = [
+  [1, 2, 3],
+  [23, 24, 25],
+];
+```
+
+
+#### [5.4 const 数组，const断言 、readonly 只读数组](#)
+JavaScript 规定，const命令声明的数组变量是可以改变成员的。
+```typescript
+const arr = [0, 1];
+arr[0] = 2;
+```
+上面示例中，修改const命令声明的数组的成员是允许的。
+
+但是，很多时候确实有声明为只读数组的需求，即不允许变动数组成员。
+
+TypeScript 允许声明只读数组，方法是在数组类型前面加上 readonly 关键字。
+```typescript
+const arr: readonly number[] = [0, 1];
+
+arr[1] = 2; // 报错
+arr.push(3); // 报错
+delete arr[0]; // 报错
+```
+上面示例中，arr是一个只读数组，删除、修改、新增数组成员都会报错。
+
+
+> TypeScript 将readonly number[]与number[]视为两种不一样的类型，后者是前者的子类型。
+> 这是因为只读数组没有pop()、push()之类会改变原数组的方法，所以number[]的方法数量要多于readonly number[]，这意味着number[]其实是readonly number[]的子类型。
+
+```typescript
+let a1: number[] = [0, 1];
+let a2: readonly number[] = a1; // 正确
+
+a1 = a2; // 报错
+```
+上面示例中，子类型number[]可以赋值给父类型readonly number[]，但是反过来就会报错。
+
+**注意，readonly关键字不能与数组的泛型写法一起使用**。
+```typescript
+// 报错
+const arr: readonly Array<number> = [0, 1];
+```
+上面示例中，readonly与数组的泛型写法一起使用，就会报错。
+
+实际上，TypeScript 提供了两个专门的泛型，用来生成只读数组的类型。
+```typescript
+const a1: ReadonlyArray<number> = [0, 1];
+
+const a2: Readonly<number[]> = [0, 1];
+```
+上面示例中，泛型`ReadonlyArray<T>`和`Readonly<T[]>`都可以用来生成只读数组类型。两者尖括号里面的写法不一样，`Readonly<T[]>`的尖括号里面是整个数组（number[]），而`ReadonlyArray<T>`的尖括号里面是数组成员（number）。
+
+
+只读数组还有一种声明方法，就是使用“**const 断言**。
+```typescript
+const arr = [0, 1] as const;
+
+arr[0] = [2]; // 报错
+```
+上面示例中，as const告诉 TypeScript，推断类型时要把变量arr推断为只读数组，从而使得数组成员无法改变。

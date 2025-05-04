@@ -3,16 +3,16 @@
 
 ----
 
-#### 目录
-- [TypeScript 入门必知](./contents/typescriptIntroduce.md) TS介绍，编译方式、基本用法。
-- [TypeScript 基本类型系统](./contents/typescriptTypeSystem.md) 了解TS的类型系统，基本类型、any、never、unknown、Tuples...
+### 目录
+- [TypeScript 语言入门必知](./contents/typescriptIntroduce.md) TS语言基本介绍，编译方式、基本用法、类型推断的基本知识。
+- [TypeScript 基本类型系统](./contents/typescriptTypeSystem.md) 了解TS的类型系统，基本类型、any、never、unknown、void、Tuples...，const 数组，const断言 、readonly 只读数组。
+- 
 
 
 
+### links
+[TypeScript 中文文档](https://nodejs.cn/typescript/) 、[TypeScript 教程 阮一峰](https://typescript.p6p.net/)
 
----
 
-#### links
-[TypeScript 中文文档](https://nodejs.cn/typescript/) 、[TypeScript 教程阮一峰](https://typescript.p6p.net/)
-#### 日志
-- TypeScript、C#语言、Delphi语言之父Anders Hejlsberg今日在Microsoft开发者博客宣布重大消息，TypeScript编译器以及工具链将移植到Go语言，性能提升高达10倍！  
+### 日志
+TypeScript、C#语言、Delphi语言之父 `Anders Hejlsberg` 今日在 `Microsoft` 开发者博客宣布重大消息，TypeScript编译器以及工具链将移植到Go语言，性能提升高达10倍！
