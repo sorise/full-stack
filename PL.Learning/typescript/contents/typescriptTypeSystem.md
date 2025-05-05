@@ -508,7 +508,24 @@ plus = function (a,b) {
 ```
 
 ### [四、值类型](#)
+TypeScript 规定，单个值也是一种类型，称为“值类型”。
 
+```typescript
+let x: "hello";
+
+x = "hello"; // 正确
+x = "world"; // 报错
+```
+上面示例中，变量x的类型是字符串hello，导致它只能赋值为这个字符串，赋值为其他字符串就会报错。
+
+TypeScript 推断类型时，遇到const命令声明的变量，如果代码里面没有注明类型，就会推断该变量是值类型。
+```typescript
+// x 的类型是 "https"
+const x = "https";
+
+// y 的类型是 string
+const y: string = "https";
+```
 
 
 ### [五、数组类型](#)
@@ -560,6 +577,8 @@ TypeScript 允许使用方括号读取数组成员的类型。
 ```typescript
 type Names = string[];
 type Name = Names[0]; // string
+
+let t: Name = "tick";
 ```
 上面示例中，类型Names是字符串数组，那么Names[0]返回的类型就是string。
 
@@ -633,8 +652,9 @@ delete arr[0]; // 报错
 上面示例中，arr是一个只读数组，删除、修改、新增数组成员都会报错。
 
 
-> TypeScript 将readonly number[]与number[]视为两种不一样的类型，后者是前者的子类型。
-> 这是因为只读数组没有pop()、push()之类会改变原数组的方法，所以number[]的方法数量要多于readonly number[]，这意味着number[]其实是readonly number[]的子类型。
+TypeScript 将 `readonly number[]` 与 `number[]` 视为两种不一样的类型，后者是前者的子类型。
+
+这是因为只读数组没有 `pop()`、`push()`之类会改变原数组的方法，所以 `number[]` 的方法数量要多于 `readonly number[]`，这意味着 `number[]` 其实是 `readonly number[]`的子类型。
 
 ```typescript
 let a1: number[] = [0, 1];
@@ -667,3 +687,429 @@ const arr = [0, 1] as const;
 arr[0] = [2]; // 报错
 ```
 上面示例中，as const告诉 TypeScript，推断类型时要把变量arr推断为只读数组，从而使得数组成员无法改变。
+
+### [六、元组类型](#)
+元组（tuple）是 TypeScript 特有的数据类型, 元组（Tup1e）是一种特殊的数组类型，可以存储固定数量的元素，并且每个元素的类型是已知的且可以不
+同。元组用于精确描述一组值的类型，`？`表示可选元素。
+
+```typescript
+let tpl: [string, number, boolean, string?];
+
+tpl = ["JXkicker", 28, true];
+```
+
+> 元组类型的写法，与上一章的数组有一个重大差异。数组的成员类型写在方括号外面`（number[]）`，元组的成员类型是写在方括号里面`（[number]）`。
+
+
+TypeScript 的区分方法是，成员类型写在方括号里面的就是元组，写在外面的就是数组。
+```typescript
+let a: [number] = [1];
+```
+上面示例中，变量a是一个元组，只有一个成员，类型是number。
+
+#### [6.1 可选元素](#)
+元组成员的类型可以添加问号后缀（?），表示该成员是可选的。
+```typescript
+let a: [number, number?] = [1];
+```
+注意，问号只能用于元组的尾部成员，也就是说，所有可选成员必须在必选成员之后。
+
+```typescript
+type myTuple = [number, number, number?, string?];
+```
+
+#### [6.2 类型推导](#)
+使用元组时，必须明确给出类型声明，不能省略，否则 TypeScript 会把一个值自动推断为数组。
+```typescript
+// a 的类型为 (number | boolean)[]
+let a = [1, true];
+```
+
+#### [6.3 不限成员数量的元组](#)
+使用扩展运算符（`...`），可以表示不限成员数量的元组。
+```typescript
+type NamedNums = [string, ...number[]];
+
+const a: NamedNums = ["A", 1, 2];
+const b: NamedNums = ["B", 1, 2, 3];
+```
+扩展运算符用在元组的任意位置都可以，但是它后面只能是数组或元组。
+```typescript
+type t1 = [string, number, ...boolean[]];
+type t2 = [string, ...boolean[], number];
+type t3 = [...boolean[], string, number];
+```
+如果不确定元组成员的类型和数量，可以写成下面这样。
+```typescript
+type Tuple = [...any[]];
+```
+
+#### [6.4 读取成员类型](#)
+元组可以通过方括号，读取成员类型。
+```typescript
+type Tuple = [string, number];
+type Age = Tuple[1]; // number
+```
+由于元组的成员都是数值索引，即索引类型都是number，所以可以像下面这样读取。
+```typescript
+type Tuple = [string, number, Date];
+type TupleEl = Tuple[number]; // string|number|Date
+```
+上面示例中，Tuple[number]表示元组Tuple的所有数值索引的成员类型，所以返回string|number|Date，即这个类型是三种值的联合类型。
+
+
+#### [6.5 只读元组](#)
+元组也可以是只读的，不允许修改，有两种写法。
+
+```typescript
+// 写法一
+type t = readonly [number, string];
+
+// 写法二
+type t = Readonly<[number, string]>;
+```
+上面示例中，两种写法都可以得到只读元组，其中写法二是一个泛型，用到了工具类型 Readonly<T>。
+
+跟数组一样，只读元组是元组的父类型。所以，元组可以替代只读元组，而只读元组不能替代元组。
+
+```typescript
+type t1 = readonly [number, number];
+type t2 = [number, number];
+
+let x: t2 = [1, 2];
+let y: t1 = x; // 正确
+
+x = y; // 报错
+```
+
+由于只读元组不能替代元组，所以会产生一些令人困惑的报错。
+```typescript
+function distanceFromOrigin([x, y]: [number, number]) {
+  return Math.sqrt(x ** 2 + y ** 2);
+}
+
+let point = [3, 4] as const;
+
+distanceFromOrigin(point); // 报错
+```
+上面示例报错的解决方法，就是使用类型断言。
+```typescript
+distanceFromOrigin(point as [number, number]);
+```
+
+#### [6.6 成员数量的推断](#)
+如果没有可选成员和扩展运算符，TypeScript 会推断出元组的成员数量（即元组长度）。
+
+```typescript
+function f(point: [number, number]) {
+  if (point.length === 3) {
+    // 报错
+    // ...
+  }
+}
+```
+上面示例会报错，原因是 TypeScript 发现元组point的长度是2，不可能等于3，这个判断无意义。
+
+如果包含了可选成员，TypeScript 会推断出可能的成员数量
+```typescript
+function f(point: [number, number?, number?]) {
+  if (point.length === 4) {
+    // 报错
+    // ...
+  }
+}
+```
+上面示例会报错，原因是 TypeScript 发现point.length的类型是1|2|3，不可能等于4。
+
+如果使用了扩展运算符，TypeScript 就无法推断出成员数量。
+```typescript
+const myTuple: [...string[]] = ["a", "b", "c"];
+
+if (myTuple.length === 4) {
+  // 正确
+  // ...
+}
+```
+
+#### [6.7 扩展运算符与成员数量](#)
+扩展运算符（...）将数组（注意，不是元组）转换成一个逗号分隔的序列，这时 TypeScript 会认为这个序列的成员数量是不确定的，因为数组的成员数量是不确定的。
+
+这导致如果函数调用时，使用扩展运算符传入函数参数，可能发生参数数量与数组长度不匹配的报错。
+```typescript
+const arr = [1, 2];
+
+function add(x: number, y: number) {
+  // ...
+}
+
+add(...arr); // 报错
+```
+有些函数可以接受任意数量的参数，这时使用扩展运算符就不会报错。
+```typescript
+const arr = [1, 2, 3];
+console.log(...arr); // 正确
+```
+console.log()可以接受任意数量的参数，所以传入...arr就不会报错。
+
+
+解决这个问题的一个方法，就是把成员数量不确定的数组，写成成员数量确定的元组，再使用扩展运算符。
+```typescript
+const arr: [number, number] = [1, 2];
+
+function add(x: number, y: number) {
+  // ...
+}
+
+add(...arr); // 正确
+```
+上面示例中，arr是一个拥有两个成员的元组，所以 TypeScript 能够确定...arr可以匹配函数add()的参数数量，就不会报错了。
+
+另一种写法是使用as const断言。
+
+```typescript
+const arr = [1, 2] as const;
+```
+
+### [七、enum](#)
+Enum 是 TypeScript 新增的一种数据结构和类型，中文译为“枚举”, 用来将相关常量放在一个容器里面，方便使用。
+
+```typescript
+enum Color {
+  Red, // 0
+  Green, // 1
+  Blue, // 2
+}
+```
+使用时，调用 Enum 的某个成员，与调用对象属性的写法一样，可以使用点运算符，也可以使用方括号运算符。
+```typescript
+let c = Color.Green; // 1
+// 等同于
+let c = Color["Green"]; // 1
+```
+
+#### [7.1 Enum 成员的值](#)
+Enum 成员默认不必赋值，系统会从零开始逐一递增，按照顺序为每个成员赋值，比如 0、1、2……, 但是，也可以为 Enum 成员显式赋值。
+
+- Enum 成员值都是只读的，不能重新赋值。
+- 为了让这一点更醒目，通常会在 enum 关键字前面加上const修饰，表示这是常量，不能再次赋值。
+
+```typescript
+const enum Color {
+  Red,
+  Green,
+  Blue,
+}
+
+// 等同于
+enum Color {
+  Red = 0,
+  Green = 1,
+  Blue = 2,
+}
+//成员的值甚至可以相同。
+enum Color {
+  Red = 0,
+  Green = 0,
+  Blue = 0,
+}
+//如果只设定第一个成员的值，后面成员的值就会从这个值开始递增。
+enum Color {
+  Red = 7,
+  Green, // 8
+  Blue, // 9
+}
+//Enum 成员的值也可以使用计算式。
+enum Permission {
+  UserRead = 1 << 8,
+  UserWrite = 1 << 7,
+  UserExecute = 1 << 6,
+  GroupRead = 1 << 5,
+  GroupWrite = 1 << 4,
+  GroupExecute = 1 << 3,
+  AllRead = 1 << 2,
+  AllWrite = 1 << 1,
+  AllExecute = 1 << 0,
+}
+```
+成员的值可以是任意数值，但不能是大整数（Bigint）。
+```typescript
+enum Color {
+  Red = 90,
+  Green = 0.5,
+  Blue = 7n, // 报错
+}
+```
+
+
+#### [7.2 同名 Enum 的合并](#)
+多个同名的 Enum 结构会自动合并，同名 Enum 合并时，不能有同名成员，否则报错。
+
+```typescript
+enum Foo {
+  A,
+}
+
+enum Foo {
+  B = 1,
+}
+
+enum Foo {
+  C = 2,
+}
+
+// 等同于
+enum Foo {
+  A,
+  B = 1，
+  C = 2
+}
+```
+
+#### [7.3 字符串 Enum](#)
+Enum 成员的值除了设为数值，还可以设为字符串。也就是说，Enum 也可以用作一组相关字符串的集合。
+
+```typescript
+enum Direction {
+  Up = "UP",
+  Down = "DOWN",
+  Left = "LEFT",
+  Right = "RIGHT",
+}
+```
+上面示例中，Direction就是字符串枚举，每个成员的值都是字符串。
+
+注意，字符串枚举的所有成员值，都必须显式设置。如果没有设置，成员值默认为数值，且位置必须在字符串成员之前。
+```typescript
+enum Foo {
+  A, // 0
+  B = "hello",
+  C, // 报错
+}
+```
+上面示例中，A之前没有其他成员，所以可以不设置初始值，默认等于0；C之前有一个字符串成员，必须C必须有初始值，不赋值就报错了。
+
+Enum 成员可以是字符串和数值混合赋值。
+```typescript
+enum Enum {
+  One = "One",
+  Two = "Two",
+  Three = 3,
+  Four = 4,
+}
+```
+除了数值和字符串，Enum 成员不允许使用其他值（比如 Symbol 值）。
+
+变量类型如果是字符串 Enum，就不能再赋值为字符串，这跟数值 Enum 不一样。
+```typescript
+enum MyEnum {
+  One = "One",
+  Two = "Two",
+}
+
+let s = MyEnum.One;
+s = "One"; // 报错
+```
+由于这个原因，如果函数的参数类型是字符串 Enum，传参时就不能直接传入字符串，而要传入 Enum 成员。
+```typescript
+enum MyEnum {
+  One = "One",
+  Two = "Two",
+}
+
+function f(arg: MyEnum) {
+  return "arg is " + arg;
+}
+
+f("One"); // 报错
+```
+前面说过，数值 Enum 的成员值往往不重要。但是有些场合，开发者可能希望 Enum 成员值可以保存一些有用的信息，所以 TypeScript 才设计了字符串 Enum.
+```typescript
+const enum MediaTypes {
+  JSON = "application/json",
+  XML = "application/xml",
+}
+
+const url = "localhost";
+
+fetch(url, {
+  headers: {
+    Accept: MediaTypes.JSON,
+  },
+}).then((response) => {
+  // ...
+});
+```
+
+字符串 Enum 可以使用 **联合类型（union）**代替。
+
+```typescript
+function move(where: "Up" | "Down" | "Left" | "Right") {
+  // ...
+}
+```
+上面示例中，函数参数where属于联合类型，效果跟指定为字符串 Enum 是一样的。
+
+#### [7.4 keyof 运算符](#)
+keyof 运算符可以取出 Enum 结构的所有成员名，作为联合类型返回。
+
+```typescript
+enum MyEnum {
+  A = "a",
+  B = "b",
+}
+
+// 'A'|'B'
+type Foo = keyof typeof MyEnum;
+```
+上面示例中，keyof typeof MyEnum可以取出MyEnum的所有成员名，所以类型Foo等同于 **联合类型** `'A'|'B'`。
+
+注意，这里的typeof是必需的，否则keyof MyEnum相当于keyof number。
+```typescript
+type Foo = keyof MyEnum;
+// "toString" | "toFixed" | "toExponential" |
+// "toPrecision" | "valueOf" | "toLocaleString"
+```
+上面示例中，类型Foo等于类型number的所有原生属性名组成的联合类型。
+
+如果要返回 Enum 所有的成员值，可以使用 `in` 运算符。
+```typescript
+enum MyEnum {
+  A = "a",
+  B = "b",
+}
+
+// { a：any, b: any }
+type Foo = { [key in MyEnum]: any };
+```
+
+#### [7.5 反向映射](#)
+数值 Enum 存在反向映射，即可以通过成员值获得成员名。
+
+```typescript
+enum Weekdays {
+  Monday = 1,
+  Tuesday,
+  Wednesday,
+  Thursday,
+  Friday,
+  Saturday,
+  Sunday,
+}
+
+console.log(Weekdays[3]); // Wednesday
+```
+上面示例中，Enum 成员Wednesday的值等于 3，从而可以从成员值3取到对应的成员名Wednesday，这就叫反向映射。
+
+这是因为 TypeScript 会将上面的 Enum 结构，编译成下面的 JavaScript 代码。
+```typescript
+var Weekdays;
+(function (Weekdays) {
+  Weekdays[(Weekdays["Monday"] = 1)] = "Monday";
+  Weekdays[(Weekdays["Tuesday"] = 2)] = "Tuesday";
+  Weekdays[(Weekdays["Wednesday"] = 3)] = "Wednesday";
+  Weekdays[(Weekdays["Thursday"] = 4)] = "Thursday";
+  Weekdays[(Weekdays["Friday"] = 5)] = "Friday";
+  Weekdays[(Weekdays["Saturday"] = 6)] = "Saturday";
+  Weekdays[(Weekdays["Sunday"] = 7)] = "Sunday";
+})(Weekdays || (Weekdays = {}));
+```
