@@ -71,7 +71,7 @@ function greeter(person: string) {
     return "Hello, " + person;
 }
 
-let user = "Jane User";
+let user: string = "Jane User";
 
 document.body.innerHTML = greeter(user);
 ```
@@ -335,11 +335,8 @@ console.log(x); // 报错
 上面示例中，变量x没有赋值就被读取，导致报错。而 JavaScript 允许这种行为，不会报错，没有赋值的变量会返回 undefined。
 
 #### [3.1 字面量类型](#)
-TypeScript中的字面量类型是一种非常强大的特性，它允许你使用具体的值作为类型。这可以用于限制变量只能取某些特定的值，从而使得代码更加健壮和易于理解。
+TypeScript中的字面量类型是一种非常强大的特性，**它允许你使用具体的值作为类型**。这可以用于限制变量只能取某些特定的值，从而使得代码更加健壮和易于理解。
 
-TypeScript中的字面量类型是一种非常强大的特性，它允许你使用具体的值作为类型。这可以用于限制变量只能取某些特定的值，从而使得代码更加健壮和易于理解。
-
-#### [3.2 字面量类型](#)
 除了通用类型 string 和 number 之外，我们还可以在类型位置引用特定的字符串和数字。var 和 let 都允许更改变量中保存的内容，而 const 不允许。这反映在 TypeScript 如何为字面创建类型。
 
 ```typescript
