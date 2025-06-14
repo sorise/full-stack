@@ -6,7 +6,7 @@
 ### 目录
 - [TypeScript 语言入门必知](./contents/typescriptIntroduce.md) TS语言基本介绍，编译方式、基本用法、类型推断的基本知识。
 - [TypeScript 基本类型系统](./contents/typescriptTypeSystem.md) 了解TS的类型系统，基本类型、`any、never、unknown、void、tuples...`，const 数组，const断言 、readonly 只读数组。
-- [TypeScript ](./contents/)
+- [TypeScript 的函数类型](./contents/typescriptFunction.md)  
 
 
 
