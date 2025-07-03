@@ -1,6 +1,15 @@
 ## [CSS 语法规则](#)
 > **介绍** : CSS（Cascading Style Sheets，层叠样式表）是一种用于描述HTML或XML文档如何呈现的样式表语言。CSS语法由选择器、属性和值等部分组成，通过这些规则定义网页元素的外观。以下是CSS语法的详细介绍。
 
+---
+
+- [1. 语法入门](#1-语法入门)
+- [2. 媒体查询](#2-媒体查询)
+- [3. css 变量](#3-css-变量)
+
+
+---
+
 ### [1. 语法入门](#)
 和 HTML 类似，CSS 也不是真正的编程语言，甚至不是标记语言,CSS 是一门样式表语言，这也就是说人们可以用它来选择性地为 HTML 元素添加样式。
 
@@ -125,8 +134,48 @@ p {
 ### [3. CSS 变量](#)
 CSS变量，也称为自定义属性，是CSS中的一种强大的特性，可以提高样式表的灵活性和可维护性。以下是对CSS变量的详细解释：
 
-- [参考视频教程](https://www.bilibili.com/video/BV1vQHyeaEYE/?spm_id_from=333.1007.tianma.1-2-2.click&vd_source=a03ca1a86c1e90990c4facd27ae17815)
+- [参考视频教程 bilibili 视频](https://www.bilibili.com/video/BV1vQHyeaEYE/?spm_id_from=333.1007.tianma.1-2-2.click&vd_source=a03ca1a86c1e90990c4facd27ae17815)
 - [MDN 使用 CSS 自定义属性（变量）](https://developer.mozilla.org/zh-CN/docs/Web/CSS/Using_CSS_custom_properties)
+
+CSS的变量是类似于样式属性一样可以继承的。
+
+```css
+html{
+  --tick: 300px;
+}
+```
+作用于html里面的所有元素的样式规则都可以访问/继承到这个变量。
+```css
+* {
+	color: red;
+}
+
+.container{
+	--inner-mine: 500px;
+	position: relative;
+	background-color: green;
+	height: var(--inner-mine);
+	width: var(--inner-mine);
+}
+
+.container .item{
+	position: absolute;
+	--inner-h-w: calc(var(--inner-mine) / 4);
+	
+	height: var(--inner-h-w);
+	width: var(--inner-h-w);
+	background-color: aqua;
+	margin-top: calc((var(--inner-mine) - var(--inner-h-w))/2);
+	margin-left: calc((var(--inner-mine) - var(--inner-h-w))/2);
+}
+```
+可以使用这个语法，那么整个页面都可以访问到这个变量
+```css
+:root {
+  --main-color: #3498db;
+  --padding: 10px;
+}
+```
 
 #### [3.1 CSS变量的定义](#)
 CSS变量使用 `--` 作为前缀定义，并且通常定义在 `:root` 选择器下，以便全局使用。

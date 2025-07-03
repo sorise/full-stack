@@ -7,7 +7,7 @@
 
 * CSS 简介
   * [更新历史](./contents/history.md)
-  * [语法规则](./contents/grammar.md)
+  * [语法规则、变量](./contents/grammar.md)
 * 属性
   * [定位](./contents/position.md) position、z-index、clip-path
   * [外补白 margin 内补白 padding](./contents/marginPadding.md)
