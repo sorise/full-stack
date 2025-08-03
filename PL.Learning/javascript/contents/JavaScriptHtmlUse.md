@@ -6,6 +6,7 @@
 - [1. Javasript 语言t](#1-javasript-语言)
 - [2. 在HTML中使用Javasript](#2-在html中使用javasript)
 - [3. 文档模式](#3-文档模式)
+- [4. 检测两种模式](#4-检测两种模式)
 
 -----
 ### [1. Javasript 语言](#)
@@ -79,7 +80,7 @@ let svgElement = document.getElementById("myCircle");
 svgElement.setAttribute("cx", 100); // 修改圆心的位置
 svgElement.setAttribute("fill", "blue"); // 修改填充颜色
 ```
-> MathML DOM (Mathematical Markup Language DOM) MathML 是一种用于描述数学公式的标记语言，尤其适用于在网页上表示数学表达式。MathML DOM 提供了对数学表达式节点的操作和修改能力。
+> `MathML DOM` (Mathematical Markup Language DOM) MathML 是一种用于描述数学公式的标记语言，尤其适用于在网页上表示数学表达式。MathML DOM 提供了对数学表达式节点的操作和修改能力。
 > * 操作数学表达式：MathML DOM允许动态修改、添加或删除数学表达式节点，如操作<mrow>、<msup>等标签，改变公式的结构。
 > * 支持数学符号和运算：它支持标准的数学符号和操作符，可以对公式进行细粒度的控制。
 > * 集成标准DOM：MathML与标准DOM集成良好，可以通过JavaScript访问和操作它的节点。
@@ -113,7 +114,7 @@ window、location、navigator、history 等。window 对象是所有 BOM 对象�
 <script type="text/javascript" >
     var msg = "i am inner script";
     alert(msg);
-</script> <!-- 嵌入式脚本 -->
+</script> <!-- 嵌入式脚本 --> 
 ```
 
 script 元素的基本属性 : 一般将外部脚本引用写在html文档底部
@@ -125,6 +126,7 @@ script 元素的基本属性 : 一般将外部脚本引用写在html文档底部
     * 绝对 URL - 指向其他站点（比如 `src="www.example.com/example.js"` ）
     * 相对 URL - 指向站点内的文件（比如 src="/scripts/example.js"）
 * defer: 值为defer 规定是否对脚本执行进行延迟，直到页面加载为止。 只有 Internet Explorer 支持 defer 属性。
+* charset: 可选。src属性指定的代码所使用的字符集。很少用，很多浏览器无在乎其具体的值。
 * type:
   * **text/javascript** **默认值** 
   * **module**，则代码会被当成ES6模板，而且只有在这时候代码中才能出现import和export关键字
@@ -132,7 +134,7 @@ script 元素的基本属性 : 一般将外部脚本引用写在html文档底部
 * integrity:这个 integrity 属性的值来 指定浏览器提取的资源（文件）的base64编码的加密哈希值。如果资源匹配其中一个哈希值，它将被加载。
 html5 规定按照他们出现的先后顺序执行脚本代码，在现实中延迟脚本并不一定会按照顺序执行，也不一定会在DOMContendLoaded 事件出发前执行
 * nonce 允许脚本的一个一次性加密随机数（nonce）。服务器每次传输策略时都必须生成一个唯一的 nonce 值。提供一个无法猜测的 nonce 是至关重要的，因为绕过一个资源的策略是微不足道的。
-
+* language： `废弃了`,表示代码块中的脚本语言，"JavaScript"、"JavaScript 1.2"、"VBScript"
 #### [2.1 动态加载脚本](#)
 
 1、直接document.write
@@ -257,7 +259,46 @@ loadScript(scriptURL);
 函数执行脚本代码。这样就实现了动态加载脚本的功能。
 
 ### [3. 文档模式](#)
-ES5 引入了文档模式的概念，通过使用DOCTYPE实现模式切换，它的主要作用是告诉浏览器以哪种模式呈现，如何解析文档，也就是说两种模式主要影响CSS内容的呈现，某些情况下也会影响JavaScript的执行。
+文档模式主要是告诉浏览器以哪种模式呈现，如何解析文档。这两种模式的主要区别只体现在通过 CSS 渲染的内容方面，但对JavaScript 也有一些关联影响。
+
+文档模式最初是由IE5.5提出的，可以使用doctype 切换文档模式。在IE 初次支持文档模式切换以后，其他浏览器也跟着实现了。
+
+> 一般提到标准模式，指的就是除混杂模式以外的模式。
+#### [3.1 历史背景](#)
+由于历史的原因，不同浏览器对页面的渲染是不同的，甚至同一浏览器的不同版本也是不同的。然后这时候就出现了一个至关重要的标准规范：W3C标准。
+
+* 在W3C标准出台之前，不同的浏览器在页面的渲染上没有统一的规范，这时的解析方式被称为Quirks mode（怪异模式或兼容模式）；
+* 在W3C标准出台之后，随着W3C的标准越来越重要，众多的浏览器开始依照W3C标准进行文档解析，不同浏览器对页面的渲染有了统一的标准，这时的解析方式被称为Strict mode，或Standards Mode（标准模式或严格模式）。
+* 后来的浏览器虽然支持Strict mode，但众多浏览器并未放弃支持Quirks mode。一个很重要的原因就是为了之前大量在Quirks mode下开发的网页能够得到正确的显示。
+
+**因此，对于支持两种模式的浏览器 当拿到一张网页时，所做的一个前期工作就是判断采取何种方式进行解析**。
+
+#### [3.2 如何触发不同的文档模式](#)
+ES5 引入了文档模式的概念，通过使用DOCTYPE实现模式切换。
+
+**答案**是：`<!DOCTYPE>` 声明， 注意：`<!DOCTYPE>` 声明必须是 HTML 文档的第一行，位于`<html>`标签之前。
+
+#### [3.3 混杂模式](#)
+所有浏览器中都以省略文档开头的 doctype 声明作为混杂模式判断的标准。但这种约定并不合理，因为混杂模式在不同浏览器中的差异非常大。
+另外，若doctype 声明 不正确，也会导致HTML和XHTML文档以混杂模式呈现。
+
+#### [3.4 标准模式](#)
+标准模式： 通过下列几种文档类型声明开启
+
+```html
+// HTML 4.01 Strict: 
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+"http://www.w3.org/TR/html4/strict.dtd">
+
+// XHTML 1.0 Strict:
+<!DOCTYPE html PUBLIC
+"-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+// HTML5:
+<!DOCTYPE html>
+```
+> XHTML文档如果包含形式完整的DOCTYPE，一般以标准模式呈现。 XHTML已经没人用了
 
 ![img.png](./static/img.png)
 
@@ -266,16 +307,35 @@ ES5 引入了文档模式的概念，通过使用DOCTYPE实现模式切换，它
 * **标准模式**：要求严格的DTD，根据web标准去解析页面的模式。
 * 准标准模式：准标准模式与标准模式非常接近，它们的差异几乎可以忽略不计。
 
-两种模式的区别
+#### [3.5 两种模式的区别: scrollLeft 和 scrollTop：](#) 
+在混杂模式下，可以通过`<body>`元素检测 scrollLeft 和 scrollTop 属性的变化。
+在标准模式下，所有浏览器都发生在`<html>`元素上。
+```javascript
+//如：在页面滚动时垂直方向上滚动的距离：
+window.addEventListener("scroll", (event) => {
+  if (document.compatMode == "CSS1Compat") {
+  	console.log(document.documentElement.scrollTop);
+  } else {
+  	console.log(document.body.scrollTop);
+  }
+});
+```
+
+#### [3.6 两种模式的区别: 盒模型的解析](#) 
 * 盒模型的解析
     * 混杂模式盒模型的宽高=内容的宽高；
     * 标准模式盒模型的宽高=内容的宽高+padding的宽高+border的宽高。
 * 图片的布局
     * 当一个块元素div中包含的内容只有图片时，在标准模式下，不管IE还是标准，在图片底部都有3像素的空白。但在混杂模式下，标准浏览器（Chrome）中div距图片底部默认没有空白
 
+#### [3.7 尺寸单位](#)
+- 在标准模式下，所有尺寸都必须包含单位，若不含单位的话，会被忽略。
+- 在混杂模式下，可以把 style.width设置为"20"，相当于"20px"。
+
+### [4. 检测两种模式](#)
 document.compatMode用来判断当前浏览器采用的渲染方式。
-* **BackCompat**：标准兼容模式关闭。document.documentElement.scrollLeft scrollTop 检测滚动。
-* **CSS1Compat**：标准兼容模式开启。可以通过body检测 scrollLeft scrollTop 属性的变化
+* **BackCompat**：混杂模式下。document.documentElement.scrollLeft scrollTop 检测滚动。
+* **CSS1Compat**：标准模式下。可以通过body检测 scrollLeft scrollTop 属性的变化
 
 ```javascript
 function GetViewportWidthAndHeight(){
@@ -293,3 +353,5 @@ function GetViewportWidthAndHeight(){
     return [width, height];
 }
 ```
+
+- 引用 `[作者: 咸肉]` <来源：稀土掘金> 链接：https://juejin.cn/post/6932769062909018125
