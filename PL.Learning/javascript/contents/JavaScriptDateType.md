@@ -1226,10 +1226,10 @@ Math.clz32(0b00100000000000000000000000000000) // 2
 
 > JS中缺少显式整数类型常常令人困惑。许多编程语言支持多种数字类型，如浮点型、双精度型、整数型和双精度型，但JS却不是这样。在JS中，按照IEEE 754-2008标准的定义，所有数字都以双精度64位浮点格式表示。
 
-* Number.MAX_SAFE_INTEGER 常量来表示 最大安全整数
-* Number.MIN_SAFE_INTEGER常量表示最小安全整数：
+* `Number.MAX_SAFE_INTEGER` 常量来表示 最大安全整数
+* `Number.MIN_SAFE_INTEGER` 常量表示最小安全整数：
 * BigInt 只用来表示整数，没有位数的限制，任何位数的整数都可以精确表示。
-* typeof运算符对于 BigInt 类型的数据返回bigint。
+* typeof 运算符对于 BigInt 类型的数据返回bigint。
 
 **创建BigInt** 可以再任意数值字面量末尾添加 **"n"**，也可以使用BigInt函数, BigInt 同样可以使用各种进制表示，都要加上后缀n。。
 ```javascript
