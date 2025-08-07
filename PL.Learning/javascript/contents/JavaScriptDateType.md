@@ -1250,7 +1250,7 @@ let r = typeof exp_big;
 console.log(r); //bigint
 ```
 
-#### [11.1 不可与普通整数比较](#)
+#### [11.1 数值比较](#)
 请记住，不能使用严格相等运算符将BigInt与常规数字进行比较，因为它们的类型不同：
 
 ```javascript
