@@ -605,6 +605,64 @@ console.log(String(und)); //undefined
 console.log(String(nl)); //null
 ```
 
+#### [8.2 String 字符串长度](#)
+JavaScript 字符串的长度通过其 **length 属性**获取：
+
+```javascript
+const str = "Hello";
+console.log(str.length); // 输出: 5
+```
+
+> 字符串的长度是一个基础但需要深入理解的概念，因为它与字符串的编码方式（Unicode）紧密相关。
+
+关键点：length 属性返回的是字符串中 UTF-16 编码的 **“码元”（code units）**的数量，而不是我们通常理解的“字符”（graphemes 或 user-perceived characters）的数量。
+
+**UTF-16 编码与码元 (Code Units)**，JavaScript 字符串内部使用 UTF-16 编码。
+- 大部分常用字符（如基本拉丁字母、数字、大部分欧洲字符）使用 1 个 16 位码元表示。这些字符的 Unicode 码点范围是 U+0000 到 U+FFFF（基本多文种平面，BMP）。
+- 超出 BMP 的字符（如一些罕见汉字、表情符号 emoji）的码点范围是 U+10000 到 U+10FFFF。这些字符需要使用 2 个 16 位码元来表示，称为 代理对（Surrogate Pair）
+
+```javascript
+// 基本拉丁字母
+const basicChar = "A";
+console.log(basicChar.length); // 输出: 1
+
+// 数字
+const digit = "5";
+console.log(digit.length); // 输出: 1
+
+// BMP 内的汉字
+const commonChinese = "中";
+console.log(commonChinese.length); // 输出: 1 (码点 U+4E2D 在 BMP 内)
+
+// 使用组合标记的字符
+const combinedChar = "é"; // 可以表示为 'e' + '́' (U+0301)
+console.log(combinedChar.length); // 输出: 2
+// 这里有两个码元：'e' (U+0065) 和组合重音符号 (U+0301)，但视觉上是一个字符。
+```
+
+**如何获取“真实”的字符数量**？ 如果你需要获取用户感知的字符数量（即“字素簇” Grapheme Clusters 的数量），不能直接使用 length。有几种方法：
+```javascript
+const emoji = "Hello 😀!";
+console.log(emoji.length); // 输出: 9(H,e,l,l,o, ,<高代理>,<低代理>,!)
+
+// 使用 Array.from 正确分割代理对和组合标记
+const charArray = Array.from(emoji);
+console.log(charArray.length); // 输出: 8 (H, e, l, l, o, , 😀, !)
+
+// 或者使用扩展运算符
+const charArray2 = [...emoji];
+console.log(charArray2.length); // 输出: 8
+```
+使用 **Intl.Segmenter** (现代方法，推荐)
+```javascript
+const text = "Hello 😀!";
+console.log(text.length); // 输出: 9(H,e,l,l,o, ,<高代理>,<低代理>,!)
+const segmenter = new Intl.Segmenter('zh-Hans-CN', { granularity: 'grapheme' });
+const segments = [...segmenter.segment(text)];
+console.log(segments.length); // 输出: 8 (正确识别了所有视觉字符和组合标记)
+```
+
+
 #### [8.3 模板字面量与字符串插值](#)
 ECMAScript 6 新增了使用[模板字面量](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Template_literals)定义字符串的能力。与使用单引号或双引号不同，模板字面量保留换行字符，可以跨行定义字符串：
 
@@ -1358,7 +1416,7 @@ BigInt对象提供了两个静态方法，用于对BigInt值进行截断，模�
 > 这种情况在处理底层数据、网络协议、加密算法等场景中非常常见。例如，IP 地址是 32 位的无符号整数，颜色值通常用 8 位或 16 位的整数表示，等等。
 
 #### [11.6 BigInt.asUintN](#)
-BigInt.asUintN(bits, bigint)：无符号整数的裁剪师,如果 bigint 是负数，asUintN 会先将其转换为正数，然后再进行截断。
+BigInt.asUintN(bits, bigint)：无符号整数的裁剪师,如果 bigint 是负数，asUintN 会先将其转换为正数（二进制是补码存储，记住），然后再进行截断。
 
 ```javascript
 const maxUint8 = 2n ** 8n - 1n; // 255n
@@ -1366,6 +1424,12 @@ const maxUint8 = 2n ** 8n - 1n; // 255n
 console.log(BigInt.asUintN(8, 256n));  // 0n
 console.log(BigInt.asUintN(8, 255n));  // 255n
 console.log(BigInt.asUintN(8, -1n));   // 255n
+
+let slt = BigInt.asUintN(8, -255n);
+//-255的原码为：1000 0000 1111 1111。
+//-255的反码为：1111 1111 0000 0000。
+//-255的补码为：1111 1111 0000 0001。
+console.log(slt);//1n
 ```
 
 BigInt.asUintN(bits, bigint) 方法的作用就是将 bigint 转换为一个 bits 位的无符号整数。简单来说，它会截断超出指定位数的位，并返回一个在 `0` 到 2<sup>bits</sup> – 1 范围内的 BigInt 值。
@@ -1423,10 +1487,12 @@ console.log(signed4BitNegative); // -10n
 ```
 
 #### [11.8 实例方法](#)
+BigInt是原始值，当你创建一个 BigInt 时，它不是一个对象，因此没有传统意义上的“实例方法”。
 
 - BigInt.prototype.toLocaleString()
-- BigInt.prototype.toString()
-- BigInt.prototype.valueOf() 
+- BigInt.prototype.toString(`[radix]`) 用于将 BigInt 值转换为字符串表示。 
+    - radix 取值范围必须是 2 到 36（包含）之间的整数。
+- BigInt.prototype.valueOf() 返回值是 BigInt 值本身，这与 Number、String 等其他原始类型的 valueOf() 行为一致。
 
 #### [11.9 与JSON的兼容性](#)
 BigInt无法被JSON.stringify直接序列化，会抛出TypeError，需要使用一个辅助函数。
