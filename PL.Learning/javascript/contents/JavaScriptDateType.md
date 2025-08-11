@@ -1634,9 +1634,9 @@ console.log(Symbol.keyFor(nameSymbolGlobal));//name
 #### [12.3 使用符号作为对象属性](#)
 凡是使用字符串或数值作为属性的方法的地方，都可以使用符号！同理支持使用 defineProperty、 defineProperties定义属性。
 
-* Object.getOwnPropertyNames()：返回对象实例的常规属性数组。
-* Object.getOwnPropertySymbols()：返回对象实例的符号属性数组。这两个方法的返回值互斥。
-* Object.getOwnPropertyDescriptors()：方法获取对象的所有自有属性描述符,包括常规属性和符号属性的数组。
+* **Object.getOwnPropertyNames(o)**：返回对象实例的常规属性数组。
+* **Object.getOwnPropertySymbols(o)**：返回对象实例的符号属性数组。这两个方法的返回值互斥。
+* **Object.getOwnPropertyDescriptors(o)**：方法获取对象的所有自有属性描述符,包括常规属性和符号属性的数组。
 
 ```javascript
 let nameSymbol = Symbol('name');
@@ -1755,6 +1755,16 @@ class Foo{
 let f = new Foo()
 console.log(f[Symbol.iterator]())
 //Genatator{<suspaneded>}
+
+let myIterable = {}
+myIterable[Symbol.iterator] = function* (){
+    yield 1;
+    yield 2;
+    yield 3;
+};
+
+console.log([...myIterable]); // [1,2,3]
+console.log(myIterable); // { [Symbol(Symbol.iterator)]: [GeneratorFunction (anonymous)] }
 ```
 技术上，这个由Symbol.iterator函数生成的对象应该通过其next()方法陆续返回值。可以通过显式地调用next()方法返回，也可以隐式地通过生成器函数返回：
 
@@ -1781,19 +1791,137 @@ count();
 ```
 
 #### [12.4 Symbol.asyncIterator](#)
-一个方法，该方法返回对象默认的AsyncIterator。由for-await-of语句使用 这个符号表示实现异步迭代器API的函数
+一个方法，该方法返回对象默认的AsyncIterator。由for-await-of语句使用 这个符号表示实现异步迭代器API的函数,
+通过使用 async 关键字异步声明来定义一个基础的迭代器，再通过 async 和 await 搭配使用出 Promise 的异步行为。
+
+```javascript
+ const asy = new Object();
+ asy[Symbol.asyncIterator] = async function*() {
+     yield "Hello";
+     yield "Async";
+     yield "Iteration";
+ };
+ ​
+ // (fucntion()=>{})()为立即执行函数
+ (async () => {
+     for await (const x of asy) {
+         console.log(x);
+     }
+ })();
+ // Hello
+ // Async
+ // Iteration
+```
+
+异步迭代器是顺序执行的，同步迭代器也是顺序执行的，都是顺序处理，但异步迭代器不会阻塞主线程。
+
+```javascript
+async function* asyncFileIterator() {
+  for (let i = 1; i <= 1000; i++) {
+    const response = await fetch(`/file/${i}`);     // ✅ 等待网络请求
+    const content = await response.text();          // ✅ 等待读取内容
+    yield content;                                  // ✅ 产出真实数据
+  }
+}
+
+// 使用：顺序处理，但不会阻塞主线程
+for await (const content of asyncFileIterator()) {
+  console.log('处理文件内容:', content.slice(0, 50));
+}
+```
 
 
 #### [12.5 Symbol.split](#)
 一个正则表达式方法，该方法在匹配正则表达式的索引位置拆分字符串。由String.prototype.split()方法使用
 
 #### [12.6 Symbol.toPrimitive](#)
-一个方法，该方法将对象转换为相应的原始值。由ToPrimitive抽象操作使用
+符号属性用于“将对象转换为相应的原始值”；由 ToPrimitive 抽象操作使用，很多内置操作都会尝试强制将对象转换为原始值，包括字符串、数值和未指定的原始类型。
+
+```javascript
+ class Foo { }
+ let foo = new Foo();
+ console.log(3 + foo); // "3[object Object]" 
+ console.log(3 - foo); // NaN 
+ console.log(String(foo)); // "[object Object]" 
+```
+对于一个自定义对象实例，通过在这个实例的 toPrimitive 属性上定义一个函数可以改变默认行为根据提供给这个函数的参数（string、number 或 default），可以控制返回的原始值；如下所示：
+
+```javascript
+ class Bar {
+     constructor() {
+         this[Symbol.toPrimitive] = function (hint) {
+             switch (hint) {
+                 case 'number':
+                     return 10;
+                 case 'string':
+                     return 'Life is True';
+                 case 'default':
+                 default:
+                     return 'Cheep Up';
+             }
+         }
+     }
+ }
+ ​
+ let bar = new Bar();
+ console.log(3 + bar); // "3Cheep Up" 
+ console.log(3 - bar); // -7
+ console.log(String(bar)); // "Life is True"
+
+```
 
 #### [12.7 Symbol.species](#)
+Species（物种）是一个生物学术语，通常指的是一组具有相似特征并能够相互繁殖的生物个体。
 
-#### [12.8 ...其他内置符号请需要百度看](#)
-...
+```javascript
+class One extends Array {} 
+ ​
+let one = new One(); 
+console.log(one instanceof Array); // true 
+console.log(one instanceof One); // true 
+// String.concat为拼接
+one = one.concat('Ones'); 
+console.log(one instanceof Array); // true 
+console.log(one instanceof One); // true 
+console.log(one); // One ['Ones']
+ ​
+// 使用获取器创建新的实例原型
+class Two extends Array { 
+   static get [Symbol.species]() { 
+      return Array; 
+   } 
+} 
+ ​
+let two = new Two(); 
+console.log(two instanceof Array); // true 
+console.log(two instanceof Two); // true 
+ ​
+two = two.concat('Twos'); 
+console.log(two instanceof Array); // true 
+console.log(two instanceof Two); // false
+console.log(two); // ['Twos']
+```
+
+#### [12.8 ...其他内置符号请需要看文档](#)
+内置符号最重要的用途之一是重新定义它们，从而改变原生结构的行为；
+
+内置符号属性都是不可写、不可枚举、不可配置的
+
+- Symbol.Iterator：为每一个对象定义了默认的迭代器
+- Symbol.asyncIterator：指定一个对象的默认异步迭代器
+- Symbol.hasInstance：检测某个对象是否是某个构造器的实例
+- Symbol.isConcatSpreadable：如果返回是 true，则对象打平其数组元素
+- Symbol.match：检索返回一个字符串匹配正则表达式的结果
+- Symbol.replace：替换一个字符串中匹配的子串
+- Symbol.search：返回字符串中正则表达式的索引
+- Symbol.species：该函数作为创建派生对象的构造函数
+- Symbol.split：在匹配正则表达式的索引位置拆分字符串
+- Symbol.toPrimitive：将对象转换为相应的原始值
+- Symbol.toStringTag：创建对象的默认字符串描述
+- Symbol.unscopables：指用于指定对象值，其对象自身和继承的从关联对象的 with 环境绑定中排除的属性名称。 
+
+
+关于更多Symbol属性与方法请查看 [MDN-Symbol](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Symbol) 。
 
 ### [13. Object 类型](#)
 ECMAScript 中的对象其实就是一组数据和功能的集合。对象通过 new 操作符后跟对象类型的名称来创建。开发者可以通过创建 Object 类型的实例来创建自己的对象，然后再给对象添加属性和方法：

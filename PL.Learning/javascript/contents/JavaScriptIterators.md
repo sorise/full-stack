@@ -1,4 +1,4 @@
-## [JavaScript 迭代器（Iterators）和生成器（Generators）](#)
+### [JavaScript 迭代器（Iterators）和生成器（Generators）](#)
 > **介绍**：迭代器提供了一种访问集合元素的标准方式，而生成器是一种特殊的函数，可以生成迭代器。
 
 -----
@@ -93,7 +93,7 @@ for (let el of fooArr) {
 * 创建映射
 * Promise.all()接收由期约组成的可迭代对象
 * Promise.race()接收由期约组成的可迭代对象
-* yield*操作符，在生成器中使用
+* `yield*` 操作符，在生成器中使用
 
 这些原生语言结构会在后台调用提供的可迭代对象的这个工厂函数，从而创建一个迭代器
 ```javascript
