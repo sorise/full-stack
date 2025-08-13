@@ -50,6 +50,8 @@ let someDate = new Date(Date.parse("May 23, 2019"));
 Date.UTC() 方法接受的参数同 Date 构造函数接受最多参数时一样，但该前者会视它们为 UTC 时间，其
 返回从 1970 年 1 月 1 日 00:00:00 UTC 到指定时间的毫秒数。
 
+> UTC时间，全称是“协调世界时”（Coordinated Universal Time），是世界上最主要的标准时间系统之一。 它基于原子钟，并且被广泛应用于全球各个领域，包括科学研究、商业交易以及互联网通信等。 UTC时间的主要特点是其稳定性和全球统一性。 它不考虑地球上的时区变化，因此为全球各地提供了一个统一的时间参考。 
+
 * Date.UTC(year)
 * Date.UTC(year, month)
 * Date.UTC(year, month, day)
@@ -186,7 +188,8 @@ Date 类型剩下的方法（见下表）直接涉及取得或设置日期值的
 * **Function.prototype.toString()**
 
 ### [2. RegExp 正则表达式](#)
-ECMAScript 通过 RegExp 类型支持正则表达式，正则表达式使用类似 Perl 的简洁语法来创建, [JavaScript 菜鸟教程、正则表达式](https://www.runoob.com/regexp/regexp-tutorial.html)。
+ECMAScript 通过 [RegExp](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/RegExp) 类型支持正则表达式，正则表达式使用类似 Perl
+的简洁语法来创建, [JavaScript 菜鸟教程、正则表达式](https://www.runoob.com/regexp/regexp-tutorial.html)。
 
 ```
 let expression = /pattern/flags; 
@@ -200,7 +203,7 @@ let expression = /pattern/flags;
 * **y**：执行“粘性（sticky）”搜索，从目标字符串的当前位置开始匹配。。
 * **s**：dotAll 模式，表示元字符.匹配任何字符（包括`\n` 或`\r`）。
 * **v**	升级 u 模式，提供更多 Unicode 码特性。
-* **u**	“Unicode”；将模式视为 Unicode 码位序列。	unicode
+* **u**	“Unicode”；将模式视为 Unicode 码位序列。	unicode，**非常有用，建议打开！**
 * **v**	升级 u 模式，提供更多 Unicode 码特性。	unicodeSets
 
 ```javascript
