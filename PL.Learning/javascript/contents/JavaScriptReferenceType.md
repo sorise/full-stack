@@ -188,7 +188,7 @@ Date 类型剩下的方法（见下表）直接涉及取得或设置日期值的
 * **Function.prototype.toString()**
 
 ### [2. RegExp 正则表达式](#)
-ECMAScript 通过 [RegExp](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/RegExp) 类型支持正则表达式，正则表达式使用类似 Perl
+**正则表达式是一个字符序列，用于在文本匹配/搜索的字符串中匹配字符组合**。 ECMAScript 通过 [RegExp](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/RegExp) 类型支持正则表达式，正则表达式使用类似 Perl
 的简洁语法来创建, [JavaScript 菜鸟教程、正则表达式](https://www.runoob.com/regexp/regexp-tutorial.html)。
 
 ```
@@ -200,11 +200,10 @@ let expression = /pattern/flags;
 * **g**：全局模式，表示查找字符串的全部内容，而不是找到第一个匹配的内容就结束。
 * **i**：不区分大小写，表示在查找匹配时忽略 pattern 和字符串的大小写。
 * **m**：多行模式，表示查找到一行文本末尾时会继续查找。
-* **y**：执行“粘性（sticky）”搜索，从目标字符串的当前位置开始匹配。。
-* **s**：dotAll 模式，表示元字符.匹配任何字符（包括`\n` 或`\r`）。
-* **v**	升级 u 模式，提供更多 Unicode 码特性。
+* **y**：执行“粘性（sticky）”搜索，从目标字符串的当前位置开始匹配。`<下面解释>`
+* **s**：dotAll 模式，表示元字符 `.` 匹配任何字符（包括`\n` 或`\r`）。
 * **u**	“Unicode”；将模式视为 Unicode 码位序列。	unicode，**非常有用，建议打开！**
-* **v**	升级 u 模式，提供更多 Unicode 码特性。	unicodeSets
+* **d**：表示匹配的结果应该包含每个捕获组开头和末尾的索引。
 
 ```javascript
 // 匹配字符串中的所有"at"
@@ -241,13 +240,13 @@ let pattern2 = new RegExp("[bc]at", "i");
 
 #### [2.2 实例属性](#)
 每个 RegExp 实例都有下列属性，提供有关模式的各方面信息。
-* global：布尔值，表示是否设置了 g 标记。
-* ignoreCase：布尔值，表示是否设置了 i 标记。
-* unicode：布尔值，表示是否设置了 u 标记。
-* sticky：布尔值，表示是否设置了 y 标记。
+* global：布尔值，表示是否设置了 `g` 标记。
+* ignoreCase：布尔值，表示是否设置了 `i` 标记。
+* unicode：布尔值，表示是否设置了 `u` 标记。
+* sticky：布尔值，表示是否设置了 `y` 标记。
 * lastIndex：整数，表示在源字符串中下一次搜索的开始位置，始终从 0 开始。
-* multiline：布尔值，表示是否设置了 m 标记。
-* dotAll：布尔值，表示是否设置了 s 标记。
+* multiline：布尔值，表示是否设置了 `m` 标记。
+* dotAll：布尔值，表示是否设置了 `s` 标记。
 * source：正则表达式的字面量字符串（不是传给构造函数的模式字符串），没有开头和结尾的斜杠。
 * flags：正则表达式的标记字符串。始终以字面量而非传入构造函数的字符串模式形式返回（没有前后斜杠）。
 
@@ -274,9 +273,7 @@ console.log(pattern2.flags); // "i"
 flags 属性是相同的。source 和 flags 属性返回的是规范化之后可以在字面量中使用的形式。
 
 #### [2.3 exec](#)
-RegExp 实例的主要方法是 exec()，主要用于配合捕获组使用。
-
-这个方法只接收一个参数，即要应用模式的字符串。如果找到了匹配项，则返回包含第一个匹配信息的数组；如果没找到匹配项，则返回null。
+RegExp 实例的主要方法是 exec()，主要用于配合捕获组使用，返回一个结果数组或 null。
 
 返回的数组虽然是 Array 的实例，但包含两个额外的属性：
 * **index** 是字符串中匹配模式的起始位置。 
@@ -355,9 +352,40 @@ console.log(matches[0]); // ba
 console.log(pattern.lastIndex); // 8 
 ```
 
+#### [2.3 exec续 返回值](#)
+exec() 方法在一个指定字符串中执行一个搜索匹配。返回一个结果数组或 null。
+
+**返回值**
+* 如果匹配失败，exec() 方法返回 null，并将正则表达式的 lastIndex 重置为 0。
+* 如果匹配成功，exec() 方法返回一个数组，并更新正则表达式对象的 lastIndex 属性。完全匹配成功的文本将作为返回数组的第一项，从第二项起，后续每项都对应一个匹配的捕获组。数组还具有以下额外的属性：
+
+* `index`: 匹配到的字符位于原始字符串的基于 0 的索引值。
+* `input`: 匹配的原始字符串。
+* `groups` : 一个命名捕获组对象，其键是名称，值是捕获组。若没有定义命名捕获组，则 groups 的值为 undefined。参阅捕获组以了解更多信息。
+* `indices` `可选` : 此属性仅在设置了 d 标志位时存在。它是一个数组，其中每一个元素表示一个子字符串的边界。每个子字符串匹配本身就是一个数组，其中第一个元素表示起始索引，第二个元素表示结束索引。
+
+```javascript
+// Match "quick brown" followed by "jumps", ignoring characters in between
+// Remember "brown" and "jumps"
+// Ignore case
+const re = /quick\s(?<color>brown).+?(jumps)/dgi;
+const result = re.exec("The Quick Brown Fox Jumps Over The Lazy Dog");
+```
+下表列出这个脚本的返回值（result）：
+
+|属性	|值|
+|:---|:---|
+|[0]	|"Quick Brown Fox Jumps"|
+|[1]	|"Brown"|
+|[2]	|"Jumps"|
+|index|	4|
+|indices|	`[[4, 25], [10, 15], [20, 25]] groups: { color: [10, 15 ]}` |
+|input	|"The Quick Brown Fox Jumps Over The Lazy Dog"|
+|groups|	`{ color: "brown" }` |
+
+另外，由于正则表达式是全局的（global），`re.lastIndex` 会被设置为 25。
 #### [2.4 test](#)
-接收一个字符串参数。如果输入的文本与模式匹配，则参数返回 true，否则返回 false。
-这个方法适用于只想测试模式是否匹配，而不需要实际匹配内容的情况。 
+接收一个字符串参数。如果输入的文本与模式匹配，**则参数返回 true，否则返回 false**。这个方法适用于只想测试模式是否匹配，而不需要实际匹配内容的情况。 
 
 **test()** 经常用在 if 语句中：
 ```javascript
@@ -378,18 +406,18 @@ console.log(pattern.toLocaleString()); // /\[bc\]at/gi
 
 正则表达式的 **valueOf**()方法返回正则表达式本身。
 
-#### [2.5 构造函数属性](#)
-RegExp 构造函数本身也有几个属性。换句话说，每个属性都有一个全名和一个简写。
+#### [2.5 静态属性](#)
+**RegExp** 构造函数本身也有几个属性。换句话说，每个属性都有一个全名和一个简写。
 
 |全 名|简 写| 说 明                            |
 |:---|:---|:-------------------------------|
-|input |`$_`| 最后搜索的字符串（非标准特性）                |
-|lastMatch |`$&`| 最后匹配的文本|
-|lastParen |`$+`| 最后匹配的捕获组（非标准特性）|
-|leftContext |`$`| input 字符串中出现在 lastMatch 前面的文本|
-|rightContext |`$'`|  input 字符串中出现在 lastMatch 后面的文本 |
+|input |`$_`| 最后搜索的字符串（非标准特性）       `已废弃`         |
+|lastMatch |`$&`| 最后匹配的文本 `已废弃` |
+|lastParen |`$+`| 最后匹配的捕获组（非标准特性） `已废弃` |
+|leftContext |`$`| input 字符串中出现在 lastMatch 前面的文本 `已废弃` |
+|rightContext |`$'`|  input 字符串中出现在 lastMatch 后面的文本  `已废弃` |
 
-通过这些属性可以提取出与 exec()和 test()执行的操作相关的信息。来看下面的例子：
+通过这些属性可以提取出与 `exec()` 和 `test()` 执行的操作相关的信息。来看下面的例子：
 ```javascript
 let text = "this has been a short summer";
 let pattern = /(.)hort/g;
@@ -402,7 +430,7 @@ if (pattern.test(text)) {
     console.log(RegExp.lastParen); // s
 } 
 ```
-以上代码创建了一个模式，用于搜索任何后跟"hort"的字符，并把第一个字符放在了捕获组中。
+以上代码创建了一个模式，用于搜索任何后跟 "hort" 的字符，并把第一个字符放在了捕获组中。
 不同属性包含的内容如下。
 * **input** 属性中包含原始的字符串。
 * **leftConext** 属性包含原始字符串中"short"之前的内容，rightContext 属性包含"short" 之后的内容。
