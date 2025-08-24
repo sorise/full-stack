@@ -17,13 +17,13 @@
 **创建对象的方法**: 
 * 显式地创建 Object 的实例有两种方式。第一种是使用 new 操作符和 Object 构造函数
 * 另一种方式是使用 **对象字面量（object literal）表示法**
-* 总结创建方式：new Ojbect()、字面量{key:value,key2:value2}、 Object.create(obj)。
+* 总结创建方式：`new Ojbect()`、字面量 `{key:value,key2:value2}`、`Object.create(proto, obj)`。
 
 **其他使用方法**
-* 使用方式：对象.属性=value，对象["属性名"]=value，属性(Key)存在则赋值，不存在则创建并赋值。
-* 删除属性：delete obj.prop
-* 检测属性："key" in obj，返回bool
-* 遍历属性：for(let key in obj) **循环所有key**。
+* 使用方式：`对象.属性=value`，对象 `["属性名"]=value`，属性(Key)存在则赋值，不存在则创建并赋值。
+* 删除属性：`delete obj.prop`
+* 检测属性：`"key" in obj`，返回 `bool`。
+* 遍历属性：`for(let key in obj)` **循环所有key**。
 ```javascript
 //1.0 构造函数
 let person = new Object();
@@ -544,15 +544,15 @@ console.log(Object.hasOwn(object1, 'undeclaredPropertyValue'));
 ECMA 在第五版定义了只有内部采用的特性 描述了属性的各种特性,ECM-262 定义这些特性是否了实现JavaScript 是为了实现JavaScripty殷勤用的,因此Js代码中无法访问他们
 为了表示特性是内部值 规范用双中括号表示 `[[enumerable]]`
 
-- [x] `(1). ECMA中有两种属性:数据属性和访问器属性`
+- ECMA中有两种属性:`数据属性`和`访问器属性`。
 
 #### [3.1 数据属性](#)
 包含一个数据值的位置，这个位置可以读取 数据属性有四个描述其行为的特性。
 
-- `(1)`. `[[configurable]]`: **是否能够通过delete 删除属性从而重新定义属性**, 默认值为true defineProperties中默认值为false。
-- `(2)`. `[[enumerable]]`:  表示能否通过for-in循环返回属性 **默认为true** defineProperties中默认值为false。
-- `(3)`. `[[writeable]]`: 表示能否修改属性的值 **默认为 true** defineProperties中默认值为false。
-- `(4)`. `[[value]]`: 包含这个属性的数据值，读取属性值的时候 从这个位置读取 写入属性值的 吧新值保存在这个位置。
+1. `[[configurable]]`: **是否能够通过delete 删除属性从而重新定义属性**, 默认值为true defineProperties中默认值为false。
+2. `[[enumerable]]`:  表示能否通过for-in循环返回属性 **默认为true** defineProperties中默认值为false。
+3. `[[writeable]]`: 表示能否修改属性的值 **默认为 true** defineProperties中默认值为false。
+4. `[[value]]`: 包含这个属性的数据值，读取属性值的时候 从这个位置读取 写入属性值的 吧新值保存在这个位置。
 
 ```javascript
 var person = {
@@ -560,8 +560,7 @@ var person = {
 }
 ```
 #### [3.2 Object.defineProperty(obj,propertyName,obj_desc)](#)
-如果要修改属性默认的特性,必须使用defineProperty方法 接收三个参数 属性所在对象 属性名称 和一个描述符对象 描述符对象的属性必须是  configurable,enumerable
-writeable,value 设置一个或者多个值
+如果要修改属性默认的特性,必须使用defineProperty方法 接收三个参数 **属性所在对象** **属性名称** 和一个**描述符对象**，描述符对象的属性必须是  configurable,enumerable、writeable,value 设置一个或者多个值。
  
 **注意**: 那么不设置的特征值是 默认值 可以多次调用 此方法修改同一个属性但是 但是在吧configurable设置 为false之后就会有错误了 
 ```javascript
@@ -574,41 +573,64 @@ Object.defineProperty(person,"name",{
 });
 
 person.name = "Kicker";
+//TypeError: Cannot assign to read only property 'name' of object '#<Object>'
 
 console.log(person.name); //JxKicker
+
+for (let key in person) {
+    console.log(key);
+}
+//age
+
+Object.defineProperty(person,"score",{
+    configurable:true,
+    writable:false,
+    enumerable:true,
+    value:98.52
+});
+
+let keys = [];
+for (let key in person) {
+    keys.push(key);
+}
+console.log(keys); //[ 'age', 'score' ]
 ```
 
 #### [3.3 访问器属性](#)
-它不包含值;他们包含一堆getter setter 函数 在读取属性值的时候调用getter属性 在设置属性值的时候 掉setter值 这个函数负责决定如何处理函数,访问属性有如下四个
-特性值
+它不包含值,他们包含一堆 `getter setter 函数` 在读取属性值的时候调用 `getter` 属性 在设置属性值的时候掉 `setter` 值 这个函数负责决定如何处理函数,访问属性有如下四个特性值。
 
-- `(1)`. `[[configurable]]`: 是否能够通过delete 删除属性从而重新定义属性 默认值为true defineProperties中默认值为false。
-- `(2)`. `[[enumerable]]`: 表示能否通过for-in循环返回属性默认为true defineProperties中默认值为false。
-- `(3)`. `[[get]]`: 在读取属性的时候调用的函数 默认值 undefined。
-- `(4)`. `[[set]]`: 在设置属性的时候调用的函数 默认值 undefined。
+1. `[[configurable]]`: 是否能够通过delete 删除属性从而重新定义属性 默认值为true defineProperties中默认值为false。
+2. `[[enumerable]]`: 表示能否通过for-in循环返回属性默认为true defineProperties中默认值为false。
+3. `[[get]]`: 在读取属性的时候调用的函数，返回默认值 undefined。
+4. `[[set]](v)`: 在设置属性的时候调用的函数，返回默认值 undefined。
 
 ```javascript
 let toolBox = {};
 
 Object.defineProperty(toolBox, "_basic_standard_precision", {
     configurable: false,
-    writable:false,
+    writable:true,
     value:3,
     enumerable:false
 });
 
-Object.defineProperty(toolBox,"pricision", {
+Object.defineProperty(toolBox,"precision", {
     configurable:true,
     Enumerable:true,
     get() {
         return this._basic_standard_precision;
     },
     set(v) {
-        this._basic_standard_precision = v;
+        if (Number.isInteger(v) && Number(v) > 0) {
+            this._basic_standard_precision = v;
+        }
     }
 })
 
-console.log(toolBox.pricision);
+toolBox.precision = 10;
+toolBox.precision = 0;
+
+console.log(toolBox.precision);
 ```
 
 #### [3.4 Object.defineProperties()](#)

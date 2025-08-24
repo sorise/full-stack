@@ -22,6 +22,7 @@
 ### links
 [JavaScript | MDN](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript)、[印记中文](https://docschina.org/) 、[阮一峰 ECMAScript 6 入门](https://es6.ruanyifeng.com/)
 
+- [现代 JavaScript 教程](https://zh.javascript.info/)
 ### UI Tool
 - [标小智 免费Favicon.ico图标在线生成器](https://www.logosc.cn/favicon-generator)
 

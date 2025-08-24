@@ -371,19 +371,20 @@ exec() 方法在一个指定字符串中执行一个搜索匹配。返回一个�
 const re = /quick\s(?<color>brown).+?(jumps)/dgi;
 const result = re.exec("The Quick Brown Fox Jumps Over The Lazy Dog");
 ```
-下表列出这个脚本的返回值（result）：
+下表列出这个脚本的返回值（`result`）：
 
 |属性	|值|
 |:---|:---|
-|[0]	|"Quick Brown Fox Jumps"|
-|[1]	|"Brown"|
-|[2]	|"Jumps"|
-|index|	4|
+|`[0]`	|`"Quick Brown Fox Jumps"`|
+|`[1]`	|`"Brown"`|
+|`[2]`	|`"Jumps"`|
+|index |	4|
 |indices|	`[[4, 25], [10, 15], [20, 25]] groups: { color: [10, 15 ]}` |
-|input	|"The Quick Brown Fox Jumps Over The Lazy Dog"|
+|input	|`"The Quick Brown Fox Jumps Over The Lazy Dog"`|
 |groups|	`{ color: "brown" }` |
 
-另外，由于正则表达式是全局的（global），`re.lastIndex` 会被设置为 25。
+另外，由于正则表达式是全局的`（global）`，`re.lastIndex` 会被设置为 25。
+
 #### [2.4 test](#)
 接收一个字符串参数。如果输入的文本与模式匹配，**则参数返回 true，否则返回 false**。这个方法适用于只想测试模式是否匹配，而不需要实际匹配内容的情况。 
 
@@ -470,7 +471,7 @@ if (pattern.test(text)) {
 
 
 ### [3. 原始值包装类型](#)
-为了方便操作原始值，ECMAScript 提供了 3 种特殊的引用类型：Boolean、Number 和 String。
+为了方便操作原始值，ECMAScript 提供了 3 种特殊的引用类型：[Boolean](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Boolean)、Number 和 String。
 
 ```javascript
 let s1 = "some text";
@@ -491,7 +492,7 @@ console.log(typeof obj); // "object"
 ```
 
 ### [4. Boolean](#)
-Boolean 是对应布尔值的引用类型。要创建一个 Boolean 对象，就使用 Boolean 构造函数并传入
+[Boolean](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Boolean) 是对应布尔值的引用类型。要创建一个 Boolean 对象，就使用 Boolean 构造函数并传入
 true 或 false，如下例所示：
 
 ```javascript
@@ -521,7 +522,7 @@ console.log(falseValue instanceof Boolean); // false
 理解原始布尔值和 Boolean 对象之间的区别非常重要，强烈建议永远不要使用后者。
 
 ### [5. Number](#)
-Number 是对应数值的引用类型。要创建一个 Number 对象，就使用 Number 构造函数并传入一个数值，如下例所示：
+[Number](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Number) 是对应数值的引用类型。要创建一个 Number 对象，就使用 Number 构造函数并传入一个数值，如下例所示：
 ```javascript
 let numberObject = new Number(10); 
 ```
@@ -564,7 +565,7 @@ Number.isFinite(2e64); // true
 
 | 方法                                                                                                                | 介绍                                |
 |:------------------------------------------------------------------------------------------------------------------|:----------------------------------|
-| [Number.EPSILON](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Number/EPSILON) | 表示 1 与大于 1 的最小浮点数之间的差值            |
+| [Number.EPSILON](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Number/EPSILON) | 表示 1 与大于 1 的最小浮点数之间的差值 ,2<sup>-52</sup>，或大约 2.2204460492503130808472633361816E-16。           |
 | Number.MAX_SAFE_INTEGER                                                                                           | 表示在 JavaScript 中最大的安全整数（253 – 1）。 |
 | Number.MAX_VALUE                                                                                                  | 表示在 JavaScript 中可表示的最大数值。         |
 | Number.MIN_SAFE_INTEGER                                                                                           | 代表在 JavaScript 中最小的安全整数（-253 – 1） |
@@ -574,6 +575,14 @@ Number.isFinite(2e64); // true
 | Number.POSITIVE_INFINITY                                                                                          |      表示正无穷大值。         |
 
 ```javascript
+const result = Math.abs(0.2 - 0.3 + 0.1);
+
+console.log(result);
+// Expected output: 2.7755575615628914e-17
+
+console.log(result < Number.EPSILON);
+// Expected output: true
+
 function checkNumber(bigNumber) {
   if (bigNumber === Number.POSITIVE_INFINITY) {
     return 'Process number as Infinity';
@@ -594,7 +603,7 @@ console.log(checkNumber(Number.MAX_VALUE * 2));
 | 方法                                          | 介绍 |
 |:--------------------------------------------|:---|
 | Number.prototype.toExponential()            |返回一个以指数表示法表示该数字的字符串。|
-| Number.prototype.toFixed()                  |使用定点表示法来格式化该数值。|
+| [Number.prototype.toFixed(digits)](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Number/toFixed)                  |使用定点表示法来格式化该数值。|
 | Number.prototype.toLocaleString()           |回这个数字特定于语言环境的表示字符串。 |
 | [Number.prototype.toPrecision(precision)](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Number/toPrecision) | 方法返回一个以指定精度表示该数字的字符串。|
 | Number.prototype.toString()                 | 返回表示该数字值的字符串。 |
@@ -614,6 +623,23 @@ console.log(expo('123456'));
 
 console.log(expo('oink'));
 // Expected output: "NaN"
+
+let numObj = 5.123456;
+
+console.log(numObj.toPrecision()); // 输出 '5.123456'
+console.log(numObj.toPrecision(5)); // 输出 '5.1235'
+console.log(numObj.toPrecision(2)); // 输出 '5.1'
+console.log(numObj.toPrecision(1)); // 输出 '5'
+
+numObj = 0.000123;
+
+console.log(numObj.toPrecision()); // 输出 '0.000123'
+console.log(numObj.toPrecision(5)); // 输出 '0.00012300'
+console.log(numObj.toPrecision(2)); // 输出 '0.00012'
+console.log(numObj.toPrecision(1)); // 输出 '0.0001'
+
+// 请注意，在某些情况下可能会返回指数表示法字符串
+console.log((1234.5).toPrecision(2)); // 输出 '1.2e+3'
 ```
 
 **toFixed(digits)** 使用定点表示法来格式化该数值, 小数点后的位数。
@@ -657,7 +683,7 @@ console.log((1234.5).toPrecision(2)); // 输出 '1.2e+3'
 ```
 
 ### [6. String](#)
-String 是对应字符串的引用类型。要创建一个 String 对象，使用 String 构造函数并传入一个数值，如下例所示：
+[String](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/String)  是对应字符串的引用类型。要创建一个 String 对象，使用 String 构造函数并传入一个数值，如下例所示：
 
 ```javascript
 let stringObject = new String("hello world");
@@ -790,8 +816,6 @@ console.log(a2 === a3); // false
 #### [6.3 静态方法](#)
 直接通过类名可以调用的方法：
 
-|||
-String.fromCharCode(numN...)
 
 [String.fromCharCode(numN...)](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/String/fromCharCode) 返回由指定的 UTF-16 码元序列创建的字符串。
 ```javascript
