@@ -75,8 +75,22 @@ console.log(`Name:${p1["sex"]}`);
 
 
 #### [1.1 Object 类型具有下列属性](#)
+如下属性需要重点关注：
 * **constructor**: 对创建对象的函数的引用（指针）。对于 Object 对象，该指针指向原始的 Object() 函数。
 * **prototype**: 对该对象的**原型对象的引用**。对于所有的对象，它默认返回 Object 对象的一个实例。
+* **记住**：**函数也是一个对象**，这个对象有一个 `prototype` 属性，指向一个特殊的对象，称之为**原型**。
+```
+                           另一个原型对象 [属性 constructor]、[属性 __proto__] 
+                                                  ↑
+                           -----------------------|                  
+                           |
+构造函数 [属性 prototype]  ---------------->  原型对象 [属性 constructor]、[属性 __proto__] 
+    |       ↑                                           ↑    |   
+    |new    |                                           |    |   
+    |       --------------------------------------------|-----   
+    ↓                                                   |        
+实例 [属性 __proto__] ------------------------------------
+```
 
 #### [1.2 对象实例的默认方法、属性](#)
 
@@ -85,12 +99,15 @@ console.log(`Name:${p1["sex"]}`);
 * toString():返回对象的原始字符串表示。对于 Object 对象，ECMA-262 没有定义这个值，所以不同的 ECMAScript 实现具有不同的值
 * valueOf():返回最适合该对象的原始值。对于许多对象，该方法返回的值都与 ToString() 的返回值相同。
 * isPrototypeOf(obj): 检查对象是否出现在某个对象的原型链中。
-* **__proto__** 指向实例化的原型对象，推荐Object.getPrototypeOf()
+* **`__proto__`** 指向实例化的原型对象，推荐Object.getPrototypeOf()。
 * **constructor**: 对创建对象的函数的引用（指针）。对于 Object 对象，该指针指向原始的 Object() 函数。
 
 ```javascript
-const obj1={};
-const obj2={
+const obj1 = {
+
+};
+
+const obj2 = {
     name:"zhagnsan",
     "age":"3",
     school:{    //属性值也是对象
@@ -100,7 +117,8 @@ const obj2={
     sayHello:function(name){    //属性值是函数
         console.log("hello "+name);
     },
-}
+};
+
 obj2.sayHello("sam");
 obj2.birthday="2022-12-12";//赋值操作：属性(Key)存在则赋值，不存在则创建+赋值
 
@@ -113,20 +131,26 @@ Object.getOwnPropertyNames(["a","b"])	//[ "0", "1", "length" ]
 Object.keys(["a","b"]) //[ "0", "1" ]
 Object.getPrototypeOf([]); //Array []
 
-const obj={name:"sam",sex:"male",say:function(){}};
+const obj = { 
+    name:"sam",
+    sex:"male", 
+    say:function(){
+        console.log("said!");
+    }
+};
+
 obj.hasOwnProperty("name"); //true
 obj.propertyIsEnumerable("name"); //true
 obj.toString = function(){return JSON.stringify(this)};
 
 console.log(Person.prototype.isPrototypeOf(p1)); //true
-``` 
+```
 
 ### [2. Object 静态方法](#)
 Object 对象有一些静态方法，这些方法通常用于操作对象。例如：
 
 | 方法                                | 说明 |
 |:----------------------------------|:---|
-| Object.assign()                   | 复制一个或多个源对象的所有可枚举属性到目标对象。      |        
 | Object.create()                   | 创建一个具有指定原型的新对象。|                       
 | Object.defineProperty()           | 在一个对象上定义一个新的属性或修改现有属性，并返回该对象。 |
 | Object.defineProperties()         | 在一个对象上定义新的属性或修改现有属性，并返回该对象。|
@@ -141,57 +165,131 @@ Object 对象有一些静态方法，这些方法通常用于操作对象。例�
 | Object.is()                       | 判断两个值是否相等。|
 | Object.seal()                     | 密封一个对象。|
 | Object.setPrototypeOf()           | 设置一个对象的原型到另一个对象或 null。|
+| Object.assign()                   | 复制一个或多个源对象的所有可枚举属性到目标对象。      |        
 | Object.isSealed()                 |  静态方法用于判断一个对象是否密封。|
 | Object.seal()                     |  静态方法密封一个对象。|
 | Object.hasOwn()                     |  如果指定对象具有指示的属性作为其自身属性，则返回 true。如果属性是继承的，或者不存在，则该方法返回 false。|
 
 
 #### [2.1 Object.create](#)
-该方法用于创建新对象。第一个参数用于指定新建对象的原型对象；第二个参数是对象的属性描述对象。方法返回新建的对象。
-
-Object.create(proto,propertiesObject)
+该方法用于创建新对象。第一个参数用于指定新建对象的原型对象；第二个参数是对象的属性描述对象，方法返回新建的对象。
+一般用于创建`原型对象`，用在继承的过程中。
 
 ```javascript
-function Person() {}
-Person.prototype.hello = function (){
-    console.log("hello")
-}
-let person = Object.create(Person.prototype,{
-    name:{
-        value:"jonas",
-        writable:true,
-        configurable:true,
-    },
-    age:{
-        value:18,
-        writable:true,
-        configurable:true,
-    }
-})
-console.log(person)//Person {name: "jonas", age: 18}
-person.hello()//hello
+Object.create(proto);
+Object.create(proto, propertiesObject);
 ```
-#### [2.2 Object.defineProperty](#)
-Object.defineProperty(obj,prop,desc):在对象 obj 上定义新的属性，或者修改对象 obj 中的属性，结果返回对象 obj。
+- proto： 新创建对象的原型对象。
+- propertiesObject `可选`。如果该参数被指定且不为 `undefined`，则该传入对象可枚举的自有属性将为新创建的对象添加具有对应属性名称的属性描述符。这些属性对应于 `Object.defineProperties()` 的第二个参数。
+- 返回值: 根据指定的原型对象和属性创建的新对象。
 
 ```javascript
-let person = {}
+// Shape——父类
+function Shape() {
+  this.x = 0;
+  this.y = 0;
+}
+
+// 父类方法
+Shape.prototype.move = function (x, y) {
+  this.x += x;
+  this.y += y;
+  console.info("Shape moved.");
+};
+
+// Rectangle——子类
+function Rectangle() {
+  Shape.call(this); // 调用父类构造函数。
+}
+
+// 子类继承父类
+Rectangle.prototype = Object.create(Shape.prototype, {
+  // 如果不将 Rectangle.prototype.constructor 设置为 Rectangle，
+  // 它将采用 Shape（父类）的 prototype.constructor。
+  // 为避免这种情况，我们将 prototype.constructor 设置为 Rectangle（子类）。
+  constructor: {
+    value: Rectangle,
+    enumerable: false,
+    writable: true,
+    configurable: true,
+  },
+});
+
+const rect = new Rectangle();
+
+console.log("rect 是 Rectangle 类的实例吗？", rect instanceof Rectangle); // true
+console.log("rect 是 Shape 类的实例吗？", rect instanceof Shape); // true
+rect.move(1, 1); // 打印 'Shape moved.'
+```
+
+**例子**: `entities/Person.js`
+```javascript
+export default function Person(id, name, age) {
+    this.id = id;
+    this.name = name;
+    this.age = age;
+}
+```
+`entities/Student.js`
+```javascript
+import Person from "./Person.js";
+
+export default function Student(id, name, age, score) {
+    Person.call(this, id, name, age);
+    this.score = score;
+}
+
+Student.prototype = Object.create(Person.prototype, {
+    constructor: {
+        value: Student,
+        enumerable: true,
+        writable: true,
+        configurable: true
+    }
+});
+```
+`index.js`
+```javascript
+import Person from "./entities/Person.js";
+import Student from "./entities/Student.js";
+
+let tk = new Person("51162119...0709", "LZM", 26);
+let jx = new Student("2016110418", "JX", 27, 99.5);
+
+
+console.log(jx instanceof  Student);  //true
+console.log(jx instanceof  Person);   //true
+console.log(tk instanceof  Person);   //true
+console.log(tk instanceof  Student);  //false
+```
+
+#### [2.2 Object.defineProperty](#)
+`Object.defineProperty(obj,prop,desc)`，在对象 obj 上定义新的属性，或者修改对象 obj 中的属性，结果返回对象 obj。
+
+```javascript
+Object.defineProperty(obj, prop, descriptor);
+```
+**例如**:
+```javascript
+let person = {}; 
+
 Object.defineProperty(person,"name",{
     value : "jonas",
     writable : true,
     enumerable : true,
     configurable : true
-})
-console.log(person)//{name: "jonas"}
+});
+
+console.log(person) //{ name: "jonas" }
 ```
 
 #### [2.3 Object.defineProperties()](#top)
-一次性定义多个属性 如果有些描述属性没有给与值 那么默认为false
+一次性定义多个属性 如果有些描述属性没有给与值 那么默认为 `false`。
 
 ```javascript
 var book = {};
 
-Object.defineProperties(book,{
+Object.defineProperties(book, {
     _year:{
         writable:true,
         value:2004
@@ -215,6 +313,7 @@ Object.defineProperties(book,{
         }
     }
 });
+
 book.year = 2008;
 
 console.log(book.edition);
@@ -246,7 +345,7 @@ Object.defineProperties(kingdom, {
 ```
 
 #### [2.4 Object.freeze](#)
-Object.freeze(obj):该方法用于冻结对象，一个被冻结的对象不能被修改，不能添加新的属性，不能修改属性的描述符，该对象的原型对象也不能修改。返回值为被冻结的对象。
+`Object.freeze(obj)` 该方法用于冻结对象，一个被冻结的对象不能被修改，不能添加新的属性，不能修改属性的描述符，该对象的原型对象也不能修改。返回值为被冻结的对象。
 
 ```javascript
 let person = {name:"jonas",age:18}
@@ -284,11 +383,11 @@ for (const [key, value] of Object.entries(object1)) {
 ```
 
 #### [2.7 Object.getOwnPropertySymbols](#)
-Object.getOwnPropertySymbols(obj):该方法返回一个指定对象自身所有的 Symbol 键名的属性的数组。
+`Object.getOwnPropertySymbols(obj)`, 该方法返回一个指定对象自身所有的 Symbol 键名的属性的数组。
 
 
 #### [2.8 Object.getOwnPropertyNames](#)
-Object.getOwnPropertyNames(obj):该方法返回一个由指定对象的所有自身属性的属性名（包括不可枚举属性但不包括 Symbol 作为键名的属性）组成的数组。
+`Object.getOwnPropertyNames(obj)`, 该方法返回一个由指定对象的所有自身属性的属性名（包括不可枚举属性但不包括 Symbol 作为键名的属性）组成的数组。
 
 ```javascript
 let nameSymbol = Symbol('name');
@@ -411,21 +510,53 @@ Object.setPrototypeOf(obj, proto)
 obj.__proto__ === proto     //true
 ```
 
-#### [2.15 Object.entries(obj)](#)
-entries 分割对象
+#### [2.15 Object.fromEntries(obj)](#)
+`Object.fromEntries()`, 静态方法将键值对列表转换为一个对象。
 
 ```javascript
-const obj = { foo: 'bar', baz: 42 };
-console.log(Object.entries(obj)); // [ ['foo', 'bar'], ['baz', 42] ]
+const entries = new Map([
+  ["foo", "bar"],
+  ["baz", 42],
+]);
 
-// array like object
-const obj = { 0: 'a', 1: 'b', 2: 'c' };
-console.log(Object.entries(obj)); // [ ['0', 'a'], ['1', 'b'], ['2', 'c'] ]
+const obj = Object.fromEntries(entries);
 
-//  string
-Object.entries('abc')   // [['0', 'a'], ['1', 'b'], ['2', 'c']]
+console.log(obj);
+// Expected output: Object { foo: "bar", baz: 42 }
+```
+将 Map 转换成对象，通过 `Object.fromEntries`，你可以将 Map 转换成 Object。
+```javascript
+const map = new Map([
+  ["foo", "bar"],
+  ["baz", 42],
+]);
 
-Object.entries(100)   // []
+const obj = Object.fromEntries(map);
+
+console.log(obj); // { foo: "bar", baz: 42 }
+```
+
+通过 `Object.fromEntries`，你可以将 Array 转换成 Object：
+```javascript
+const arr = [
+  ["0", "a"],
+  ["1", "b"],
+  ["2", "c"],
+];
+const obj = Object.fromEntries(arr);
+console.log(obj); // { 0: "a", 1: "b", 2: "c" }
+```
+
+**对象转换**, 通过 `Object.fromEntries`、其逆操作 `Object.entries()` 和数组操作方法，你可以像这样转换对象：
+```javascript
+const object1 = { a: 1, b: 2, c: 3 };
+
+const object2 = Object.fromEntries(
+  Object.entries(object1).map(([key, val]) => [key, val * 2]),
+);
+
+console.log(object2);
+// { a: 2, b: 4, c: 6 }
 ```
 
 #### [2.16 Object.getPrototypeOf()](#)
@@ -463,9 +594,11 @@ console.dir(Object.getOwnPropertyDescriptors(obj))
 
 /*
 使用场景：
-Object.assign() 方法只能拷贝源对象的可枚举的自身属性，同时拷贝时无法拷贝属性的特性，而且访问器属性会被转换成数据属性，也无法拷贝源对象的原型
+Object.assign() 方法只能拷贝源对象的可枚举的自身属性，同时拷贝时无法拷贝属性的特性，而且
+访问器属性会被转换成数据属性，也无法拷贝源对象的原型。
 
-Object.create() 方法可以实现上面说的这些，配合getPrototypeOf，以及getOwnPropertyDescriptors实现全面浅拷贝
+Object.create() 方法可以实现上面说的这些，配合getPrototypeOf，以及 
+getOwnPropertyDescriptors 实现全面浅拷贝。
 
 Object.create(
   Object.getPrototypeOf(obj), 
@@ -560,9 +693,9 @@ var person = {
 }
 ```
 #### [3.2 Object.defineProperty(obj,propertyName,obj_desc)](#)
-如果要修改属性默认的特性,必须使用defineProperty方法 接收三个参数 **属性所在对象** **属性名称** 和一个**描述符对象**，描述符对象的属性必须是  configurable,enumerable、writeable,value 设置一个或者多个值。
+如果要修改属性默认的特性,必须使用defineProperty方法 接收三个参数 **属性所在对象**、**属性名称** 和一个**描述符对象**，描述符对象的属性必须是 `configurable`、`enumerable`、`writeable`、`value` 设置一个或者多个值。
  
-**注意**: 那么不设置的特征值是 默认值 可以多次调用 此方法修改同一个属性但是 但是在吧configurable设置 为false之后就会有错误了 
+**注意**: 那么不设置的特征值是 **默认值** 可以多次调用此方法修改同一个属性但是，在把 `configurable` 设置为false之后就会有错误了。
 ```javascript
 var person = {} ; 
 
@@ -580,8 +713,8 @@ console.log(person.name); //JxKicker
 for (let key in person) {
     console.log(key);
 }
-//age
 
+//age
 Object.defineProperty(person,"score",{
     configurable:true,
     writable:false,
@@ -693,7 +826,7 @@ Object.defineProperties(kingdom, {
 ```
 
 #### [3.5 读取属性的特性](#)
-js提供了 Object.getOwnPropertyDescriptor(obj,propertyName); 第一个参数 对象 第二个参数 对象的属性名 返回一个描述对象
+javascript 提供了 `Object.getOwnPropertyDescriptor(obj,propertyName);` 第一个参数对象，第二个参数对象的属性名，返回一个描述对象。
 ```javascript
 let descripter =  Object.getOwnPropertyDescriptor(book,"edition");
 
@@ -713,9 +846,10 @@ console.log(typeof yeardescripter.get); //function
 ### [4. 使用函数创建对象](#)
 以上创建对象的方式 太过于单一，无法提供一个创建对象的模板 还无法实现继承重用效果,怎么实现来 请让我细细道来。
 
-**谨记：每一个函数本身也是一个对象哦，且函数有一个属性叫prototype指向一个对象，这个对象被称为原型！这个原型对象有一个属性叫constructor指向函数**
+- **谨记：每一个函数本身也是一个对象哦，且函数有一个属性叫prototype指向一个对象，这个对象被称为原型！这个原型对象有一个属性叫constructor指向函数**
+- **必须掌握**：原型模式，其他模式了解知道。
 
-**必须掌握**：原型模式，其他模式了解知道。
+
 #### [4.1 工厂模式](#)
 这是最基本的模式开发人员 发明一种函数 来封装以特定接口创建对象的细节
 ```javascript
