@@ -7,6 +7,8 @@
 - [3. 属性创建](#3-属性创建)
 - [4. 使用函数创建对象](#4-使用函数创建对象)
 - [5. 基本原理](#5-基本原理)
+- [6. this 关键字](#6-this-关键字)
+
 -----
 
 ### [1. 创建Object 对象](#)
@@ -372,18 +374,37 @@ console.log(descriptor)//{value: "Jonas", writable: true, enumerable: true, conf
 Object.entries(obj):该方法返回对象 obj 自身的可枚举属性的键值对数组。结果是一个二维数组，数组中的元素是一个由两个元素 key ，value 组成的数组。
 
 ```javascript
-const object1 = {
-  a: 'somestring',
-  b: 42,
+const pro = {
+    a: 'something',
+    b: 42,
 };
 
-for (const [key, value] of Object.entries(object1)) {
-  console.log(`${key}: ${value}`);
+for (const [key, value] of Object.entries(pro)) {
+    console.log(`${key}: ${value}`);
 }
+/*
+a: something
+b: 42
+* */
 ```
 
 #### [2.7 Object.getOwnPropertySymbols](#)
 `Object.getOwnPropertySymbols(obj)`, 该方法返回一个指定对象自身所有的 Symbol 键名的属性的数组。
+
+```javascript
+// 创建一个Symbol
+const hobbySymbol = Symbol('hobby');
+
+// 创建一个对象，并添加一个Symbol类型的属性
+const anotherPerson = {
+    name: '小红',
+    [hobbySymbol]: '阅读'  // 使用Symbol作为属性名
+};
+
+// 使用Object.getOwnPropertySymbols()获取对象的Symbol属性
+const symbolProperties = Object.getOwnPropertySymbols(anotherPerson);
+console.log(symbolProperties);  // 输出: [Symbol(hobby)]
+```
 
 
 #### [2.8 Object.getOwnPropertyNames](#)
@@ -446,8 +467,71 @@ for (const symbol of  Object.getOwnPropertySymbols(user)) {
 #### [2.9 Object.seal](#)
 Object.seal(obj) 封闭对象，阻止添加新属性并将所有的属性标记为不可配置！
 
+```javascript
+const object1 = {
+  property1: 42,
+};
+
+Object.seal(object1);
+object1.property1 = 33;
+console.log(object1.property1);
+// Expected output: 33
+
+delete object1.property1; // Cannot delete when sealed
+console.log(object1.property1);
+// Expected output: 33
+
+```
+
+Object.isSealed() 静态方法判断一个对象是否被密封。
+
+```javascript
+const object1 = {
+  property1: 42,
+};
+
+console.log(Object.isSealed(object1));
+// Expected output: false
+
+Object.seal(object1);
+
+console.log(Object.isSealed(object1));
+// Expected output: true
+
+```
+
 #### [2.10 Object.isFrozen](#)
-Object.isFrozen(obj) 判断对象是否被冻结。返回布尔值。
+`Object.isFrozen(obj)` 判断对象是否被冻结(是否调用 `Object.freeze` 方法)。返回布尔值。
+
+```javascript
+const obj = {
+  prop: 42,
+};
+
+Object.freeze(obj);
+
+obj.prop = 33;
+// Throws an error in strict mode
+
+console.log(obj.prop);
+// Expected output: 42
+```
+Object.isFrozen() 静态方法判断一个对象是否被冻结。
+```javascript
+const object1 = {
+  property1: 42,
+};
+
+console.log(Object.isFrozen(object1));
+// Expected output: false
+
+Object.freeze(object1);
+
+console.log(Object.isFrozen(object1));
+// Expected output: true
+
+```
+
 
 #### [2.10 Object.isExtensible](#)
 Object.isExtensible(obj) 该方法用于判断一个对象是否可以扩展（是否可以添加属性），返回布尔值。
@@ -688,14 +772,15 @@ ECMA 在第五版定义了只有内部采用的特性 描述了属性的各种�
 4. `[[value]]`: 包含这个属性的数据值，读取属性值的时候 从这个位置读取 写入属性值的 吧新值保存在这个位置。
 
 ```javascript
-var person = {
+let person = {
   Name:"Jxkicker" //前三个特性值为 true [[Value]] 为 "Jxkicker"
 }
 ```
+
 #### [3.2 Object.defineProperty(obj,propertyName,obj_desc)](#)
 如果要修改属性默认的特性,必须使用defineProperty方法 接收三个参数 **属性所在对象**、**属性名称** 和一个**描述符对象**，描述符对象的属性必须是 `configurable`、`enumerable`、`writeable`、`value` 设置一个或者多个值。
  
-**注意**: 那么不设置的特征值是 **默认值** 可以多次调用此方法修改同一个属性但是，在把 `configurable` 设置为false之后就会有错误了。
+**注意**: 那么不设置的特征值是 **默认值** 可以多次调用此方法修改同一个属性但是，在把 `configurable` 设置为 `false` 之后就会有错误了。
 ```javascript
 var person = {} ; 
 
@@ -877,17 +962,17 @@ console.log('person2:', person2);
 
 #### [4.2 构造函数](#)
 JS构造函数可以创建特定类型的对象
-* **构造函数没有return**
-* **直接将属性和方法赋值给this对象**
-* **没有显示的创建对象**
-* 实例化要使用 new 操作符返回的是一个新的的对象
-* 每个对象都有一个 constructor 属性指向 **构造函数**
+* **构造函数没有return**。
+* **直接将属性和方法赋值给this对象**。
+* **没有显示的创建对象**。
+* 实例化要使用 new 操作符返回的是一个新的的对象。
+* 每个对象都有一个 constructor 属性指向 **构造函数**。
 
 使用构造函数创建对象所JS所做的五个操作
-* **在内存中创建一个对象**
-* 这个对象内部的 `[[Prototype]] (__proto__)` 特性被赋值为构造函数的ptototype属性
-* 构造函数中 this 指向新对象
-* 执行构造函数内部代码，给新对象添加属性
+* **在内存中创建一个对象**。
+* 这个对象内部的 `[[Prototype]] (__proto__)` 特性被赋值为构造函数的ptototype属性。
+* 构造函数中 this 指向新对象。
+* 执行构造函数内部代码，给新对象添加属性。
 * 如果构造函数返回非空对象，那么返回该对象，否则返回刚创建的新对象。
 
 ```javascript
@@ -920,8 +1005,9 @@ console.log('person2_:', person2_);
 
 你可以理解为静态：最大的好处: 可以让所有对象势力共享它所包含的属性和方法 也就是说说不必再构造函数中定义方法 也可以将这些方法直接添加到原型对象中。
 
-* 默认指向Object
-* 我们原型模式和构造函数相结构的方法 来创建对象  因为原型对象 里面包含的东西 是静态的 但是又是类似于对象属性 本事上来说 它是公有的 所有对象的公有属性方法
+* 默认指向Object。
+* 我们原型模式和构造函数相结构的方法 来创建对象  因为原型对象 里面包含的东西 是静态的 但是又是类似于对象属性 本事上来说 它是公有的所有对象的公有属性方法。
+
 ```javascript
 function Person(name = "",age = 0,sex = true,job ="" ){
     this.name = name;
@@ -1056,7 +1142,7 @@ console.log(person1 instanceof Person); //false
 **问题**: 无法继承，无法判断类型！ instanceof 无法判断，本质上 Object 类型！只是实现了私有属性！
 
 **稍作改造，使得它有类型**。
-```js
+```javascript
 function Person(para_name, para_age, para_job) {
     //创建要返回的对象
     var o = {};
@@ -1098,6 +1184,139 @@ console.log(person1 instanceof Person); //true
 * 不要纠结是先有Object对象，还是先有Function方法，就跟先有鸡还是现有蛋一样，相互依赖，同时诞生
 * 每个对象的_proto_属性（注意不是prototype属性）都指向自己的继承父类，也就是他的克隆类的原型对象，也就是Foo.prototype对象（object对象）
 
+### [6. this 关键字](#)
+JavaScript有一个特殊的关键字this，您可以在方法中使用它来引用当前对象。
+
+this 关键字是 JavaScript 中一个非常重要且有时令人困惑的概念。它指向一个对象，其值在函数执行时根据函数的调用方式动态确定，而不是在函数定义时静态确定。
+
+简单来说，this `指向的是调用函数的那个对象`。
+
+this 的值主要由四种绑定规则决定，这些规则有优先级顺序：
+- 默认绑定 (Default Binding)
+- 隐式绑定 (Implicit Binding)
+- 显式绑定 (Explicit Binding)
+- new 绑定 (New Binding)
+
+绑定优先级
+这四种规则有明确的优先级：`new 绑定 > 显式绑定 > 隐式绑定 > 默认绑定`，这意味着，如果一个函数调用同时符合多个规则，优先级最高的规则将决定 this 的值。
+
+#### [6.1 默认绑定 (Default Binding)](#)
+这是最基础的规则。在非严格模式下，当一个函数被独立调用（即没有明确的调用者对象）时，this 会指向全局对象。
+
+- 在浏览器环境中，全局对象是 `window`。
+- 在 `Node.js` 环境中，全局对象是 `global`。
+- 在严格模式下 `('use strict';)`，this 会是 `undefined`。
+
+```javascript
+function foo() {
+    console.log(this); 
+    // 非严格模式下：window (浏览器) / global (Node.js)
+    // 严格模式下：undefined
+}
+
+// 独立调用
+foo();
+```
+- this在对象中使用时，它的值是对象本身。
+- 在构造函数中this没有值。它代替了新对象。**创建新对象时，this的值将成为新对象**。
+
+#### [6.2 隐式绑定 (Implicit Binding)](#)
+当函数作为对象的一个方法被调用时，this 会指向调用该方法的那个对象。
+
+```javascript
+const obj = {
+    name: 'Alice',
+    greet: function() {
+        console.log(`Hello, I'm ${this.name}`);
+    }
+};
+
+// obj 是调用者，所以 this 指向 obj
+obj.greet(); // 输出: Hello, I'm Alice
+
+// 更复杂的例子
+const person = {
+    name: 'Bob',
+    friend: {
+        name: 'Charlie',
+        sayName: function() {
+            console.log(this.name);
+        }
+    }
+};
+
+// 调用者是 person.friend，所以 this 指向 friend 对象
+person.friend.sayName(); // 输出: Charlie
+
+// 注意：隐式丢失 (Implicit Loss)
+const sayNameFunc = person.friend.sayName;
+// 此时是独立调用，this 指向全局对象或 undefined
+sayNameFunc(); // 输出: undefined (严格模式) 或 可能是全局的 name (非严格模式)
+```
+
+#### [6.3 显式绑定 (Explicit Binding)](#)
+使用 call(), apply() 或 bind() 方法可以显式地指定函数执行时 this 的值 ([后章详解](JavaScriptFunction.md#6-函数属性与方法))。
+
+- `call(thisArg, arg1, arg2, ...)`: 立即调用函数，this 绑定到 thisArg，参数逐个传入。
+- `apply(thisArg, [argsArray])`: 立即调用函数，this 绑定到 thisArg，参数以数组形式传入。
+- `bind(thisArg, arg1, arg2, ...)`: 创建一个新函数，该函数的 this 值被永久绑定到 thisArg，参数可以预先传入部分。新函数不会立即执行。
+ 
+```javascript
+function introduce(age, city) {
+    console.log(`Hi, I'm ${this.name}, ${age} years old, from ${city}.`);
+}
+
+const person1 = { name: 'David' };
+const person2 = { name: 'Eve' };
+
+// 使用 call
+introduce.call(person1, 30, 'New York'); // Hi, I'm David, 30 years old, from New York.
+
+// 使用 apply
+introduce.apply(person2, [25, 'London']); // Hi, I'm Eve, 25 years old, from London.
+
+// 使用 bind (创建一个新函数)
+const introduceDavid = introduce.bind(person1, 30); // 预设了 this 和 age
+introduceDavid('Paris'); // Hi, I'm David, 30 years old, from Paris.
+```
+
+#### [6.4 new 绑定](#)
+当使用 `new` 关键字调用一个函数（构造函数）时，会创建一个新对象，`this` 会指向这个新创建的实例对象。
+
+```javascript
+function Person(name, age) {
+    // 1. 创建一个新对象 ({}), this 指向这个新对象
+    // 2. 将新对象的原型 (__proto__) 指向 Person.prototype
+    // 3. 执行函数体，为新对象添加属性
+    this.name = name;
+    this.age = age;
+    // 4. 如果函数没有返回其他对象，则返回这个新对象
+}
+
+const john = new Person('John', 28);
+console.log(john); // Person { name: 'John', age: 28 }
+console.log(john.name); // John
+```
+
+#### [6.5 箭头函数中的 this](#)
+箭头函数 (`=>`) 是一个重要的例外。它没有自己的 this 绑定。它的 this 值**继承自外层（包裹它的）普通函数或全局作用域**的 `this` 值，这称为**词法作用域** (`Lexical Scoping`) 的 this。
+
+```javascript
+const obj = {
+  name: 'Arrow',
+  regularFunc: function() {
+    console.log(this.name); // 输出: "Arrow"
+    
+    const arrowFunc = () => {
+      console.log(this.name); // 输出: "Arrow" (继承了regularFunc的this)
+    };
+    arrowFunc();
+  }
+};
+
+obj.regularFunc();
+```
+
 
 -----
-时间: 2024/10/19 第四次修订
+时间: 2025/08/25 第四次修订
