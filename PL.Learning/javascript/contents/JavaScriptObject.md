@@ -149,16 +149,17 @@ console.log(Person.prototype.isPrototypeOf(p1)); //true
 ```
 
 ### [2. Object 静态方法](#)
-Object 对象有一些静态方法，这些方法通常用于操作对象。例如：
+[Object](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Object) 对象有一些静态方法，这些方法通常用于操作对象。例如：
 
 | 方法                                | 说明 |
 |:----------------------------------|:---|
-| Object.create()                   | 创建一个具有指定原型的新对象。|                       
+| [Object.create()](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Object/create)                  | 创建一个具有指定原型的新对象。|                       
 | Object.defineProperty()           | 在一个对象上定义一个新的属性或修改现有属性，并返回该对象。 |
 | Object.defineProperties()         | 在一个对象上定义新的属性或修改现有属性，并返回该对象。|
 | Object.entries()                  | 返回一个数组，包含对象自身的每个可枚举属性`[key, value]`对。|
 | Object.fromEntries()              | 返回一个由键值对组成的对象。|
 | Object.freeze()                   | 冻结一个对象。|
+|Object.isFrozen()| Object.isFrozen() 静态方法判断一个对象是否被冻结。 |
 | Object.getOwnPropertyDescriptor() | 返回一个对象的指定属性的描述符。|
 | Object.getOwnPropertyNames()      | 返回一个数组，包含对象自身的所有属性的键。|
 | Object.getOwnPropertySymbols()    | 返回一个数组，包含对象自身的所有符号属性。|
@@ -168,8 +169,8 @@ Object 对象有一些静态方法，这些方法通常用于操作对象。例�
 | Object.seal()                     | 密封一个对象。|
 | Object.setPrototypeOf()           | 设置一个对象的原型到另一个对象或 null。|
 | Object.assign()                   | 复制一个或多个源对象的所有可枚举属性到目标对象。      |        
-| Object.isSealed()                 |  静态方法用于判断一个对象是否密封。|
 | Object.seal()                     |  静态方法密封一个对象。|
+| Object.isSealed()                 |  静态方法用于判断一个对象是否密封。|
 | Object.hasOwn()                     |  如果指定对象具有指示的属性作为其自身属性，则返回 true。如果属性是继承的，或者不存在，则该方法返回 false。|
 
 
@@ -557,16 +558,24 @@ Object.is(obj1,obj2) 该方法用于比较两个对象是否相同，返回布�
 注意：该方法不会做隐式类型转换。
 
 #### [2.12 Object.keys](#)
-Object.keys(obj) ：遍历可枚举的属性，只包含对象本身可枚举属性，不包含原型链可枚举属性
-
+Object.keys(obj) ：遍历可枚举的属性，只包含对象本身可枚举属性，**不包含原型链可枚举属性**。
+静态方法返回一个由给定对象自身的可枚举的字符串键属性名组成的数组 `返回类型 string[]`。
 ```javascript
 let arr = ["a", "b", "c"];
 let obj = { foo: "bar", baz: 42 };
 let ArrayLike = { 0 : "a", 1 : "b", 2 : "c"};
+let miner = Symbol.for("miner");
+
+let tick = {
+    miner: "Sarajevo",
+    year: 1913,
+    king: "波斯尼亚和黑塞哥维"
+}
 
 Object.keys(arr)        // ['0', '1', '2']
 Object.keys(obj)        // ["foo","baz"]
 Object.keys(ArrayLike)  // ['0', '1', '2']
+console.log(Object.keys(tick))  //[ 'miner', 'year', 'king' ]
 ```
 
 #### [2.13 Object.values](#)
@@ -766,9 +775,9 @@ ECMA 在第五版定义了只有内部采用的特性 描述了属性的各种�
 #### [3.1 数据属性](#)
 包含一个数据值的位置，这个位置可以读取 数据属性有四个描述其行为的特性。
 
-1. `[[configurable]]`: **是否能够通过delete 删除属性从而重新定义属性**, 默认值为true defineProperties中默认值为false。
-2. `[[enumerable]]`:  表示能否通过for-in循环返回属性 **默认为true** defineProperties中默认值为false。
-3. `[[writeable]]`: 表示能否修改属性的值 **默认为 true** defineProperties中默认值为false。
+1. `[[configurable]]`: **是否能够通过delete 删除属性从而重新定义属性**, 普通定义属性方式的默认值:**true**, defineProperties中默认值: **false**。
+2. `[[enumerable]]`:  表示能否通过 `for-in` 循环返回属性 **普通定义属性方式的默认值：true** `defineProperties` 中默认值:**false**。
+3. `[[writeable]]`: 表示能否修改属性的值 **默认为 true** ,`defineProperties` 中默认值: **false**。
 4. `[[value]]`: 包含这个属性的数据值，读取属性值的时候 从这个位置读取 写入属性值的 吧新值保存在这个位置。
 
 ```javascript
@@ -931,12 +940,12 @@ console.log(typeof yeardescripter.get); //function
 ### [4. 使用函数创建对象](#)
 以上创建对象的方式 太过于单一，无法提供一个创建对象的模板 还无法实现继承重用效果,怎么实现来 请让我细细道来。
 
-- **谨记：每一个函数本身也是一个对象哦，且函数有一个属性叫prototype指向一个对象，这个对象被称为原型！这个原型对象有一个属性叫constructor指向函数**
+- **谨记**：**每一个函数本身也是一个对象哦，且函数有一个属性叫prototype指向一个对象，这个对象被称为原型！这个原型对象有一个属性叫constructor指向函数**。
 - **必须掌握**：原型模式，其他模式了解知道。
 
 
 #### [4.1 工厂模式](#)
-这是最基本的模式开发人员 发明一种函数 来封装以特定接口创建对象的细节
+这是最基本的模式开发人员 发明一种函数 来封装以特定接口创建对象的细节。
 ```javascript
 function PersonFatory(name = "",age = 0,sex = true,job ="" ){
     var o = new Object();
@@ -958,20 +967,20 @@ console.log('person2:', person2);
  person2: { name: 'Ninchol', age: 25, sex: false, job: 'Coder' }
  */
 ```
-**他解决了创建多个类似对象的问题 但是没有解决对象识别的问题 如何知道一个对象的类型**。
+**工厂模式**：**他解决了创建多个类似对象的问题 但是没有解决对象识别的问题 如何知道一个对象的类型**。
 
 #### [4.2 构造函数](#)
 JS构造函数可以创建特定类型的对象
 * **构造函数没有return**。
-* **直接将属性和方法赋值给this对象**。
+* **直接将属性和方法赋值给this对象**。 
 * **没有显示的创建对象**。
-* 实例化要使用 new 操作符返回的是一个新的的对象。
-* 每个对象都有一个 constructor 属性指向 **构造函数**。
+* 实例化要使用 `new` 操作符返回的是一个新的的对象。
+* 每个对象都有一个 `constructor` 属性指向 **构造函数**。
 
 使用构造函数创建对象所JS所做的五个操作
 * **在内存中创建一个对象**。
 * 这个对象内部的 `[[Prototype]] (__proto__)` 特性被赋值为构造函数的ptototype属性。
-* 构造函数中 this 指向新对象。
+* 构造函数中 `this` 指向新对象。
 * 执行构造函数内部代码，给新对象添加属性。
 * 如果构造函数返回非空对象，那么返回该对象，否则返回刚创建的新对象。
 
@@ -998,7 +1007,7 @@ console.log('person2_:', person2_);
  // 可以检测出来类型
  console.log('person1_ instanceof Person : ', person1_ instanceof Person); //true
 ```
-构造函数的问题- **同一种功能的函数被反复创建**。
+构造函数的问题： **同一种功能的函数被反复创建**。
 
 #### [4.3 原型模式](#)
 我们创建的每个函数都有一个prototype(原型)属性,这个属性是一个指针,指向一个对象,而这个对象的用途是包含由特定类型的所有势力共享的属性和方法。
@@ -1032,31 +1041,41 @@ person1_.SaidHello();
 person2_.SaidHello();
 
 ```
-只要创建一个新函数,就会根据一组特定的规则为该函数创建一个 prototype 属性,该属性指向函数的原型对象,在默认的情况下,所有的原型对象都会自动获得
+只要创建一个新函数,就会根据一组特定的规则为该函数创建一个 prototype 属性,该属性指向函数的原型对象,在默认的情况下,所有的原型对象都会自动获得一个 `constructor`属性，这个属性包含一个指向 prototype属性所在函数的指针每个使用构造函数创建的对象都具有一个属性 `__proto__` 指向构造函数 prototype 指向的 对象！ 可以说是复制其值了！
 
-一个 `constructor`属性这个属性包含一个指向 prototype属性所在函数的指针每个使用构造函数创建的对象都具有一个属性 `__proto__` 指向构造函数 prototype指向的 对象！ 可以说是复制其值了！
-
-Object.getPrototypeOf(obj) 得到一个对象的原型
+`Object.getPrototypeOf(obj)`：得到一个对象的原型
 ```javascript
-function Person(){}
-Person.prototype= {
-    name:"Jxkicker",
+function Person(){
+
+}
+
+Person.prototype = {
+    name:"JxKicker",
     age:29,
     job:"Software Engineer",
+    constructor: Person,
     sayName:function(){
         alert(this.name);
     }
 }
 
-var p1 = new Person();
+let p1 = new Person();
 let pro = Object.getPrototypeOf(p1);
+
 console.log('pro:\n', pro);
+console.log('type:', p1 instanceof Person); //true
+console.log('type:', p1.constructor.name);  //Person
 /*
 pro:
- { name: 'Jxkicker',
+ {
+  name: 'JxKicker',
   age: 29,
   job: 'Software Engineer',
-  sayName: [Function: sayName] }
+  constructor: [Function: Person],
+  sayName: [Function: sayName]
+}
+type: true
+type: Person
 */
 ```
 #### [4.3 寄生构造模式](#)
@@ -1105,20 +1124,20 @@ console.log(myArray.getFirst());
 #### [4.4 稳妥构造函数](#)
 稳妥构造函数模式与前面介绍的两种设计模式具有相似的地方，都是在函数内部定义好对象之后返回该对象来创建实例。然而稳妥构造函数模式的独特之处在于具有以下特点：
 
-* 没有通过对象定义公共属性
-* 在公共方法中不使用this引用对象自身
-* 不使用new操作符调用构造函数
+* 没有通过对象定义公共属性。`缺点，没有支持OOP 的静态功能`。
+* 在公共方法中不使用this引用对象自身。 `致命缺点，此时指向 函数本身`。
+* 不使用new操作符调用构造函数。
 
 ```javascript
 //4.4 稳妥构造函数
 function Person(para_name, para_age, para_job) {
     //创建要返回的对象
-    var o = {};
+    let o = {};
 
     //在这里定义私有属性和方法
-    var name = para_name;
-    var age = para_age;
-    var job = para_job;
+    let name = para_name;
+    let age = para_age;
+    let job = para_job;
 
     o.sayAge = function() {
         console.log(age);
@@ -1131,12 +1150,19 @@ function Person(para_name, para_age, para_job) {
     return o;
 }
 
-var person1 = Person("Nicholas", 29, "Software Engineer");    //创建对象实例
-person1.sayName();    //Nicholas
-person1.name;         //undefined
-person1.sayAge();     // 报错
+let person1 = Person("Nicholas", 29, "Software Engineer");    //创建对象实例
+person1.sayName();               //Nicholas
+console.log(person1.name);       //undefined
+person1.sayAge();                // 29
 
 console.log(person1 instanceof Person); //false
+
+let person2 = Person("Ku ta", 27, "Software Computer");    //创建对象实例
+person2.sayName();               //Ku ta
+console.log(person2.name);       //undefined
+person2.sayAge();                // 27
+
+console.log(person2 instanceof Person); //false
 ```
 
 **问题**: 无法继承，无法判断类型！ instanceof 无法判断，本质上 Object 类型！只是实现了私有属性！
@@ -1145,12 +1171,12 @@ console.log(person1 instanceof Person); //false
 ```javascript
 function Person(para_name, para_age, para_job) {
     //创建要返回的对象
-    var o = {};
+    let o = {};
     o.__proto__ = Person.prototype;
     //在这里定义私有属性和方法
-    var name = para_name;
-    var age = para_age;
-    var job = para_job;
+    let name = para_name;
+    let age = para_age;
+    let job = para_job;
 
     o.sayAge = function() {
         console.log(age);
@@ -1163,7 +1189,7 @@ function Person(para_name, para_age, para_job) {
     return o;
 }
 
-var person1 = Person("Nicholas", 29, "Software Engineer");    //创建对象实例
+let person1 = Person("Nicholas", 29, "Software Engineer");    //创建对象实例
 
 console.log(person1 instanceof Person); //true
 ```
@@ -1172,17 +1198,17 @@ console.log(person1 instanceof Person); //true
 例如属性访问原理，构造函数！！！
 
 #### [5.1 属性访问属性](#)
-当访问一个属性的,它是如何查找值的呢？ 这和静态语言不同 且等我嘻嘻说来
-* 每当读取某个对象的某个属性的时候,都会执行一次搜索,目标是具有给定名称的属性
-  * 1.首先搜索对象实例本身的属性 找到 返回值 找不到 搜索指针指向的原型对象
-  * 2.在原型对象中搜素属性 找到返回 找不到 则继续向上查找 原型的原型
-* 所以 如果原型对象属性 和实例对象的属性 同名的时候 会发生覆盖 并且实例属性的优先级高
+当访问一个属性的,它是如何查找值的呢？ 这和静态语言不同 且等我细细说来。
+* 每当读取某个对象的某个属性的时候,都会执行一次搜索,目标是具有给定名称的属性。
+  * 1.首先搜索对象实例本身的属性 找到 返回值 找不到 搜索指针指向的原型对象。
+  * 2.在原型对象中搜素属性 找到返回 找不到 则继续向上查找 原型的原型。
+* 所以 如果原型对象属性 和实例对象的属性 同名的时候 会发生覆盖 并且实例属性的优先级高。
 
 #### [5.2 基本定理](#)
 * **Function是最顶层的构造方法，所有对象都由Function方法构造，包括Object方法**，Function方法（有些人把这个认为是Function方法的自生性，不用纠结，不管是什么原因，只要记住Function是方法也是对象就行）
 * **所有的方法（就是克隆类）都继承Function.prototype对象（包括Function方法 通过定理1可得）**
 * 不要纠结是先有Object对象，还是先有Function方法，就跟先有鸡还是现有蛋一样，相互依赖，同时诞生
-* 每个对象的_proto_属性（注意不是prototype属性）都指向自己的继承父类，也就是他的克隆类的原型对象，也就是Foo.prototype对象（object对象）
+* 每个对象的`__proto__`属性（注意不是prototype属性）都指向自己的继承父类，也就是他的克隆类的原型对象，也就是Foo.prototype对象（object对象）
 
 ### [6. this 关键字](#)
 JavaScript有一个特殊的关键字this，您可以在方法中使用它来引用当前对象。

@@ -1971,6 +1971,45 @@ function sum(num1, num2) {
 * 函数的参数不能叫 eval 或 arguments；
 * 两个命名参数不能拥有同一个名称。
 
+#### [14.1 prototype](#)
+在 JavaScript 中，只有函数（Function） 拥有一个名为 prototype 的属性。这个 prototype 属性的默认值是在函数创建时自动赋予的，其具体机制如下：
+
+- 默认值是一个对象：当您定义一个函数时（无论是函数声明、函数表达式还是使用 Function 构造函数），JavaScript 引擎会自动为该函数创建一个 prototype 属性。
+
+该对象包含两个主要部分：
+- constructor 属性：这个新创建的对象（即 `prototype` 对象）自身会包含一个 `constructor` 属性，它指向函数本身。
+- `__proto__` (或内部 `[[Prototype]]` 链)：这个 prototype 对象的内部 `[[Prototype]]` 链（通常可通过 `__proto__` 访问）会指向 `Object.prototype`。这意味着这个默认的 prototype 对象继承自 `Object.prototype`，因此它拥有 `Object.prototype` 上的所有方法（如 toString, valueOf 等）。
+
+总结来说，prototype 属性的默认值是一个新创建的普通对象 {}，这个对象具有以下特点：
+
+- 它的 constructor 属性指向拥有它的那个函数。
+- 它的原型（`[[Prototype]]`）是 `Object.prototype`。
+
+```javascriptz
+function MyFunction() {
+    // 函数体
+}
+
+// JavaScript 引擎自动执行了类似下面的操作：
+// MyFunction.prototype = {
+//     constructor: MyFunction
+// };
+// 并且 MyFunction.prototype.__proto__ === Object.prototype
+
+console.log(MyFunction.prototype.constructor.name);
+// MyFunction
+
+console.log(MyFunction.prototype.constructor === MyFunction);
+// true
+
+console.log(MyFunction.prototype.__proto__ === Object.prototype);
+// true
+
+console.log(typeof MyFunction.prototype);
+// "object"
+```
+
+
 -----
 时间: [2024/9/28 第四次 再次修订](#) 
 

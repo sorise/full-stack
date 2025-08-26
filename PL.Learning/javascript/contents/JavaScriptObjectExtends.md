@@ -366,3 +366,78 @@ let Lzm = new Child('李志明', 23, '2016110425');
 
 console.log(Lzm);
 ```
+
+**可以再简洁一些**：将如下注释部分替换为 `Object.setPrototypeOf(Child.prototype, Parent.prototype)`;
+```javascript
+/* Parent继承自 Object */
+function Parent(name = 'null', age = 0){
+    this.name = name;
+    this.age = age;
+}
+
+Parent.prototype.intro = function (lang) {
+    if (lang.trim().toLowerCase() === 'chinese'){
+        return `姓名: ${this.name} 年龄: ${this.age}`
+    }
+    else if (lang.trim().toLowerCase() === 'english'){
+        return `name: ${this.name} age: ${this.age}`
+    }
+}
+
+function Child(name, age, id){
+    /*借用构造函数实现属性继承*/
+    Parent.call(this,name, age);
+    this.id = id;
+}
+
+// let childProto = {};
+// Object.defineProperty(childProto, 'constructor',{
+//     value:Child,
+//     enumerable: false
+// });
+// childProto.__proto__  = Parent.prototype;
+// Child.prototype = childProto;
+
+Object.setPrototypeOf(Child.prototype, Parent.prototype);
+
+/* 定义子类的方法 */
+Child.prototype.getName = function () {
+    return this.name;
+};
+
+
+let father = new Parent("蒋星",27);
+let Lzm = new Child('李志明', 23, '2016110425');
+
+console.log(Lzm);
+console.log(Lzm instanceof Child);  //true
+console.log(Lzm instanceof Parent); //true
+console.log(father instanceof Child); //false
+console.log(father instanceof Parent); //true
+
+console.log(Object.getPrototypeOf(father) === Object.getPrototypeOf(Lzm) ); //false
+console.log(Object.getPrototypeOf(father) === Object.getPrototypeOf(Object.getPrototypeOf(Lzm)) ); //true
+```
+
+这样的继承关系是这样的，非常的简洁和干净。
+```
+构造函数Object [prototype]  ---------------->  原型对象 [属性 constructor]  [属性 __proto__] 
+    ↑                                           ↑    |   
+    |                                           |    |   
+    --------------------------------------------|-----   
+                                                |        
+                                                -------------------------
+                                                                        |
+构造函数Parent [prototype]  -------->  原型对象 [属性 constructor]  [属性 __proto__] 
+    ↑                                  ↑       ↓
+    |                                  |       |
+    -----------------------------------|-------|                    
+                                       |----------------------------|   
+                                                                    |
+Child 构造函数 [属性 prototype]  ------->  原型对象 [constructor]、[属性 __proto__] 
+  |       ↑                                        ↑    ↓   
+  |new    |                                        |    |   
+  |       -----------------------------------------|-----   
+  ↓                                                |        
+Child实例 [属性 __proto__] ------------------------
+```
