@@ -26,19 +26,19 @@
 [**原型链**](https://mdn.org.cn/en-US/docs/Web/JavaScript/Inheritance_and_the_prototype_chain): **构造函数、原型和实例的关系**。
 * 记住凡是对象都具有 `__proto__` 属性指向自己的原型。
 * 每个构造函数都有一个`prototype`指向一个原型对象，原型有一个属性 `constructor` 指回构造函数，而实例有一个内部指针 `__proto__` 指向原型。
-* 而原型本身又是一个对象，他也有自己的 `__proto__` 属性。这个原型本身有一个内部指针指向另一个原型，相应地另一个原型也有一个指针指向另一个构造函
-  数。
+* 而原型本身又是一个对象，他也有自己的 `__proto__` 属性。这个原型本身有一个内部指针指向另一个原型，相应地另一个原型也有一个指针指向另一个构造函数。
+
 ```
-                                                另一个原型对象 [属性 constructor]、[属性 __proto__] 
-                                                      ↑
-                --------------------------------------|                  
-                |
-  构造函数 [属性 prototype]  ---------------->  原型对象 [属性 constructor]、[属性 __proto__] 
-        ↑                                           ↑    |   
-        |                                           |    |   
-        --------------------------------------------|-----   
-                                                    |        
-   实例 [属性 __proto__] -----------------------------
+                                       另一个原型对象 [属性 constructor]、[属性 __proto__] 
+                                                  ↑
+            --------------------------------------|                  
+            |
+构造函数 [属性 prototype]  ---------------->  原型对象 [属性 constructor]、[属性 __proto__] 
+    ↑                                           ↑    |   
+    |                                           |    |   
+    --------------------------------------------|-----   
+                                                |        
+实例 [属性 __proto__] -----------------------------
 ```
 
 ```javascript
@@ -46,28 +46,29 @@
 ```
 
 #### [1.2 一个经典的原型链继承](#)
-
+利用 prototype 来实现继承。
 ```javascript
+/* Parent继承自 Object */
 "use strict";
 
 function Parent(name = 'null', age = 0){
-  this.name = name;
-  this.age = age;
+    this.name = name;
+    this.age = age;
 }
 
 Parent.prototype.sayHello = function(_name){
-  console.log(`hello,${_name} ,my name is ${this.name}`);
+    console.log(`hello,${_name} ,my name is ${this.name}`);
 }
 
 function Child(id){
-  this.id = id;
-}
-
-Child.prototype.showID = function(){
-  console.log(`showID,${this.id}`);
+    this.id = id;
 }
 
 Child.prototype = new Parent('jxkicker', 25);
+
+Child.prototype.showID = function(){
+    console.log(`showID,${this.id}`);
+}
 
 let student = new Child('2016110418');
 
@@ -75,9 +76,10 @@ console.log(student);
 console.log(student instanceof Parent); //true
 console.log(student instanceof Child); //true
 console.log(student.constructor); //Parent
+
+student.showID(); //showID,2016110418
 ```
-值得注意的点：constructor 属性的问题，由于Child构造函数的原型上面没有定义 constructor 属性, constructor 在 Child的原型的原型上面 也就是 Parent。
-也就是这条原型链的构造函数只有一个 Parent。其他子类型虽然有构造函数但是并不指向他们自己的构造函数
+值得注意的点：constructor 属性的问题，由于Child构造函数的原型上面没有定义 constructor 属性, constructor 在 Child的原型的原型上面 也就是 Parent。**也就是这条原型链的构造函数只有一个 Parent。其他子类型虽然有构造函数但是并不指向他们自己的构造函数** 。
 
 **默认原型** : 任何函数的prototype 指向默认都是指向一个Object 实例的。当然Object类型本身并没有属性，只有方法，但也有一个 Object Prototype。方法都定义在Object原型上面。
 
@@ -230,7 +232,7 @@ console.log(person);
 ```
 
 ### [5. 寄生式继承](#)
-寄生式继承是与原型式继承紧密相关第一种思路,他利用了工厂模式和原型式继承模式。
+寄生式继承是与原型式继承紧密相关第一种思路,他利用了工厂模式和原型式继承模式， **评价：垃圾玩意儿**。
 
 ```javascript
 function createAnthor(original){
@@ -260,7 +262,7 @@ var obj = createAnthor(person);
 ```
 
 ### [6. 寄生组合式继承](#)
-组合继承,非常不错 很常用，**但是也有一些缺点多次调用构造函**, 但是这也是最实用的继承方法了。
+组合继承,非常不错 很常用，**但是也有一些缺点多次调用构造函数**, 但是这也是最实用的继承方法了。
 
 1. 多次调用构造函数 会两次调用父类的构造函数 
    * 子类构造函数内部
@@ -421,12 +423,12 @@ console.log(Object.getPrototypeOf(father) === Object.getPrototypeOf(Object.getPr
 
 这样的继承关系是这样的，非常的简洁和干净。
 ```
-构造函数Object [prototype]  ---------------->  原型对象 [属性 constructor]  [属性 __proto__] 
-    ↑                                           ↑    |   
-    |                                           |    |   
-    --------------------------------------------|-----   
-                                                |        
-                                                -------------------------
+构造函数Object [prototype]  -------->  原型对象 [属性 constructor]  [属性 __proto__] 
+    ↑                                     ↑    ↓   
+    |                                     |    |   
+    ----------------------------- --------|-----   
+                                          |        
+                                          -------------------------------
                                                                         |
 构造函数Parent [prototype]  -------->  原型对象 [属性 constructor]  [属性 __proto__] 
     ↑                                  ↑       ↓

@@ -4,14 +4,12 @@
 -----
 - [1. 类定义](#1-类定义)
 - [2. 继承](#2-继承)
+- [3. 访问性之私有化](#3-访问性之私有化)
 
 -----
 
 ### [1. 类定义](#)
-[Mdn 类 文档](https://mdn.org.cn/en-US/docs/Web/JavaScript/Reference/Classes)，类是创建对象的模板。它们
-将数据与处理这些数据的代码封装在一起。JS 中的类构建在 原型 之上，但也具有一些类独有的语法和语义。
-
-与函数类型相似，定义类也有两种主要方式：类声明和类表达式。这两种方式都使用 class 关键字加大括号：
+[类](https://mdn.org.cn/en-US/docs/Web/JavaScript/Reference/Classes)，它是创建对象的模板。它们将数据与处理这些数据的代码封装在一起。JS 中的类构建在原型之上，但也具有一些类独有的语法和语义。类实际上是“特殊的 函数”，就像你可以定义函数表达式和函数声明一样，类也可以通过两种方式定义：`类表达式`或`类声明`，这两种方式都使用 `class` 关键字加大括号。
 ```javascript
 // 类声明
 class Person {}
@@ -22,15 +20,23 @@ const Animal = class {};
 
 类的体是位于花括号 `{}` 中的部分。在这里，您定义类成员，例如方法或构造函数。
 
-类的体在 严格模式 中执行，即使没有 "use strict" 指令。
+类的体在 严格模式 中执行，即使没有 `"use strict"` 指令。
 
 类元素可以由三个方面来描述
 * **类型**：getter、setter、方法或字段
 * **位置**：静态或实例
 * **可见性**：公共或私有
 
+也可以详细一些划分为：
+- **constructor** 构造函数
+- **私有属性** 字段、getter、setter
+- **公共类字段**  
+- **静态** 为类定义静态方法或字段，或静态初始化块
+- **extends、super**
+
+
 #### [1.1 类的成员](#)
-类可以包含**构造函数方法**、**实例方法**、**获取函数**、**设置函数**和 **静态类方法**，但这些都不是必需的,空的类定义照样有效。
+类可以包含**构造函数方法**、**实例方法**、**get、set属性**、**字段**、**私有属性**和 **静态类方法、字段**，但这些都不是必需的,空的类定义照样有效。
 
 ```javascript
 class Point {
@@ -59,7 +65,7 @@ console.log(Point.distance(a, b));
 ```
 
 #### [1.2 类构造函数](#)
-constructor 关键字用于在类定义块内部创建类的构造函数。方法名 constructor 会告诉解释器
+`constructor` 关键字用于在类定义块内部创建类的构造函数。方法名 constructor 会告诉解释器
 在使用 new 操作符创建类的新实例时，应该调用这个函数。构造函数的定义不是必需的，不定义构造函数相当于将构造函数定义为**空函数**。
 
 > 在一个类中只能有一个名为“constructor”的特殊方法 - 如果类包含多个 constructor 方法，则会抛出 SyntaxError。
@@ -68,11 +74,11 @@ constructor 关键字用于在类定义块内部创建类的构造函数。方�
 是，JavaScript 解释器知道使用 new 和类意味着应该使用 constructor 函数进行实例化。
 使用 new 调用类的构造函数会执行如下操作。
 
-(1) 在内存中创建一个新对象。  
-(2) 这个新对象内部的 `[[Prototype]]` 指针被赋值为构造函数的 prototype 属性。  
-(3) 构造函数内部的 this 被赋值为这个新对象（即 this 指向新对象）。  
-(4) 执行构造函数内部的代码（给新对象添加属性）。  
-(5) 如果构造函数返回非空对象，则返回该对象；否则，返回刚创建的新对象。  
+1. 在内存中创建一个新对象。  
+2. 这个新对象内部的 `[[Prototype]]` 指针被赋值为构造函数的 `prototype` 属性。  
+3. 构造函数内部的 `this` 被赋值为这个新对象（即 `this` 指向新对象）。  
+4. 执行构造函数内部的代码（给新对象添加属性）。  
+5. 如果构造函数返回非空对象，则返回该对象；否则，返回刚创建的新对象。  
 
 ```javascript
 class Person {
@@ -83,7 +89,7 @@ class Person {
     }
 }
 ```
-构造函数可以使用 [super](https://mdn.org.cn/en-US/docs/Web/JavaScript/Reference/Operators/super) 关键字调用超类的构造函数， 可以在构造函数中创建实例属性。
+构造函数可以使用 [super](https://mdn.org.cn/en-US/docs/Web/JavaScript/Reference/Operators/super) 关键字调用超类的构造函数，可以在构造函数中创建实例属性。
 ```javascript
 class Foo {
   constructor(name) {
@@ -148,10 +154,19 @@ let foo = createInstance(classList[0], 3141); // instance 3141
 // 因为是一个类表达式，所以类名是可选的
 let p = new class Foo {
     constructor(x) {
-     console.log(x);
-     }
+        console.log(x);
+        this.tick = x;
+    }
 }('bar'); // bar
+
+
 console.log(p); // Foo {} 
+
+/*
+bar
+Foo { tick: 'bar' }
+*/
+
 ```
 #### [1.4 实例成员](#)
 每次通过new调用类标识符时，都会执行类构造函数。在这个函数内部，可以为新创建的实例（this）添加“自有”属性。
@@ -484,6 +499,7 @@ obj.staticMethod(); // TypeError: obj.staticMethod is not a function
 使用场景
 * 普通方法：当你需要一个方法来操作对象的状态时，应该使用普通方法。这些方法通常依赖于对象的属性或者其他方法的结果。
 * 静态方法：当你有一个方法，它的逻辑并不依赖于任何特定的实例，或者你想为其他实例提供一个工具方法时，可以使用静态方法。例如，一个用于创建类的新实例的工厂方法，或者是一个用来验证某些输入是否符合预期格式的辅助方法。
+
 ### [2. 继承](#)
 虽然类继承使用的是新语法，但背后依旧使用的是原型链。
 
@@ -760,3 +776,46 @@ b.baz(); // baz
 > 所周知的软件设计原则：“组合胜过继承（composition over inheritance）。”这个设计原则被
 > 很多人遵循，在代码设计中能提供极大的灵活性。
  
+### [3. 访问性之私有化](#)
+[私有属性](https://mdn.org.cn/en-US/docs/Web/JavaScript/Reference/Classes/Private_properties) 是常规类属性（包括类字段、类方法等）的对应项，这些属性是公开的。私有属性通过使用哈希 # 前缀创建，并且不能在类外部合法地引用。这些类属性的隐私封装由 JavaScript 本身强制执行。访问私有属性的唯一方法是通过点表示法，并且只能在定义私有属性的类中执行此操作。
+
+语法
+
+
+```javascript
+class ClassWithPrivate {
+  #privateField;
+  #privateFieldWithInitializer = 42;
+
+  #privateMethod() {
+    // …
+  }
+
+  static #privateStaticField;
+  static #privateStaticFieldWithInitializer = 42;
+
+  static #privateStaticMethod() {
+    // …
+  }
+}
+```
+
+还有一些额外的语法限制
+
+在类中声明的所有私有标识符必须是唯一的。命名空间在静态属性和实例属性之间共享。唯一的例外是当两个声明定义 getter-setter 对时。
+私有标识符不能是 #constructor。
+
+大多数类属性都有其私有对应项
+
+- 私有字段
+- 私有方法
+- 私有静态字段
+- 私有静态方法
+- 私有 getter
+- 私有 setter
+- 私有静态 getter
+- 私有静态 setter
+
+这些特性统称为私有属性。但是，构造函数在 JavaScript 中不能是私有的。为了防止在类外部构造类，您必须使用私有标志。
+
+私有属性用 `#` 名称（发音为“哈希名称”）声明，这些名称是带有 # 前缀的标识符。哈希前缀是属性名称的固有部分——您可以将其与旧的下划线前缀约定 _privateField 联系起来——但它不是普通的字符串属性，因此您不能使用方括号表示法动态访问它。
