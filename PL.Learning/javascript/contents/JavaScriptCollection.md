@@ -56,7 +56,7 @@ console.log(many);
 ```javascript
 let colors = new Array(); // 创建一个空数组
 let colors = new Array(3);   // 创建一个包含 3 个元素的数组
-let names = new Array("Greg");  // 创建一个只包含一个元素，即字符串"Greg"的数组
+let names  = new Array("Greg");  // 创建一个只包含一个元素，即字符串"Greg"的数组
 ```
 另一种创建数组的方式是使用数组字面量（array literal）表示法。数组字面量是在中括号中包含以逗号分隔的元素列表，如下面的例子所示：
 
@@ -486,14 +486,14 @@ find()和 findIndex()方法使用了断言函数。这两个方法都从数组�
 
 ```javascript
 const people = [
- {
- name: "Matt",
- age: 27
- },
- {
- name: "Nicholas",
- age: 29
- }
+  {
+    name: "Matt",
+    age: 27
+  },
+  {
+    name: "Nicholas",
+    age: 29
+  }
 ];
 console.log(people.find((element, index, array) => element.age < 28));
 // {name: "Matt", age: 27}
@@ -505,10 +505,10 @@ console.log(people.findIndex((element, index, array) => element.age < 28));
 const evens = [2, 4, 6];
 // 找到匹配后，永远不会检查数组的最后一个元素
 evens.find((element, index, array) => {
-console.log(element);
-console.log(index);
-console.log(array);
-return element === 4;
+  console.log(element);
+  console.log(index);
+  console.log(array);
+  return element === 4;
 });
 // 2
 // 0
@@ -530,7 +530,7 @@ ECMAScript 为数组定义了 5 个迭代方法。每个方法接收两个参数
 * some(callbackFn, thisArg)：对数组每一项都运行传入的函数，如果有一项函数返回 true，则这个方法返回 true。
 
 
-**callbackFn(element, index, array) -> bool**;
+**callbackFn(element, index, array) -> bool|value**;
   * element 数组中当前正在处理的元素。
   * index 正在处理的元素在数组中的索引。
   * array 调用了 every() 的数组本身。

@@ -617,8 +617,7 @@ console.log(new Van()); // {}
 ```
 
 #### [2.2 抽象基类](#)
-有时候可能需要定义这样一个类，它可供其他类继承，但本身不会被实例化。虽然 ECMAScript 没有专门支持这种类的语法 ，但通过 new.target 也很容易实现。new.target 保存通过 new 关键字调
-用的类或函数。通过在实例化时检测 new.target 是不是抽象基类，可以阻止对抽象基类的实例化：
+有时候可能需要定义这样一个类，它可供其他类继承，但本身不会被实例化。虽然 ECMAScript 没有专门支持这种类的语法 ，但通过 new.target 也很容易实现。`new.target` **保存通过 new 关键字调用的类或函数**。通过在实例化时检测 new.target 是不是抽象基类，可以阻止对抽象基类的实例化：
 
 ```javascript
 // 抽象基类
@@ -655,10 +654,15 @@ class Vehicle {
 class Bus extends Vehicle {
     foo() {}
 }
+
+try{
 // 派生类
-class Van extends Vehicle {}
-new Bus(); // success!
-new Van(); // Error: Inheriting class must define foo()
+    class Van extends Vehicle {}
+    new Bus(); // success!
+    new Van(); 
+}catch(e){
+    console.log(e.message); //Inheriting class must define foo()
+}
 ```
 
 #### [2.3 继承内置类型](#)
@@ -698,22 +702,38 @@ console.log(a2 instanceof SuperArray); // false
 #### [2.4 类混入](#)
 把不同类的行为集中到一个类是一种常见的 JavaScript 模式。虽然 ES6 没有显式支持多类继承，但通过现有特性可以轻松地模拟这种行为。
 
-> Object.assign()方法是为了混入对象行为而设计的。只有在需要混入类的行为
+> `Object.assign()` 方法是为了混入对象行为而设计的。只有在需要混入类的行为
 > 时才有必要自己实现混入表达式。如果只是需要混入多个对象的属性，那么使用
-> Object.assign()就可以了。
+> `Object.assign()` 就可以了。
 
 在下面的代码片段中，extends 关键字后面是一个 JavaScript 表达式。任何可以解析为一个类或一
 个构造函数的表达式都是有效的。这个表达式会在求值类定义时被求值：
 ```javascript
-class Vehicle {}
-
-function getParentClass() {
-    console.log('evaluated expression');
-    return Vehicle;
+class Parent {
+    className = 'parent';
 }
 
-class Bus extends getParentClass() {}
-// 可求值的表达式
+function expression() {
+    return Parent;
+}
+
+class Son extends expression() {
+    constructor(id, name, age) {
+        super();
+        this.id = id;
+        this.name = name;
+        this.age = age;
+    }
+
+    //格式化输出
+    toString() {
+        return `{ id: ${this.id}, age: ${this.age}, name: ${this.name} }`;
+    }
+}
+
+let me = new Son("2025","JX", 27);
+
+console.log(me.toString());
 ```
 混入模式可以通过在一个表达式中连缀多个混入元素来实现，这个表达式最终会解析为一个可以被继承的类。
 
@@ -777,7 +797,7 @@ b.baz(); // baz
 > 很多人遵循，在代码设计中能提供极大的灵活性。
  
 ### [3. 访问性之私有化](#)
-[私有属性](https://mdn.org.cn/en-US/docs/Web/JavaScript/Reference/Classes/Private_properties) 是常规类属性（包括类字段、类方法等）的对应项，这些属性是公开的。私有属性通过使用哈希 # 前缀创建，并且不能在类外部合法地引用。这些类属性的隐私封装由 JavaScript 本身强制执行。访问私有属性的唯一方法是通过点表示法，并且只能在定义私有属性的类中执行此操作。
+[私有属性](https://mdn.org.cn/en-US/docs/Web/JavaScript/Reference/Classes/Private_properties) 是常规类属性（包括类字段、类方法等）的对应项，这些属性是公开的。私有属性通过使用哈希 `#` 前缀创建，并且不能在类外部合法地引用。这些类属性的隐私封装由 JavaScript 本身强制执行。访问私有属性的唯一方法是通过点表示法，并且只能在定义私有属性的类中执行此操作。
 
 语法
 
