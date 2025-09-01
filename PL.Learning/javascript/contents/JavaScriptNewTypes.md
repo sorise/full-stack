@@ -4,6 +4,8 @@
 ---
 
 - [1. BigInt 大整数类型](#1-bigint-大整数类型)
+- [2. WeakRef 弱引用](#2-weakref-弱引用)
+- [3. FinalizationRegistry](#3-finalizationregistry)
 
 ----
 ### [1. BigInt 大整数类型](#)
@@ -147,3 +149,130 @@ BigInt.asIntN(64, max); // 9223372036854775807n
 BigInt.asIntN(64, max + 1n); // -9223372036854775808n
 // negative because the 64th bit of 2^63 is 1
 ```
+
+
+### [2. WeakRef 弱引用](#)
+[WeakRef](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/WeakRef) 对象允许你保留对另一个对象的弱引用，但不会阻止垃圾回收（GC）清理被弱引用的对象。
+
+> WeakRef 对象包含对对象的弱引用，这个弱引用被称为该 WeakRef 对象的 target 或者是 referent。对象的弱引用是指该引用不会阻止 GC 回收这个对象。而与此相反的，一个普通的引用（或者说强引用）会将与之对应的对象保存在内存中。只有当该对象没有任何的强引用时，JavaScript 引擎 GC 才会销毁该对象并且回收该对象所占的内存空间。如果上述情况发生了，那么你就无法通过任何的弱引用来获取该对象。
+
+
+`WeakRef.prototype.deref()`  deref方法返回WeakRef 实例的目标对象，如果目标对象已被垃圾收集，则返回undefined 。
+
+```javascript
+const tick = () => {
+  // Get the element from the weak reference, if it still exists
+  const element = this.ref.deref();
+  if (element) {
+    element.textContent = ++this.count;
+  } else {
+    // The element doesn't exist anymore
+    console.log("The element is gone.");
+    this.stop();
+    this.ref = null;
+  }
+};
+```
+例子演示了在一个 DOM 元素中启动一个计数器，当这个元素不存在时停止：
+```javascript
+class Counter {
+  constructor(element) {
+    // Remember a weak reference to the DOM element
+    this.ref = new WeakRef(element);
+    this.start();
+  }
+
+  start() {
+    if (this.timer) {
+      return;
+    }
+
+    this.count = 0;
+
+    const tick = () => {
+      // Get the element from the weak reference, if it still exists
+      const element = this.ref.deref();
+      if (element) {
+        element.textContent = ++this.count;
+      } else {
+        // The element doesn't exist anymore
+        console.log("The element is gone.");
+        this.stop();
+        this.ref = null;
+      }
+    };
+
+    tick();
+    this.timer = setInterval(tick, 1000);
+  }
+
+  stop() {
+    if (this.timer) {
+      clearInterval(this.timer);
+      this.timer = 0;
+    }
+  }
+}
+
+const counter = new Counter(document.getElementById("counter"));
+counter.start();
+setTimeout(() => {
+  document.getElementById("counter").remove();
+}, 5000);
+```
+
+
+### [3. FinalizationRegistry](#)
+FinalizationRegistry 是 ECMAScript 2021（ES12）引入的新特性。
+
+一句话来概括就是提供了一种在对象被垃圾回收时执行清理操作（回调函数）的机制，有两个 API，来看一段使用的示例。
+
+```javascript
+const finalRegistry = new FinalizationRegistry((value) => {
+  console.log(
+    "对象被垃圾回收时触发，value 为 register 方法的第二个参数，不传的话为 undefined",
+    value
+  );
+});
+
+let a = { name: "a" };
+let b = { age: 18 };
+let c = { hobby: "game" };
+
+finalRegistry.register(a); //注册对象
+finalRegistry.register(b, "this is b"); // 第二个参数会被当成回调函数的参数
+finalRegistry.register(c, "this is c", c); // 第三个参数用于取消监听
+
+a = null;
+// 打印 undefined
+b = null;
+// 打印 this is b
+
+// 取消注册回调函数
+finalRegistry.unregister(c);
+
+// 不会打印
+c = null;
+```
+
+#### [3.1 register](#)
+FinalizationRegistry 实例的 register() 方法会将一个值注册到此 FinalizationRegistry 中，以便在该值被垃圾回收时，可能会调用该 registry 的回调函数。
+
+```javascript
+register(target, heldValue)
+register(target, heldValue, unregisterToken)
+```
+
+接受三个参数
+- `target`：必传，监听的对象
+- `heldValue`：必传，触发回调函数的时候会将此值传递过去（但是其实也可以不传，默认就是 undefined，不知道为什么 MDN 上标记为必传 🤷）
+- `unregisterToken`：如果想使用 unregister 方法去取消监听回收事件的话，就传递第三个参数，FinalizationRegistry 会保持对他的弱引用，通常使用目标值本身作为注销令牌
+
+#### [3.2 unregister](#)
+接受一个参数，取消监听，FinalizationRegistry 实例的 unregister() 方法会从此 FinalizationRegistry 中注销一个目标值。
+
+```javascript
+unregister(unregisterToken)
+```
+
+- unregisterToken： 就是 register 的第三个参数即可
