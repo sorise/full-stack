@@ -18,7 +18,7 @@ JavaScript/ECMAScript（JS）是一种具有函数优先特性的轻量级、解
 - [JavaScript 旧版继承](./contents/JavaScriptObjectExtends.md) 重点是原型链继承、借用构造函数继承、自悟的完美继承方式。
 - [JavaScript 新版继承](./contents/JavaScriptClass.md) 新版继承extend、super。
 - [JavaScript 基本集合类型](./contents/JavaScriptCollection.md) 包括数组（Array）、对象（Object）、Map、WeakMap、 和 Set、WeakSet。
-- [JavaScript 新类型](./contents/JavaScriptNewTypes.md) ES6之后的新增类型，BigInt。
+- [JavaScript 新类型](./contents/JavaScriptNewTypes.md) ES6之后的新增类型，BigInt、WeakRef、FinalizationRegistry。
 - [JavaScript 函数](./contents/JavaScriptFunction.md) 函数、参数、箭头函数、闭包、bind、call、apply、new.target
 - [JavaScript ES6+ 解构赋值、扩展运算符](./contents/JavaScriptES6PlusDesc.md) 解构赋值及其应用、指数运算符、扩展运算符、`?.`、`??`。
 - [JavaScript 迭代器与生成器](./contents/JavaScriptIterators.md) 迭代器提供了一种访问集合元素的标准方式，而生成器是一种特殊的生成迭代器的函数。
