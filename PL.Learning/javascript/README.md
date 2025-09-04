@@ -44,4 +44,4 @@ JavaScript/ECMAScript（JS）是一种具有函数优先特性的轻量级、解
 - [WebGL 教程](#)
 
 ### Links
-- [《JavaScript高级程序设计》（第4版）](https://nonfan.github.io/javascript-docs/)
+- [《JavaScript高级程序设计》（第4版）](https://nonfan.github.io/javascript-docs/)、[现代 JavaScript 教程 javascript.info](https://zh.javascript.info/)
