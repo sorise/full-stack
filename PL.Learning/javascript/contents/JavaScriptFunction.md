@@ -165,8 +165,8 @@ let sum = function(num1, num2) {
 ```
 
 ### [2. 箭头函数](#)
-ECMAScript 6 新增了使用胖箭头（`=>`）语法定义函数表达式的能力。很大程度上，箭头函数实例
-化的函数对象与正式的函数表达式创建的函数对象行为是相同的。任何可以使用函数表达式的地方，都可以使用箭头函数：
+ECMAScript 6 新增了使用胖箭头（`=>`）语法定义函数表达式的能力。很大程度上，箭头函数实例化的函数对象与正式的函数表达式创建的函数对象行为是相同的。
+任何可以使用函数表达式的地方，都可以使用箭头函数：
 
 ```javascript
 let arrowSum = (a, b) => {
@@ -533,12 +533,22 @@ function inner() {
 }
 outer();
 //[Function: outer]
+
+function factorial(num) {
+    if(num <= 1){
+        return 1
+    }else {
+        return num * arguments.callee(num - 1)
+    }
+}
 ```
 在严格模式下访问 arguments.callee 会报错。ECMAScript 5 也定义了 arguments.caller，但
 在严格模式下访问它会报错，在非严格模式下则始终是 undefined。
 
 这是为了分清 arguments.caller和函数的 caller 而故意为之的。而作为对这门语言的安全防护，这些改动也让第三方代码无法检测同
 一上下文中运行的其他代码。 严格模式下还有一个限制，就是不能给函数的 caller 属性赋值，否则会导致错误。
+
+**在es5.0 的标准模式下不能用callee 和 caller**
 
 #### [5.4 new.target](#)
 ECMAScript 中的函数始终可以作为构造函数实例化一个新对象，也可以作为普通函数被调用。
