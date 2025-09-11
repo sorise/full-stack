@@ -237,15 +237,29 @@ obj.getName();
 
 **箭头函数中的 this** 箭头函数并没有自己的 this 绑定，它会从外围的词法环境捕获 this 值，也就是所谓的“词法 this”。
 ```javascript
-var obj = {
+import Staff from './entities/staff.js';
+
+let me = new Staff("2016110418", "lzm", 27);
+
+var obj2 = {
+    name: "example",
+    getName: function() {
+        (() => {
+            console.log(this.name); // example this 为 obj2
+        })()
+    }
+};
+
+obj2.getName(); // example
+
+var obj3 = {
     name: "example",
     getName: () => {
         console.log(this.name); // 输出 "undefined" 在浏览器中或 "global" 在 Node.js 中
     }
 };
 
-obj.getName(); // 因为箭头函数没有自己的 this，这里的 this 是全局对象
-
+obj3.getName(); // 因为箭头函数没有自己的 this，这里的 this 是全局对象
 
 class pair{
     constructor(_key, _value){
@@ -566,14 +580,13 @@ King(); // Error: King must be instantiated using "new"
 ```
 
 ### [6. 函数属性与方法](#)
-前面提到过，ECMAScript 中的函数是对象，因此有属性和方法。每个函数都有两个属性：length
+前面提到过，**ECMAScript** 中的函数是对象，因此有属性和方法。每个函数都有两个属性：length
 和 prototype。
 
-* length 属性保存函数定义的命名参数的个数。
-* prototype **指向原型**，是保存引用类型所有实例方法的地方，这意味着toString()、valueOf()等方法实际上都保存在 prototype 上，进而由所有实
-例共享。**prototype 属性是不可枚举的，因此使用 for-in 循环不会返回这个属性**。
+* **length** 属性保存函数定义的命名参数的个数。
+* **prototype** **指向原型**，是保存引用类型所有实例方法的地方，这意味着 `toString()`、`valueOf()` 等方法实际上都保存在 prototype 上，进而由所有实例共享。**prototype 属性是不可枚举的，因此使用 for-in 循环不会返回这个属性**。
 
-bind、call和apply都是JavaScript中用于处理函数调用的方法。它们的作用都是相同的而主要区别在于它们如何设置和传递函数的上下文以及参数。
+`bind`、`call` 和 `apply` 都是JavaScript中用于处理函数调用的方法。它们的作用都是相同的而主要区别在于它们如何设置和传递函数的上下文以及参数。
 
 #### [6.1 bind](#)
 bind会创建一个新的函数，并将原始函数绑定到指定的上下文,以后可以进行复用。这意味着无论在什么时候调用这个新函数，它都会使用绑定的上下文。
@@ -652,7 +665,10 @@ function factorial(num) {
 
 #### [7.1 尾调用优化](#)
 ECMAScript 6 规范新增了一项内存管理优化机制，让 JavaScript 引擎在满足条件时可以重用栈帧。
-具体来说，这项优化非常适合“尾调用”，**即外部函数的返回值是一个内部函数的返回值**。
+具体来说，这项优化非常适合“尾调用”， 主要用于避免递归调用时栈溢出，并提升执行效率。
+
+尾调用是指：**一个函数的最后一步操作是调用另一个函数（或自己），并且立刻返回其结果，不再执行其他操作**。
+
 
 ```javascript
 function outerFunction() {
@@ -679,6 +695,47 @@ function fibImpl(a, b, n) {
     }
     return fibImpl(b, a + b, n - 1);
 } 
+```
+
+#### [7.2 命名函数表达式](#)
+严格模式下是无法使用 `arguments.callee` , 因此可以使用命名函数表达式达到目的：
+
+一个命名函数表达式是指：将一个带有名字的函数赋值给一个变量的表达式。 特性：函数名只在函数体内有效（作用域限制）
+```javascript
+const 变量名 = function 函数名() {
+    // 函数体
+};
+```
+例子1：
+```javascript
+const factorial = (function f(num) {
+    if (num <= 1) {
+        return 1;
+    } else {
+        return num * f(num - 1);
+    }
+});
+
+let r1 = factorial(5);
+
+let f2 = factorial;
+
+let r2 = factorial(5);
+
+console.log(r1 === r2);
+```
+例子2：
+```javascript
+//函数名 fact 是块级作用域的，仅在函数体内可见。
+const factorial = function fact(n) {
+    if (n <= 1) return 1;
+    return n * fact(n - 1); // ✅ 可以在内部使用 `fact` 自调用
+};
+
+console.log(factorial(5)); // 120
+
+// ❌ 外部不能访问 `fact`
+console.log(fact); // ReferenceError: fact is not defined
 ```
 
 ### [8. 闭包](#)
