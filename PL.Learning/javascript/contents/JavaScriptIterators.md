@@ -239,26 +239,28 @@ class Counter {
 return()方法必须返回一个有效的 IteratorResult 对象。简单情况下，可以只返回{ done: true }。**因为这个返回值只会用在生成器的上下文中**。
 
 ```javascript
+class Counter {
+    // Counter 的实例应该迭代 limit 次
     constructor(limit) {
-    this.limit = limit;
-}
-[Symbol.iterator]() {
-    let count = 1,
-        limit = this.limit;
-    return {
-        next() {
-            if (count <= limit) {
-                return { done: false, value: count++ };
-            } else {
+        this.limit = limit;
+    }
+    [Symbol.iterator]() {
+        let count = 1,
+            limit = this.limit;
+        return {
+            next() {
+                if (count <= limit) {
+                    return { done: false, value: count++ };
+                } else {
+                    return { done: true };
+                }
+            },
+            return() {
+                console.log('Exiting early');
                 return { done: true };
             }
-        },
-        return() {
-            console.log('Exiting early');
-            return { done: true };
-        }
-    };
-}
+        };
+    }
 }
 
 let counter = new Counter(5);
@@ -287,7 +289,7 @@ try {
 
 let counter3 = new Counter(5);
 let [a, b] = counter3;
-// Exiting early 
+// Exiting early
 ```
 因为 `return()` 方法是可选的，所以并非所有迭代器都是可关闭的。要知道某个迭代器是否可关闭，
 可以测试这个迭代器实例的 return 属性是不是函数对象。不过，仅仅给一个不可关闭的迭代器增加这

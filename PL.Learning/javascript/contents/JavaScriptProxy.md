@@ -11,9 +11,10 @@
 ----
 
 ### [1. 代理 Proxy](#)
-[Proxy](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Proxy) 对象用于定
-义自定义行为（也称为**拦截器或陷阱**）以处理对其他对象的基本操作（如属性查找、赋值、枚举、函数调用等）。
+[Proxy](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Proxy) 对象用于定义自定义行为（也称为**拦截器或陷阱**）以处理对其他对象的基本操作（如属性查找、赋值、枚举、函数调用等）。
 通过使用new Proxy()构造函数，可以创建一个代理对象，该对象可以拦截对目标对象的各种操作，并允许你定义如何响应这些操作。
+
+> 代理和反射提供了**拦截**并向基本操作**嵌入**默认行为的能力。
 
 ```javascript
 const p = new Proxy(target, handler)
