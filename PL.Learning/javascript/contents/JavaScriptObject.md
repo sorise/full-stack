@@ -172,7 +172,7 @@ console.log(Person.prototype.isPrototypeOf(p1)); //true
 | Object.seal()                     |  静态方法密封一个对象。|
 | Object.isSealed()                 |  静态方法用于判断一个对象是否密封。|
 | Object.hasOwn()                     |  如果指定对象具有指示的属性作为其自身属性，则返回 true。如果属性是继承的，或者不存在，则该方法返回 false。|
-
+|Object.preventExtensions()| 让一个对象永远不能再添加新的属性。 |
 
 #### [2.1 Object.create](#)
 该方法用于创建新对象。第一个参数用于指定新建对象的原型对象；第二个参数是对象的属性描述对象，方法返回新建的对象。
@@ -765,6 +765,58 @@ console.log(Object.hasOwn(object1, 'undeclaredPropertyValue'));
 // Expected output: false
 ```
 
+#### [2.22 Object.preventExtensions()](#)
+Object.preventExtensions() 是 JavaScript 中一个用于限制对象扩展性的内置方法。
+
+```javascript
+// 1. 创建一个普通对象
+const obj = { name: "Alice" };
+
+// 2. 阻止该对象扩展
+Object.preventExtensions(obj);
+
+// 3. 尝试添加新属性 - 会失败（在严格模式下会抛出错误）
+obj.age = 30; // 静默失败（非严格模式）
+console.log(obj.age); // undefined
+
+// 严格模式下会抛出 TypeError
+function addPropertyStrict() {
+    "use strict";
+    obj.city = "Beijing"; // TypeError: Cannot add property city, object is not extensible
+}
+// addPropertyStrict(); // 取消注释会抛出错误
+
+// 4. 修改已有属性 - 仍然可以
+obj.name = "Bob";
+console.log(obj.name); // "Bob"
+
+// 5. 删除已有属性 - 仍然可以（除非属性本身不可配置）
+delete obj.name;
+console.log(obj.name); // undefined
+
+// 6. 检查对象是否可扩展
+console.log(Object.isExtensible(obj)); // false
+```
+
+#### [2.23 组织扩展、密封对象、冻结对象的对比](#)
+JavaScript 提供了三个层级的“密封”对象的方法，preventExtensions 是最基础的一层：
+
+|方法	|作用|	是否可添加属性	|是否可修改属性	|是否可删除属性|	是否可配置属性|
+|:---|:---|:---|:---|:---|:---|
+|Object.preventExtensions(obj)	|阻止扩展| 否| 是|	 是|	 是|
+|Object.seal(obj)	|密封对象	|否|是| 否| (不可配置)| 否 (不可配置)|
+|Object.freeze(obj)|	冻结对象|否|否 (不可写)| 否 (不可配置)| 否 (不可配置)|
+
+`Object.preventExtensions()` 只作用于对象自身。如果对象的属性是一个引用（如另一个对象或数组），那个引用指向的对象仍然可以被扩展。
+
+```javascript
+const obj = { nested: {} };
+Object.preventExtensions(obj);
+// obj 本身不能再添加新属性
+// obj.nested 仍然可以添加属性
+obj.nested.newProp = "hello"; // 成功
+console.log(obj.nested.newProp); // "hello"
+```
 
 ### [3. 属性创建](#)
 ECMA 在第五版定义了只有内部采用的特性 描述了属性的各种特性,ECM-262 定义这些特性是否了实现JavaScript 是为了实现JavaScripty殷勤用的,因此Js代码中无法访问他们

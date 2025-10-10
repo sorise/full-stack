@@ -521,27 +521,54 @@ new proxy();
 `target` 必须可以用作构造函数。
 
 ### [3. 反射 Reflect](#)
-[Reflect](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Reflect) 是一个内置对象，它提供了许多与代理相同的静态方法，用于直接操作对象，但没有代理的拦截功能。这些方法包括但不限于get(), set(), construct(), deleteProperty()等。使用Reflect方法可以更容易地实现函数式编程风格，并且在某些情况下，这些方法的行为比直接使用语言的运算符更加一致。
+[Reflect](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Reflect)  是 ES6 (ECMAScript 2015) 引入的一个内置对象，它提供了一组静态方法，**用于执行底层的 JavaScript 操作**，特别是那些与元编程（metaprogramming） 和 对象操作相关的操作。
 
+Reflect 是一个将 JavaScript 内部方法（通常由引擎实现）暴露为可调用 API 的集合，它让开发者能够以更一致、更函数式的方式执行对象的底层操作，并且与 Proxy 对象紧密配合，共同构成了现代 JavaScript 元编程的基础。
 ```javascript
-const user = {
-  name: 'Jake'
+import Staff from './entities/staff.js';
+
+const entity = {
+    a: 2,
+    b: 4,
+    get c(){
+        return this.a + this.b;
+    }
 };
 
-const proxy = new Proxy(user, {
-  get(target, property, receiver) {
-    console.log(`Getting ${property}`);
-    return Reflect.get(...arguments);
-  },
-  set(target, property, value, receiver) {
-    console.log(`Setting ${property}=${value}`);
-    return Reflect.set(...arguments);
-  }
+const ep = new Proxy(entity, {
+    get(target, prop, receiver) {
+        console.log(`read entity ${prop}`);
+        return target[prop];
+    }
 });
 
-proxy.name; // Getting name
-proxy.age = 27; // Setting age=27 
+let r = ep.c; //get entity 6
+//read entity c
+
+const entity_ = {
+    a: 1,
+    b: 4,
+    get c(){
+        return this.a + this.b;
+    }
+}
+
+const ep_ = new Proxy(entity_, {
+    get(target, prop, receiver) {
+        console.log(`read entity_ ${prop}`);
+        return Reflect.get(target, prop, receiver);
+    }
+});
+
+let r_ = ep_.c;
+/*
+ read entity_ c
+ read entity_ a
+ read entity_ b
+* */
 ```
+
+Reflect 对象的本质是 JavaScript 语言内部操作的标准化、函数式接口。它不是用来“反射”类型信息（像 Java 或 C# 那样），而是让你能够以一种更规范、更可靠的方式去执行和拦截对象的底层操作。它是现代 JavaScript 中进行高级对象操作和元编程不可或缺的工具，尤其在与 Proxy 配合使用时，其价值体现得淋漓尽致。
 
 ### [4. 代理模式](#)
 使用代理可以在代码中实现一些有用的编程模式。
