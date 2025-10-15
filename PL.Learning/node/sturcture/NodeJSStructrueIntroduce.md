@@ -50,135 +50,70 @@ Node.js 的作者 Ryan 做了一个中间层处理
 
 
 #### [1.2  JS如何与C++通信](#)
+Node.js 的底层设计正是基于 JavaScript (JS) 与 C++ 的深度协作，其核心思想是：
+用 JavaScript 编写业务逻辑，用 C++ 实现高性能、系统级操作，两者通过 V8 引擎和自定义绑定层无缝通信。
 
-```javascript
-// test.js
-const addon = require('./build/Release/addon');
+**V8 引擎**：Node.js使用Google的V8 JavaScript 引擎来执行JS代码。V8 是用 C++ 编写的，它不仅执行JS，还允许 C++ 暴露函数给 JS调用。
 
-console.log('This should be eight:', addon.add(3, 5));
-```
-上面是js调用，再来看看C++代码（已被编译）
 
-```javascript
-// addon.cc
+- `v8::Context`：JS 的执行环境。
+- `v8::ObjectTemplate / v8::FunctionTemplate`：用于定义 JS 中的对象和函数。
+- `v8::Local<v8::Value>`：JS 和 C++ 数据类型的桥梁。
+
+Node.js 启动时，会加载内置的 C++ 模块（如 fs, net, child_process 等），这些模块的底层实现是 C++，通过 绑定（Bindings） 暴露给 JS。
+```cpp
+// hello_world.cc
 #include <node.h>
+#include <v8.h>
 
-namespace demo {
-
-using v8::Exception;
-using v8::FunctionCallbackInfo;
-using v8::Isolate;
-using v8::Local;
-using v8::NewStringType;
-using v8::Number;
-using v8::Object;
-using v8::String;
-using v8::Value;
-
-// 这是 "add" 方法的实现。
-// 输入参数使用 const FunctionCallbackInfo<Value>& args 结构传入。
-void Add(const FunctionCallbackInfo<Value>& args) {
-  Isolate* isolate = args.GetIsolate();
-
-  // 检查传入的参数的个数。
-  if (args.Length() < 2) {
-    // 抛出一个错误并传回到 JavaScript。
-    isolate->ThrowException(Exception::TypeError(
-        String::NewFromUtf8(isolate, 
-                        "参数的数量错误",
-                            NewStringType::kNormal).ToLocalChecked()));
-    return;
-  }
-
-  // 检查参数的类型。
-  if (!args[0]->IsNumber() || !args[1]->IsNumber()) {
-    isolate->ThrowException(Exception::TypeError(
-        String::NewFromUtf8(isolate, 
-                        "参数错误",
-                            NewStringType::kNormal).ToLocalChecked()));
-    return;
-  }
-
-  // 执行操作
-  double value =
-      args[0].As<Number>()->Value() + args[1].As<Number>()->Value();
-  Local<Number> num = Number::New(isolate, value);
-
-  // 设置返回值 (使用传入的 FunctionCallbackInfo<Value>&)。
-  args.GetReturnValue().Set(num);
+void Method(const v8::FunctionCallbackInfo<v8::Value>& args) {
+  v8::Isolate* isolate = args.GetIsolate();
+  args.GetReturnValue().Set(v8::String::NewFromUtf8(isolate, "Hello from C++!"));
 }
 
-void Init(Local<Object> exports) {
-  NODE_SET_METHOD(exports, "add", Add);
+void Initialize(v8::Local<v8::Object> exports) {
+  NODE_SET_METHOD(exports, "hello", Method);
 }
 
-NODE_MODULE(NODE
-_GYP_MODULE_NAME, Init)
-
-}  // 命名空间示例
+NODE_MODULE(NODE_GYP_MODULE_NAME, Initialize)
 ```
-Nodejs 封装的插件开放一些对象和函数，供运行在 Node.js 中的 js 访问，当 js 调用函数 addon 时，输入参数和返回值与 C/C++ 代码相互映射，统一封装处理。这样就可以直接在 Node.js 中引入并使用。
-
-#### [1.3 C++调用JS回调](#)
 
 ```javascript
-// test.js
-const addon = require('./build/Release/addon');
-// 传入一个函数
-addon((msg) => {
-  console.log(msg);
-// 打印: 'hello world'
-});
+const myaddon = require('./build/Release/hello_world');
+console.log(myaddon.hello()); // 输出: Hello from C++!
 ```
-传入C++并执行
-```javascript
-// addon.cc
-#include <node.h>
 
-namespace demo {
+**N-API / Node-API**：稳定的 C++ 接口（推荐方式）早期 Node.js 使用 v8 直接绑定，但 V8 的 API 变化频繁，导致 C++ 插件难以维护。为此，Node.js 引入了 `N-API`（原名 Node-API）：
 
-using v8::Context;
-using v8::Function;
-using v8::FunctionCallbackInfo;
-using v8::Isolate;
-using v8::Local;
-using v8::NewStringType;
-using v8::Null;
-using v8::Object;
-using v8::String;
-using v8::Value;
+- 一层 稳定的 C API，屏蔽了 V8 的变化。
+- C++ 插件通过 N-API 与 JS 通信，不再直接依赖 V8。
+- 支持预编译，跨 Node.js 版本兼容。
 
-void RunCallback(const FunctionCallbackInfo<Value>& args) {
-  Isolate* isolate = args.GetIsolate();
-  Local<Context> context = isolate->GetCurrentContext();
-  Local<Function> cb = Local<Function>::Cast(args[0]);
-  const unsigned argc = 1;
-  // 这里有一个c++方法，将args[0]也就是我们传入的函数，转化成c++看得懂的，用cb接收
-  Local<Value> argv[argc] = {
-      String::NewFromUtf8(isolate,
-                          "hello world",
-                          NewStringType::kNormal).ToLocalChecked() };
-  // 调用一下，传入的函数就被调用了，打印出hello world
-  cb->Call(context, Null(isolate), argc, argv).ToLocalChecked();
-}
-
-void Init(Local<Object> exports, Local<Object> module) {
-  NODE_SET_METHOD(module, "exports", RunCallback);
-}
-
-NODE_MODULE(NODE_GYP_MODULE_NAME, Init)
-
-}
 ```
-回调函数被同步地调用，要知道 C++ 是看不懂 js 的，所以如何做中间层的封装就交给这些 Node 插件去做,有了这些 Node.js 提供的插件（node binding），JS和C++就可以进行交互了，也使JS的能力被大大的扩展了。
+JS 调用 require('fs').readFile
+    → Node.js JS 层转发
+    → C++ Binding 层 (N-API)
+    → 调用 libuv 异步读取文件
+    → 完成后通过回调（Callback）或 Promise 返回 JS
+```
+异步操作：如何从 C++ 回调 JS，这是 Node.js 非阻塞 I/O 的核心。以 fs.readFile 为例：
+
+**执行流程：**
+- JS 调用 fs.readFile('a.txt', callback)
+- JS 层调用 C++ 绑定函数。
+- C++ 层将任务提交给 libuv 的线程池（非主线程）。
+- 主线程（JS）继续执行，不阻塞。
+- 文件读取完成后，libuv 通知主线程。
+- C++ 层通过 callback 调用 JS 函数（使用 V8/N-API 调用 JS 函数对象）。
+- JS 回调被执行。
+
 
 ### [2. 基本组件](#)
 
 #### [2.1 什么是V8](#)
 V8引擎是一个 JavaScript 引擎实现，最初由一些语言方面专家设计，后被谷歌收购，随后谷歌对其进行了开源
 V8使用 C++ 开发，在运行 JavaScript 之前，相比其它的 JavaScript 的引擎转换成字节码或解释执行，V8 将其编译成原生机器码。
-JavaScript 程序在 V8 引擎下的运行速度媲美二进制程序，它是现阶段执行 JavaScript 最快的一个引擎
-
+JavaScript 程序在 V8 引擎下的运行速度媲美二进制程序，它是现阶段执行 JavaScript 最快的一个引擎。
 
 - 将 JS 源代码变成本地代码并执行
 - 维护调用栈，确保 JS 函数的执行顺序
@@ -220,8 +155,8 @@ v8 和 libuv 在整个 Node.js 架构的底层是最为重要的
 
 JavaScript 是单线程的，有了 Event Loop 的加持，Node.js 才可以非阻塞地执行 I/O 操作，把这些操作尽量转移给操作系统来执行
 
-**Event**: 计时器到期了、文件可以读取了、读取出错了
-**Loop **: Loop 就是循环，由于事件分优先级，所以处理起来也是分先后顺序，所以 Node.js 需要按顺序轮询每种事件，轮询是循环的。
+- **Event**: 计时器到期了、文件可以读取了、读取出错了
+- **Loop**: Loop 就是循环，由于事件分优先级，所以处理起来也是分先后顺序，所以 Node.js 需要按顺序轮询每种事件，轮询是循环的。
 
 **Event Loop 各阶段详解**
 
@@ -247,6 +182,7 @@ JavaScript 是单线程的，有了 Event Loop 的加持，Node.js 才可以非�
 ```
 上图其中每个方框都是 Event Loop 中的一个阶段，每个阶段都有一个「先入先出队列」，这个队列存有要执行的回调函数
 
+
 **timer 阶段**
 
 先看看有没有计时器，有了执行回调函数
@@ -265,10 +201,9 @@ JavaScript 是单线程的，有了 Event Loop 的加持，Node.js 才可以非�
 
 **Poll 阶段**
 
-轮询阶段，处理大部分的事件（文件可读了？读！http请求来了，处理！）
+主要用于处理IO回调，处理大部分的事件（文件可读了？读！http请求来了，处理！）
 
 当 event loop 进入 poll 阶段，如果发现没有计时器，就会：
-
 - 如果 poll 队列不是空的，event loop 就会依次执行队列里的回调函数，直到队列被清空或者到达 poll 阶段的时间上限。
 - 如果 poll 队列是空的，就会：
     - 如果有 setImmediate() 任务，event loop 就结束 poll 阶段去往 check 阶段。
@@ -282,7 +217,8 @@ JavaScript 是单线程的，有了 Event Loop 的加持，Node.js 才可以非�
 setImmediate() 是通过 libuv 里一个能将回调安排在 poll 阶段之后执行的 API 实现的
 
 **Close callback 阶段**
-比如 socket.destroy()，就会有一个 close 事件进入这个阶段
+
+关闭阶段的回调，比如 socket.destroy()，就会有一个 close 事件进入这个阶段
 
 `------------循环-----------------`
 
@@ -295,6 +231,11 @@ setImmediate() 是通过 libuv 里一个能将回调安排在 poll 阶段之后�
 Node.js 大部分时间都会停留在 poll 阶段，大部分事件都在 poll 阶段被处理，如文件、网络请求
 
 程序结束时，Node.js 会检查 Event Loop 是否在等待异步 I/O 操作结束，是否在等待计时器触发，如果没有，就会关掉 Event Loop
+
+以上几个阶段的任务被称为“宏任务”。以下任务为微队列任务
+* process.nextTick
+. promise
+
 
 #### [3.2 流程总结](#)
 Application就是咱们写的代码，把它放在v8上面去运行

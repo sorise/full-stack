@@ -461,6 +461,71 @@ Generating CaiXuKun
 { value: 'lhy', done: false }
 * */
 ```
+yield 永远也得不到第一次调用next的返回值。
+```javascript
+function *generator(){
+    let a = yield 1;
+    console.log(a); //永远也得不到第一次调用next的返回值
+    let b = yield 2;
+    console.log(b);
+    let c = yield 3;
+    console.log(c);
+    return undefined;
+}
+
+let m = generator();
+
+console.log(m.next('a in'));
+console.log(m.next('b in'));
+console.log(m.next('c in'));
+console.log(m.next('d in'));
+
+/*
+{ value: 1, done: false }
+b in
+{ value: 2, done: false }
+c in
+{ value: 3, done: false }
+d in
+{ value: undefined, done: true }
+* */
+```
+第一次调用：m.next('a in')
+* 生成器开始执行，遇到第一个 yield 1。
+* yield 1 暂停执行，并返回 { value: 1, done: false }。
+* 注意：你传入的 'a in' 没有地方接收它，因为这是第一次执行，前面没有 yield 表达式。所以 'a in' 被完全忽略。
+* 此时 let a = yield 1; 还没有完成赋值，a 的值还未确定。
+
+
+第二次调用：m.next('b in')
+* 生成器从上次暂停的地方（yield 1）继续执行。
+* yield 1 这个表达式的返回值是 'b in'（即本次 next() 的参数）。
+* 所以 let a = yield 1; 等价于 let a = 'b in';
+* 然后执行 console.log(a); → 输出 'b in'
+* 接着执行 let b = yield 2;，暂停并返回 { value: 2, done: false }
+
+第三次调用：m.next('c in')
+- 从 yield 2 继续执行。
+- yield 2 的返回值是 'c in'，所以 let b = 'c in';
+- 执行 console.log(b); → 输出 'c in'
+- 然后 let c = yield 3;，暂停并返回 { value: 3, done: false }
+
+第四次调用：`m.next('d in')`
+- 从 yield 3 继续执行。
+- yield 3 返回 `'d in'`，所以 `let c = 'd in'`;
+- 执行 `console.log(c)`; → 输出 `'d in'`
+- 然后 `return undefined;`，返回 `{ value: undefined, done: true }`
+
+第一次调用 m.next('a in') 时传入的 'a in' 会被忽略，因为没有上一个 yield 表达式可以接收它。
+如果你希望 'a in' 被赋值给 a，你应该在第二次调用 next() 时传入 'a in'：
+
+```javascript
+console.log(m.next());        // 启动，忽略参数
+console.log(m.next('a in'));  // 这个 'a in' 赋值给 a
+console.log(m.next('b in'));
+console.log(m.next('c in'));
+```
+
 
 #### [3.4 增强 yield](#)
 可以使用星号增强 yield 的行为，让它能够迭代一个可迭代对象，从而一次产出一个值：

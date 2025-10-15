@@ -650,7 +650,7 @@ p1.then(
 ```
 
 
-````javascript
+```javascript
 //起步构建
 // 1.用类创建Promise，类中需要有个执行器executor
 // 2.执行者中发生错误，交给异常状态处理
