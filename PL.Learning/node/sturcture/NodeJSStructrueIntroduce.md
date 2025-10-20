@@ -554,17 +554,219 @@ module.exports = {
 ```
 此时会按照 `browser -> module -> main` 的顺序来查找入口文件。
 
-**exports**：node 在 14.13 支持在 package.json 里定义 exports 字段，拥有了条件导出的功能。
-- exports 字段可以配置不同环境对应的模块入口文件，并且当它存在时，它的优先级最高。
-- 比如使用 require 和 import 字段根据模块规范分别定义入口：
+**workspaces**: 项目的工作区配置，用于在本地的根目录下管理多个子项目。可以自动地在 npm install 时将 workspaces 下面的包，软链到根目录的 node_modules 中，不用手动执行 npm link 操作。
+
+workspaces 字段接收一个数组，数组里可以是文件夹名称或者通配符。比如：
+```
+"workspaces": [
+  "workspace-a"
+]
+```
+表示在 workspace-a 目录下还有一个项目，它也有自己的 package.json。
+
+通常子项目都会平铺管理在 packages 目录下，所以根目录下 workspaces 通常配置为：
+```
+"workspaces": [
+  "packages/*"
+]
+```
+
+
+#### [7.2.续 条件导出](#)
+在 npm 包的 package.json 文件中，exports 和 main 都可以用来定义包的入口点，但是 exports 字段是 main 字段的现代的替代方案。
+如果是开发新的 npm 包，建议使用 package.json 的 exports 字段定义主入口点导出：
 
 ```
-"exports": {
-  "require": "./index.js",
-  "import": "./index.mjs"
+{
+  "exports": "./index.js"
+}
+```
+当定义了 exports 字段时，包的所有子路径都会被封闭起来，导入者无法再访问未被 exports 导出的模块。例如，require('pkg/subpath.js') 会抛出 ERR_PACKAGE_PATH_NOT_EXPORTED 错误。
+
+这种导出的封装为工具以及在处理包的 semver（语义化版本）升级时提供了更可靠的包接口保证。然而，这并不是一种强封装，因为直接 require 包的任何绝对子路径（例如 require('/path/to/node_modules/pkg/subpath.js')）仍然会加载 subpath.js。
+
+著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
+- **更可靠的包接口保证**：**通过明确指定哪些模块可以被外部访问，开发者可以更好地控制包的公共 API，从而减少意外暴露内部实现细节的风险**。
+- **不是强封装**：尽管有这些控制，但如果用户知道确切的文件路径，他们仍然可以直接通过绝对路径来加载包内的任意文件，这绕过了 exports 字段的限制。
+
+**子路径导出**: 在 package.json 的 exports 字段中，你可以指定包的主要入口点和其他自定义子路径。主要入口点用 . 表示，表示当用户直接引用包时应加载的文件。其他自定义子路径则可以指向包内的特定模块或文件，允许更精细地控制哪些部分可以被外部访问。
+
+```json
+{
+  "exports": {
+    ".": "./index.js",
+    "./submodule.js": "./src/submodule.js"
+  }
+}
+```
+只有 exports 中定义的子路径才能被使用者导入：
+```javascript
+import submodule from 'es-module-package/submodule.js';
+// Loads ./node_modules/es-module-package/src/submodule.js
+```
+其他子路径则会报错：
+```javascript
+import submodule from 'es-module-package/private-module.js';
+// Throws ERR_PACKAGE_PATH_NOT_EXPORTED
+```
+exports 字段可以配置不同环境对应的模块入口文件，并且当它存在时，它的优先级最高,使用 require 和 import 字段根据模块规范分别定义入口：
+```json
+{
+  "exports": {
+    "require": "./index.js",
+    "import": "./index.mjs"
+   }
+}
+```
+这样的配置在使用 `import 'xxx'` 和 `require('xxx')` 时会从不同的入口引入文件，exports 也支持使用 browser 和 node 字段定义 browser 和 Node 环境中的入口。
+
+**导出语法糖**: 如果 `.` 导出是唯一的导出，那么 exports 字段为这种情况提供了简化的语法糖，即 exports 字段的值直接指定默认导出的内容。
+上方的写法其实等同于：
+```
+{
+  "exports": {
+  ".": {
+    "require": "./index.js",
+    "import": "./index.mjs"
+  }
  }
+}
+```
+
+
+```json
+{
+   "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    },
+    "./unstyled": {
+      "types": "./dist/unstyled.d.ts",
+      "import": "./dist/unstyled.mjs",
+      "require": "./dist/unstyled.js"
+    }
+  },
+}
+```
+不过要注意，node_modules 中的路径禁止在 exports 中使用，确保导出的文件只限于当前包内部。
+#### [7.2 续 imports 路径映射](#)
+在复杂的项目中，为了引用位于不同目录层级的模块，开发者通常需要使用多个 `../` 来回溯目录层级，这不仅书写繁琐而且容易出错。
+通过在 package.json 文件中配置 imports 字段，开发者可以定义一组路径别名（即路径映射），使得整个应用程序可以通过这些预定义的路径来简化模块的导入，而不需要每次都写出冗长的相对路径。
+
+例如这个例子，此例子在 package.json 中使用 imports 字段定义了一组路径别名：
+```json
+{
+  "imports": {
+    "#utils/calc": "./src/utils/calc.js"
+  }
+}
+```
+imports 字段中的条目必须总是以 `#` 开头，以确保它们与外部包的模块标识符区分开来。imports 字段中定义的路径别名（即路径映射）是**私有的**，仅在包内部使用。
+```javascript
+const calc = require("#utils/calc");
+
+const total = calc.add(1, 2);
+
+console.log("res  ", {
+  total,
+});
+```
+与 exports 字段不同的是，imports 字段支持将外部包直接作为导入路径，而不仅仅局限于本地模块。
+```json
+{
+  "imports": {
+    "#lodash": {
+      "require": "lodash",
+      "import": "lodash-es"
+    }
+  },
+  "dependencies": {
+    "lodash-es": "^4.17.21",
+    "lodash": "^4.17.21"
+  }
+}
+```
+通过这个的配置，我们可以在代码中这样引入 lodash。
+```javascript
+// index.cjs
+const { omit } = require("#lodash");
+```
+
+**子路径模式**： 如果一个 npm 包只有少量的导出或导入项，则建议直接在 package.json 文件中详细列出每一个具体的子路径，以确保清晰性和可读性。 
+
+然后，如果一个 npm 包拥有大量导出或导入项，如果逐一列出这些路径，会导致 package.json 文件臃肿并引发维护问题。
+
+对于这种情况，可以改用子路径模式：
+```json
+// ./node_modules/es-module-package/package.json
+{
+  "exports": {
+    "./features/*.js": "./src/features/*.js"
+  },
+  "imports": {
+    "#internal/*.js": "./src/internal/*.js"
+  }
+}
+```
+在上面的路径映射中，`*` 表示一个通配符，用于匹配任意有效的路径片段。
+
+而且，在实际解析路径映射时，只是简单地将匹配到的部分替换成指定的目标路径。即使替换的值中包含路径分隔符 /，这些分隔符也会被正确处理并保留：
+```javascript
+import featureX from 'es-module-package/features/x.js';
+// Loads ./node_modules/es-module-package/src/features/x.js
+
+import featureY from 'es-module-package/features/y/y.js';
+// Loads ./node_modules/es-module-package/src/features/y/y.js
+
+import internalZ from '#internal/z.js';
+// Loads ./node_modules/es-module-package/src/internal/z.js
+```
+
+
+#### [7.3 脚本配置](#)
+**scripts**: 指定项目的一些内置脚本命令，这些命令可以通过 npm run 来执行。通常包含项目开发，构建 等 CI 命令，比如：
+```
+"scripts": {
+  "build": "webpack"
+}
+```
+我们可以使用命令 npm run build / yarn build 来执行项目构建。
+
+**config**: config 用于设置 scripts 里的脚本在运行时的参数。比如设置 port 为 3001：
+```
+"config": {
+  "port": "3001"
+}
+```
+在执行脚本时，我们可以通过 npm_package_config_port 这个变量访问到 3001。
+```
+console.log(process.env.npm_package_config_port); // 3001
+```
+
+#### [7.4 依赖配置](#)
+项目可能会依赖其他包，需要在 package.json 里配置这些依赖的信息。
+
+**dependencies**: 运行依赖，也就是项目生产环境下需要用到的依赖。比如 react，vue，状态管理库以及组件库等。
+
+使用 `npm install xxx` 或则 `npm install xxx --save` 时，会被自动插入到该字段中。
+```
+"dependencies": {
+  "react": "^18.2.0",
+  "react-dom": "^18.2.0"
+}
+```
+**devDependencies**: 开发依赖，项目开发环境需要用到而运行时不需要的依赖，用于辅助开发，通常包括项目工程化工具比如 webpack，vite，eslint 等。
+
+使用 `npm install xxx -D` 或者 `npm install xxx --save-dev` 时，会被自动插入到该字段中。
+```
+"devDependencies": {
+  "webpack": "^5.69.0"
+}
 ```
 
 
 ### [参考文章](#)
 - [https://nodejs.cn/en/learn](https://nodejs.cn/en/learn)
+- [https://juejin.cn/post/7470488087656366091](https://juejin.cn/post/7470488087656366091)
