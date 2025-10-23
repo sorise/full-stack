@@ -162,7 +162,6 @@ npm i typescript -g
 tsc index.ts
 ```
 
-
 #### [2.1 自动化编译](#)
 TypeScript 允许将tsc的编译参数，写在配置文件tsconfig.json。只要当前目录有这个文件，tsc就会自动读取，所以运行时可以不写参数。
 
@@ -198,6 +197,61 @@ tsc --noEmitOnError --watch
 
 #### [2.2 什么是 tsconfig.json](#)
 目录中存在 tsconfig.json 文件表明该目录是 TypeScript 项目的根目录。tsconfig.json 文件指定编译项目所需的根文件和编译器选项。
+
+```
+{
+  "compilerOptions": {
+    "target": "esnext", // 编译后生成的版本
+    "module": "esnext", // 用于指定 TypeScript 编译后生成的模块系统的类型
+    "moduleResolution": "node", // 模块解析策略，ts默认用node的解析策略，即相对的方式导入
+    "strict": true, // 严格模式
+    "noImplicitThis": false // this指向可以是不确定的
+    "forceConsistentCasingInFileNames": true, // 严格区分文件名称大小写
+    "allowSyntheticDefaultImports": true, // 模块没有默认导出时，也可以使用import a from b
+    "strictFunctionTypes": false, // 函数类型是否严格规范（是否允许传入子类型）
+    // preserve:生成代码中会保留JSX以供后续的转换操作使用(比如：Babel).另外,输出文件会带有.jsx扩展名。一般我们会使用babel去处理jsx，不使用tsc去编译。
+    "jsx": "preserve", // 指定 JSX 的处理方式。
+    "baseUrl": ".", // 表示路径查找前缀，如果是"./src",那么在项目中引入的src目录下的文件只需要写对应的文件名称即可。不需要加上src
+    "allowJs": true, // 是否允许编译javascript文件
+    "sourceMap": true, // 是否生成sourcemap
+    // 开启`esModuleInterop`后会默认开启`allowSyntheticDefaultImports`选项
+    "esModuleInterop": true,
+    "resolveJsonModule": true, // 是否可以导入json文件解析
+    "noUnusedLocals": true, // 是否检查未使用的局部变量。
+    "noUnusedParameters": true, // 是否检查未使用的参数。
+    "experimentalDecorators": true, // 开启装饰器
+    // 指定内置API声明组的列表，
+    "lib": ["dom", "esnext"], // 指定要包含在编译中的库文件。就是.d.ts声明文件
+    // "指定要包含的类型包名，而不需要在源文件中引用"
+    "types": ["vite/client", "jest"],
+    // 查找类型定义文件。指定`.d.ts`文件的查找路径。如果指定则只会查找当前指定的目录下的.d.ts文件
+    "typeRoots": ["./node_modules/@types/", "./types"],
+    "noImplicitAny": false, // 是否禁止隐式 any 类型。
+    "skipLibCheck": true, // 是否跳过检查库文件。
+    // 配置路径别名，这里配置完毕后还需要在vue.config.ts或者vite.config.ts中的resolve.alias中配置。
+    "paths": { 
+      "/@/*": ["src/*"],
+      "/#/*": ["types/*"]
+    }
+  },
+  // 指定需要编译的文件路径或文件夹路径。
+  "include": [
+    "tests/**/*.ts",
+    "src/**/*.ts",
+    "src/**/*.d.ts",
+    "src/**/*.tsx",
+    "src/**/*.vue",
+    "types/**/*.d.ts",
+    "types/**/*.ts",
+    "build/**/*.ts",
+    "build/**/*.d.ts",
+    "mock/**/*.ts",
+    "vite.config.ts"
+  ],
+  // 排除需要编译的文件
+  "exclude": ["node_modules", "tests/server/**/*.ts", "dist", "**/*.js"]
+}
+```
 
 - 通过在没有输入文件的情况下调用 tsc，在这种情况下，编译器会从当前目录开始搜索 tsconfig.json 文件，并继续沿父目录链向上。
 - 通过在没有输入文件和 --project（或只是 -p）命令行选项的情况下调用 tsc，该选项指定包含 tsconfig.json 文件的目录的路径，或包含配置的有效 .json 文件的路径。

@@ -10,7 +10,7 @@ Node.js 在浏览器之外运行 V8 JavaScript 引擎，即 Google Chrome 的核
 - [4. JavaScript 运行机制](#4-javascript-运行机制)
 - [5. Node.js 运行](#5-nodejs-运行)
 - [6. npm 包管理器简介](#6-npm-包管理器简介)
-- [7. ]()
+- [7. package.json](#7-packagejson)
 
 ---
 
@@ -635,6 +635,43 @@ package.json 里面有许许多多的配置，与项目息息相关，了解它�
 
 **files**: 项目在进行 npm 发布时，可以通过 files 指定需要跟随一起发布的内容来控制 npm 包的大小，避免安装时间太长。发布时默认会包括 package.json，license，README 和main 字段里指定的文件。忽略 node_modules，lockfile 等文件。
 
+默认情况下会发布所有位于项目根目录下的文件和文件夹，我们也可以通过.npmignore来配置那些文件被忽略。但是更多的做法是通过配置files属性，这里设置的文件或者文件夹都会被发布，该字段包含的文件不能通过 .npmignore 或 .gitignore 排除。 一般我们只需要发布打包后的文件即可。
+
+```
+{
+  "files": [
+      "dist",
+      "es",
+      "lib",
+      "locale"
+  ]
+}
+```
+但是下方列出的文件始终被发布:
+- package.json
+- README
+- LICENSE / LICENCE
+- main字段指定的文件
+- bin 字段对应的文件 （实际测试发现这个也会被默认提交，例如vue-cli中的配置）
+
+下方列出的文件总是被忽略
+- .git
+- CVS
+- .svn
+- .hg
+- `.lock-wscript`
+- `.wafpickle-N`
+- `.*.swp`
+- `.DS_Store`
+- `._*`
+- npm-debug.log
+- `.npmrc`
+- node_modules
+- config.gypi
+- `*.orig`
+- package-lock.json (如果您希望发布，请使用 npm-shrinkwrap.json)
+
+
 > 在此基础上，我们可以指定更多需要一起发布的内容。可以是单独的文件，整个文件夹，或者使用通配符匹配到的文件。
 一般情况下，files 里会指定构建出来的产物以及类型文件，而 src，test 等目录下的文件不需要跟随发布。
 
@@ -922,6 +959,70 @@ peerDependenciesMeta: 同伴依赖也可以使用 peerDependenciesMeta 将其指
 }
 ```
 
+**overrides** overrides 可以重写项目依赖的依赖，及其依赖树下某个依赖的版本号，进行包的替换。
+> npm命令中强制指定依赖树中某个包的版本（覆盖嵌套依赖），解决依赖冲突问题。它的核心目的是解决依赖冲突、修复安全漏洞或确保依赖版本的一致性。
+
+```
+{
+  "overrides": {
+    // 全局覆盖 lodash 的版本
+    "lodash": "4.17.21",
+    
+    // 当 react@17.0.0 被安装时，覆盖其依赖的 prop-types 版本
+    "react@17.0.0": {
+      "prop-types": "15.8.1"
+    },
+    
+    // 覆盖所有父包中依赖的 typescript 版本
+    "typescript": "5.0.0"
+  }
+}
+```
+
+#### [7.5 发布配置](#)
+主要是和项目发布相关的配置。
+
+**private** : 如果是私有项目，不希望发布到公共 npm 仓库上，可以将 private 设为 true。
+```json
+{
+  "private":true
+}
+```
+**publishConfig**: 比如在安装依赖时指定了 registry 为 taobao 镜像源，但发布时希望在公网发布，就可以指定 publishConfig.registry。
+```json
+{
+  "publishConfig":{
+    "registry":"https://registry.npmjs.org/"
+  }
+}
+```
+
+#### [7.6 系统配置](#)
+和项目关联的系统配置，比如 node 版本或操作系统兼容性之类。这些要求只会起到提示警告的作用，即使用户的环境不符合要求，也不影响安装依赖包。
+
+**engines**: 一些项目由于兼容性问题会对 node 或者包管理器有特定的版本号要求，比如：
+```
+{
+  "engines": {
+    "node": ">=14 <16",
+    "pnpm": ">7"
+  }
+}
+```
+要求 node 版本大于等于 14 且小于 16，同时 pnpm 版本号需要大于 7。
+
+**os**: 在 linux 上能正常运行的项目可能在 windows 上会出现异常，使用 os 字段可以指定项目对操作系统的兼容性要求。
+```
+{
+  "os": ["darwin", "linux"]
+}
+```
+**cpu**: 指定项目只能在特定的 CPU 体系上运行。
+```
+{
+  "cpu": ["x64", "ia32"]
+}
+```
 
 
 ### [参考文章](#)
