@@ -38,6 +38,8 @@ JavaScript/ECMAScript（JS）是一种具有函数优先特性的轻量级、解
 - [JavaScript 表单脚本](./contents/JavaScriptFormScript.md) 表单处理、文本框选项、选项框编程、表单序列化。
 - [JavaScript JSON和 XMLHttpRequest](./contents/JavaScriptJSONAndXMLHttpRequest.md) JSON处理，使用、处理 XMLHttpRequest 对象，源域 Ajax 限制。
 - [JavaScript Fetch API、Streams API](./contents/JavaScriptFetchAPIAndStreamsAPI.md) Fetch API、Streams API
+- [JavaScript 客户端存储 Cookie、WebStorage、IndexDB](./contents/JavaScriptClientStore.md) 介绍JS cookie、Storage、sessionStorage、localStorage、IndexedDB数据库。
+- [JavaScript 工作者线程 Web Worker](./contents/JavaScriptWebWorker.md) 一种在后台线程中运行的 JavaScript 脚本。
 
 ### [Web 3D/2D 图像](#)
 - [Canvas 教程](#) 

@@ -283,8 +283,6 @@ JavaScript 是一种解释型语言，代码执行分为以下几个主要阶段
 
 调用栈（Call Stack）：调用栈用于管理函数调用的顺序，遵循 LIFO（后进先出） 原则。
 
-
-
 #### [4.1 为什么JavaScript是单线程](#)
 JavaScript语言的一大特点就是单线程，这与它的用途有关。作为浏览器脚本语言，JavaScript的主要用途是与用户互动，以及操作DOM。这决定了它只能是单线程，否则会带来很复杂的同步问题。比如，假定JavaScript同时有两个线程，一个线程在某个DOM节点上添加内容，另一个线程删除了这个节点，这时浏览器应该以哪个线程为准？
 
@@ -418,13 +416,14 @@ const hostname = '127.0.0.1';
 const port = 3000;
 
 const server = createServer((req, res) => {
-  res.statusCode = 200;
-  res.setHeader('Content-Type', 'text/plain');
-  res.end('');
+    res.statusCode = 200;
+    res.setHeader('Content-Type', 'text/plain');
+    res.write(JSON.stringify({"name": "hello world!"}));
+    res.end('');
 });
 
 server.listen(port, hostname, () => {
-  console.log(`Server running at http://${hostname}:${port}/`);
+    console.log(`Server running at http://${hostname}:${port}/`);
 });
 ```
 
