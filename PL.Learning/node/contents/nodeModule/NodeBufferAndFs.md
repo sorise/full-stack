@@ -236,3 +236,24 @@ console.log(buf1.equals(buf2)); // 输出: true
 > - 自 Node.js 6 起，`Buffer.from()` 和 `Buffer.alloc()` 被推荐为创建 Buffer 的标准方式，取代了已废弃的 `new Buffer()`。
 > - `Buffer.byteLength(str, 'utf8')` 与 `Buffer.from(str).length` 效果相同，但更高效（不实际创建 Buffer）。
 > - `Buffer.poolSize` 默认为 `8192`（8KB），Node.js 使用内存池优化小 Buffer 的分配。
+
+#### [1.7 Buffer 的实际应用](#)
+
+```javascript
+const fs = require('fs');
+
+// 读取文件到 Buffer
+fs.readFile('example.txt', (err, data) => {
+    if (err) throw err;
+    console.log(data.length); // <Buffer ...>
+    console.log(data.toString()); // 文件内容
+});
+
+// 写入 Buffer 到文件
+const content = Buffer.from('Hello File System');
+
+fs.writeFile('output.txt', content, (err) => {
+    if (err) throw err;
+    console.log('文件已保存');
+});
+```
