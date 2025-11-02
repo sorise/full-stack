@@ -1,9 +1,9 @@
 # [Full-Stack](https://developer.mozilla.org/zh-CN/docs/Web)
-> **介绍**: 基于Node.JS的后端`（Rear-End）`、前端`（Front-End）`学习笔记， 主要为 `JavaScript/TypeScript` 有必要单独给这一方向记录笔记！
+> **介绍**: 基于Node.JS的后端`(Rear-End)`、前端`(Front-End)`学习笔记， 主要为 `JavaScript/TypeScript` 有必要单独给这一方向记录笔记！
 
 ----
 #### Node、包管理工具
-* [nvm](https://nvm.p6p.net/)：Node版本管理器，符合POSIX标准的bash脚本，用于管理多个活动的`node.js`版本。
+* [nvm](https://nvm.p6p.net/)：Node版本管理器，符合POSIX标准的bash脚本，用于管理多个活动的`Node.js`版本。
 * [npm](./env/npm)：JavaScript 包管理工具，也是`Node.js`的默认包管理器。
 
 #### 编程语言 

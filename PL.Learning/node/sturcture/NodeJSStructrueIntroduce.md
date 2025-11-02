@@ -440,7 +440,7 @@ npm 安装、更新和管理项目依赖的下载。依赖是预先构建的代�
 npm install
 ```
 package.json 例子：
-```json
+```javascript
 {
    // 包名
   "name": "antd",
@@ -654,21 +654,21 @@ package.json 里面有许许多多的配置，与项目息息相关，了解它�
 - bin 字段对应的文件 （实际测试发现这个也会被默认提交，例如vue-cli中的配置）
 
 下方列出的文件总是被忽略
-- .git
-- CVS
-- .svn
-- .hg
+- `.git`
+- `CVS`
+- `.svn`
+- `.hg`
 - `.lock-wscript`
 - `.wafpickle-N`
 - `.*.swp`
 - `.DS_Store`
 - `._*`
-- npm-debug.log
+- `npm-debug.log`
 - `.npmrc`
-- node_modules
-- config.gypi
+- `node_modules`
+- `config.gypi`
 - `*.orig`
-- package-lock.json (如果您希望发布，请使用 npm-shrinkwrap.json)
+- `package-lock.json` (如果您希望发布，请使用 npm-shrinkwrap.json)
 
 
 > 在此基础上，我们可以指定更多需要一起发布的内容。可以是单独的文件，整个文件夹，或者使用通配符匹配到的文件。
@@ -890,7 +890,7 @@ import internalZ from '#internal/z.js';
 ```
 我们可以使用命令 npm run build / yarn build 来执行项目构建。
 
-**config**: config 用于设置 scripts 里的脚本在运行时的参数。比如设置 port 为 3001：
+**config**: 用于设置 scripts 里的脚本在运行时的参数。比如设置 port 为 3001：
 ```
 "config": {
   "port": "3001"
@@ -958,7 +958,7 @@ peerDependenciesMeta: 同伴依赖也可以使用 peerDependenciesMeta 将其指
 }
 ```
 
-**overrides** overrides 可以重写项目依赖的依赖，及其依赖树下某个依赖的版本号，进行包的替换。
+**overrides** 可以重写项目依赖的依赖，及其依赖树下某个依赖的版本号，进行包的替换。
 > npm命令中强制指定依赖树中某个包的版本（覆盖嵌套依赖），解决依赖冲突问题。它的核心目的是解决依赖冲突、修复安全漏洞或确保依赖版本的一致性。
 
 ```

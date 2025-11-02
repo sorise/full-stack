@@ -5,6 +5,8 @@
 ### 目录 
 - [Node.JS的基本架构](./sturcture/NodeJSStructrueIntroduce.md) 了解Node Standard Library，Node Bindings，V8，Libuv，架构图。
 
+**核心模块**：请学完JavaScript再开始后面的知识学习。
+- [Node Buffer](./contents/nodeModule/NodeBufferAndFs.md) 了解Buffer对象、和文件模块fs。
 
 
 #### LINK

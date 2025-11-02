@@ -786,6 +786,20 @@ let intView = new Int32Array(buffer);
 let uintView = new Uint8Array(buffer);
 ```
 
+**构造函数**，以Int32Array为例:
+```javascript
+new Int32Array()
+new Int32Array(length)
+new Int32Array(typedArray)
+new Int32Array(object)
+
+new Int32Array(buffer)
+new Int32Array(buffer, byteOffset)
+new Int32Array(buffer, byteOffset, length)
+```
+- `new Int32Array(buffer)`：把 `buffer` 的**元素值**转成 `Int32`，创建新数组。
+- `new Int32Array(buffer.buffer, offset, length)`：**共享内存**，把字节重新解释为 `Int32`。
+
 #### [5.1 创建定型数组](#)
 创建定型数组的方式包括读取已有的缓冲、使用自有缓冲、填充可迭代结构，以及填充基于任意类
 型的定型数组。另外，通过<ElementType>.from()和<ElementType>.of()也可以创建定型数组：
