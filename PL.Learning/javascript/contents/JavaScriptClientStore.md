@@ -5,6 +5,7 @@
 - [1. cookie](#1-cookie)
 - [2. Web Storage API](#2-web-storage-api)
 - [3. IndexedDB](#3-indexeddb)
+- [4. IndexedDB version 参数详解](#4-indexeddb-version-参数详解)
 
 ---
 ### [1. cookie](#)
@@ -629,8 +630,70 @@ objectStore.openCursor().onsuccess = (event) => {
 ```
 
 
+### [4. IndexedDB version 参数详解](#)
+在 JavaScript 的 IndexedDB API 中，`indexedDB.open(name, version)` 方法用于打开（或创建）一个数据库。其中的 `version` 参数具有非常重要的语义，它**表示你希望打开数据库时使用的版本号**。
+
+#### 4.1 version 的作用
+
+1. **控制数据库结构的演进**  
+  IndexedDB 是一个结构化存储系统，它通过“对象仓库”（Object Store）来组织数据。当你需要：
+  - 创建新的对象仓库
+  - 删除或修改已有对象仓库
+  - 添加索引等结构变更  
+  这些操作**只能在 `upgradeneeded` 事件中进行**，而该事件**仅在数据库版本升级时触发**。
+
+2. **版本必须是大于 0 的整数**  
+  - 第一次创建数据库时，通常传入 `1`。
+  - 后续如果要修改数据库结构（比如加新表），就需要传入比当前版本更大的整数（如 `2`, `3`...）。
+  - 如果省略 `version` 参数，则默认使用数据库的当前版本（不会触发结构变更）。
+
+
+#### 4.2 工作流程示例
+
+```javascript
+let request = indexedDB.open('MyDB', 2); // 尝试以版本 2 打开数据库
+
+request.onupgradeneeded = function(event) {
+  let db = event.target.result;
+  let oldVersion = event.oldVersion; // 升级前的版本（可能是 0、1 等）
+  let newVersion = event.newVersion; // 即将升级到的版本（这里是 2）
+
+  if (oldVersion < 1) {
+    // 第一次创建数据库：创建 users 表
+    db.createObjectStore('users', { keyPath: 'id' });
+  }
+  if (oldVersion < 2) {
+    // 从版本 1 升级到 2：添加 orders 表
+    db.createObjectStore('orders', { keyPath: 'orderId' });
+  }
+};
+
+request.onsuccess = function(event) {
+  let db = event.target.result;
+  console.log('数据库打开成功，当前版本：', db.version);
+};
+```
+
+#### 4.3 关键点总结
+
+| 情况 | 行为 |
+|------|------|
+| `version` **大于** 当前数据库版本 | 触发 `upgradeneeded` 事件，允许修改结构 |
+| `version` **等于** 当前数据库版本 | 直接打开数据库，不触发 `upgradeneeded` |
+| `version` **小于** 当前数据库版本 | 打开失败，触发 `error` 事件（不允许降级） |
+| 不传 `version` | 使用当前版本打开，不升级也不降级 |
+
+> 注意：**不能降级数据库版本**。IndexedDB 不支持回滚结构变更。
+
+#### 4.4 实际开发建议
+- 始终显式指定 `version`，便于管理数据库演进。
+- 在 `upgradeneeded` 中根据 `oldVersion` 做**增量升级**（而不是每次都重建整个结构）。
+- 版本号应为**递增的正整数**（1, 2, 3...），不要跳太多（虽然技术上允许）。
+
+
 #### 参考链接
 - [使用 HTTP Cookie - MDN Web Docs](https://developer.mozilla.org/zh-TW/docs/Web/HTTP/Guides/Cookies)
 - [JavaScript 核心指南 Cookie](https://tutorial.javascript.ac.cn/web-apis/javascript-cookies/)
 - [Cookie，document.cookie](https://zh.javascript.info/cookie)
 - [IndexedDB](https://zh.javascript.info/indexeddb)
+- [IndexedDB 使用指南](https://juejin.cn/post/7588109656042061870?searchId=2026010216113527C4124354B22CB2D272)
