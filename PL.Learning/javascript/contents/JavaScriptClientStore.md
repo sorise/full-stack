@@ -4,12 +4,13 @@
 ---
 - [1. cookie](#1-cookie)
 - [2. Web Storage API](#2-web-storage-api)
-- [3. ]
+- [3. IndexedDB](#3-indexeddb)
 
 ---
 ### [1. cookie](#)
 HTTP Cookie 是服务器发送到 Web 浏览器的一段数据。然后，Web 浏览器将 HTTP Cookie 存储在用户的计算机上，并在以后的请求中将其发送回同一服务器。
 
+服务器响应HTTP
 ```
 HTTP/1.1 200 OK
 Content-type:text/html
@@ -142,48 +143,77 @@ document.cookie = "user=John; secure";
 
 JavaScript Document.cookie API 无法访问带有 HttpOnly 属性的 cookie；此类 Cookie 仅作用于服务器。例如，持久化服务器端会话的 Cookie 不需要对 JavaScript 可用，而应具有 HttpOnly 属性。此预防措施有助于缓解跨站点脚本（XSS）攻击。
 
-#### [1.4 JavaScript Cookie 类](#)
+#### [1.3 httpOnly](#)
+这个选项和 JavaScript 没有关系，但是我们必须为了完整性也提一下它。
+
+Web 服务器使用 `Set-Cookie` header 来设置 cookie。并且，它可以设置 httpOnly 选项。
+
+这个选项禁止任何 JavaScript 访问 cookie。我们使用 document.cookie 看不到此类 cookie，也无法对此类 cookie 进行操作。
+
+这是一种预防措施，当黑客将自己的 JavaScript 代码注入网页，并等待用户访问该页面时发起攻击，而这个选项可以防止此时的这种攻击。这应该是不可能发生的，黑客应该无法将他们的代码注入我们的网站，但是网站有可能存在 bug，使得黑客能够实现这样的操作。
+
+通常来说，如果发生了这种情况，并且用户访问了带有黑客 JavaScript 代码的页面，黑客代码将执行并通过 document.cookie 获取到包含用户身份验证信息的 cookie。这就很糟糕了。
+
+但是，如果 cookie 设置了 httpOnly，那么 `document.cookie` 则看不到 `cookie`，所以它受到了保护。
+
+#### [1.4 JavaScript Cookie 工具函数](#)
 以下 Cookie 类用于设置、获取和删除 Cookie
 
+获取 cookie 最简短的方式是使用 正则表达式。getCookie(name) 函数返回具有给定 name 的 cookie：
 ```javascript
-class Cookie {
-  static get(name) {
-    const cookieName = `${encodeURIComponent(name)}=`;
-    const cookie = document.cookie;
-    let value = null;
-
-    const startIndex = cookie.indexOf(cookieName);
-    if (startIndex > -1) {
-      const endIndex = cookie.indexOf(';', startIndex);
-      if (endIndex == -1) {
-        endIndex = cookie.length;
-      }
-      value = decodeURIComponent(
-        cookie.substring(startIndex + name.length, endIndex)
-      );
-    }
-    return value;
-  }
-
-  static set(name, value, expires, path, domain, secure) {
-    let cookieText = `${encodeURIComponent(name)}=${encodeURIComponent(value)}`;
-    if (expires instanceof Date) {
-      cookieText += `; expires=${expires.toGMTString()}`;
-    }
-
-    if (path) cookieText += `; path=${path}`;
-    if (domain) cookieText += `; domain=${domain}`;
-    if (secure) cookieText += `; secure`;
-
-    document.cookie = cookieText;
-  }
-
-  static remove(name, path, domain, secure) {
-    Cookie.set(name, '', new Date(0), path, domain, secure);
-  }
+// 返回具有给定 name 的 cookie，
+// 如果没找到，则返回 undefined
+function getCookie(name) {
+  let matches = document.cookie.match(new RegExp(
+    "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
+  ));
+  return matches ? decodeURIComponent(matches[1]) : undefined;
 }
 ```
-Cookie 类具有三个静态方法：get()、set() 和 remove()。
+这里的 new RegExp 是动态生成的，以匹配 `; name=<value>`。
+> 请注意 cookie 的值是经过编码的，所以 getCookie 使用了内建方法 decodeURIComponent 函数对其进行解码。
+
+setCookie(name, value, options) 将 cookie 的 name 设置为具有默认值 `path=/`（可以修改以添加其他默认值）和给定值 value：
+
+```javascript
+function setCookie(name, value, options = {}) {
+
+  options = {
+    path: '/',
+    // 如果需要，可以在这里添加其他默认值
+    ...options
+  };
+
+  if (options.expires instanceof Date) {
+    options.expires = options.expires.toUTCString();
+  }
+
+  let updatedCookie = encodeURIComponent(name) + "=" + encodeURIComponent(value);
+
+  for (let optionKey in options) {
+    updatedCookie += "; " + optionKey;
+    let optionValue = options[optionKey];
+    if (optionValue !== true) {
+      updatedCookie += "=" + optionValue;
+    }
+  }
+
+  document.cookie = updatedCookie;
+}
+
+// 使用范例：
+setCookie('user', 'John', {secure: true, 'max-age': 3600});
+```
+deleteCookie(name); 要删除一个 cookie，我们可以给它设置一个负的过期时间来调用它：
+
+```javascript
+function deleteCookie(name) {
+  setCookie(name, "", {
+    'max-age': -1
+  })
+}
+```
+
 
 
 
@@ -199,4 +229,226 @@ Web Storage 包含如下两种机制：
     - 存储的数据没有过期日期，只能通过 JavaScript、清除浏览器缓存或本地存储的数据来清除。
     - 存储限额是两者之间的最大值。
 
-### [3. ]
+我们已经有了 cookie。为什么还要其他存储对象呢？
+
+- 与 cookie 不同，Web 存储对象不会随每个请求被发送到服务器。因此，我们可以保存更多数据。大多数现代浏览器都允许保存至少 5MB 的数据（或更多），并且具有用于配置数据的设置。
+- 还有一点和 cookie 不同，服务器无法通过 HTTP header 操纵存储对象。一切都是在 JavaScript 中完成的。
+- 存储绑定到源（域/协议/端口三者）。也就是说，不同协议或子域对应不同的存储对象，它们之间无法访问彼此数据。
+
+#### [2.1 Storage 类型](#)
+[Storage](https://developer.mozilla.org/zh-CN/docs/Web/API/Storage) 作为Web Storage API的接口,提供了访问特定域名下的会话存储或本地存储的功能，例如，可以添加、修改或删除存储的数据项。
+
+如果你想要操作一个域名的会话存储，可以使用 Window.sessionStorage；如果想要操作一个域名的本地存储，可以使用 Window.localStorage。
+
+**属性**:
+- Storage.length `只读` 返回一个整数，表示存储在 Storage 对象中的数据项数量。
+
+**方法**:
+- Storage.key(index) 该方法接受一个数值 n 作为参数，并返回存储中的第 n 个键名。
+- Storage.getItem(keyName) 该方法接受一个键名作为参数，返回键名对应的值，如果该键名不存在，则返回 null。
+- Storage.setItem(keyName, keyValue) 该方法接受一个键名和值作为参数，将会把键值对添加到存储中，如果键名存在，则更新其对应的值。
+- Storage.removeItem() 该方法接受一个键名作为参数，并把该键名从存储中删除。
+- Storage.clear(keyName) 调用该方法会清空存储中的所有键名。
+
+#### [2.2 storage 事件](#)
+当 localStorage 或 sessionStorage 中的数据更新后，storage 事件就会触发，它具有以下属性：
+
+- key —— 发生更改的数据的 key（如果调用的是 .clear() 方法，则为 null）。
+- oldValue —— 旧值（如果是新增数据，则为 null）。
+- newValue —— 新值（如果是删除数据，则为 null）。
+- url —— 发生数据更新的文档的 url。
+- storageArea —— 发生数据更新的 localStorage 或 sessionStorage 对象。
+
+
+```javascript
+// 在其他文档对同一存储进行更新时触发
+// 也可以使用 window.addEventListener('storage', event => {
+window.onstorage = event => { 
+  if (event.key != 'now') return;
+  alert(event.key + ':' + event.newValue + " at " + event.url);
+};
+
+localStorage.setItem('now', Date.now());
+```
+
+#### [2.3 localStorage](#)
+localStorage是Storage的实例，localStorage 中的键值对总是以字符串的形式存储。
+大多数现代浏览器都允许保存至少 5MB 的数据（或更多），并且具有用于配置数据的设置。
+
+**存储特性**:
+- 在同源的所有标签页和窗口之间共享数据。
+- 数据不会过期。它在浏览器重启甚至系统重启后仍然存在。
+
+```javascript
+//使用方法存储数据
+localStorage.setItem('umi', 785);
+//使用熟悉存储数据
+localStorage.name = "jxkicker"
+//使用熟悉设置key
+localStorage.age = 24
+//使用方法设置
+let _name = localStorage.getItem('name');
+```
+**遍历键**:
+```javascript
+for(let i = 0; i < localStorage.length; i++) {
+  let key = localStorage.key(i);
+  alert(`${key}: ${localStorage.getItem(key)}`);
+}
+```
+
+#### [2.4 sessionStorage](#)
+sessionStorage 对象的使用频率比 localStorage 对象低得多,属性和方法是相同的，但是它有更多的限制：
+
+- sessionStorage 的数据只存在于当前浏览器标签页。
+  - 具有相同页面的另一个标签页中将会有不同的存储。
+  - 但是，它在同一标签页下的 iframe 之间是共享的（假如它们来自相同的源）。
+- 数据在页面刷新后仍然保留，但在关闭/重新打开浏览器标签页后不会被保留。
+
+
+这是因为 sessionStorage 不仅绑定到源，**还绑定在同一浏览器标签页**。因此，sessionStorage 很少被使用。
+```javascript
+sessionStorage.setItem('test', 1);
+```
+
+### [3. IndexedDB](#)
+IndexedDB 是一种底层 API，是浏览器中**存储结构化数据**的一个方案，其设计完全是**异步**的，绝大多数操作
+都要求添加onerror何onsuccess事件处理程序来确定输出，它使用**对象存储**而不是二维表存储数据，**类似NoSQL数据库**。
+
+IndexedDB 是一个**事务型数据库系统**，类似于基于 SQL 的 RDBMS。然而，不像 RDBMS 使用固定列表，IndexedDB 是一个基于 JavaScript 的面向对象数据库。IndexedDB 允许你存储和检索用键索引的对象。
+- 使用 IndexedDB 执行的操作是异步执行的，以免阻塞应用程序。
+- 通过支持多种类型的键，来存储几乎可以是任何类型的值。
+- 支撑事务的可靠性。
+- 支持键值范围查询、索引。
+
+**IndexedDB 鼓励使用的基本模式如下所示**：
+
+- 打开数据库。
+- 在数据库中创建一个对象存储（object store）。
+- 启动事务，并发送一个请求来执行一些数据库操作，如添加或获取数据等。
+- 通过监听正确类型的 DOM 事件以等待操作完成。
+- 对结果进行一些操作（可以在 request 对象中找到）
+
+
+#### [3.1 打开数据库](#)
+要想使用 IndexedDB，首先需要 open（连接）一个数据库。
+```javascript
+let openRequest = indexedDB.open(name, version);
+```
+- name —— 字符串，即数据库名称。
+- version —— 一个正整数版本，默认为 1（下面解释）。
+
+open 方法的二个参数是数据库的版本号。数据库的版本决定了数据库模式（schema），即数据库的对象存储（object store）以及存储结构。
+- 如果数据库不存在，open 操作会创建该数据库，然后触发 onupgradeneeded 事件，你需要在该事件的处理器中创建数据库模式。
+- 如果数据库已经存在，但你指定了一个更高的数据库版本，会直接触发 onupgradeneeded 事件，允许你在处理器中更新数据库模式。
+
+调用之后会返回 openRequest 对象，我们需要监听该对象上的事件：
+- success：数据库准备就绪，openRequest.result 中有了一个数据库对象“ Database Object”，我们应该将其用于进一步的调用。
+- error：打开失败。
+- upgradeneeded：数据库已准备就绪，但其版本已过时（见下文）。
+
+```javascript
+let openRequest = indexedDB.open("store", 1);
+let db_str = null;
+openRequest.onupgradeneeded = function(event) {
+    // 如果客户端没有数据库则触发
+    db_str = event.target.result;
+    console.log(db_str);
+    // ...执行初始化...
+     // 为数据库创建对象存储（objectStore）
+    const objectStore = db_str.createObjectStore("name", { keyPath: "myKey" });
+};
+
+openRequest.onerror = function(event) {
+    console.error("Error", openRequest.error);
+};
+
+openRequest.onsuccess = function(event) {
+    db_str = openRequest.result;
+    // 继续使用 db 对象处理数据库
+};
+```
+IndexedDB 具有内建的“模式（scheme）版本控制”机制，这在服务器端数据库中是不存在的。
+
+我们可以打开版本 2 中的 IndexedDB 数据库，并像这样进行升级：
+```javascript
+let openRequest = indexedDB.open("store", 2);
+
+openRequest.onupgradeneeded = function(event) {
+  // 现有的数据库版本小于 2（或不存在）
+  let db = openRequest.result;
+  switch(event.oldVersion) { // 现有的 db 版本
+    case 0:
+      // 版本 0 表示客户端没有数据库
+      // 执行初始化
+    case 1:
+      // 客户端版本为 1
+      // 更新
+  }
+};
+```
+接下来，当且仅当 onupgradeneeded 处理程序没有错误地执行完成，openRequest.onsuccess 被触发，数据库才算是成功打开了。
+
+**删除数据库**：
+```javascript
+let deleteRequest = indexedDB.deleteDatabase(name)
+// deleteRequest.onsuccess/onerror 追踪（tracks）结果
+```
+
+#### [3.2 并行更新问题](#)
+提到版本控制，有一个相关的小问题。
+
+举个例子：
+- 一个用户在一个浏览器标签页中打开了数据库版本为 1 的我们的网站。
+- 接下来我们发布了一个更新，使得代码更新了。
+- 接下来同一个用户在另一个浏览器标签中打开了这个网站。  
+
+这时，有一个标签页和版本为 1 的数据库建立了一个连接，而另一个标签页试图在其 upgradeneeded 处理程序中将数据库版本升级到 2。
+
+问题是，这两个网页是同一个站点，同一个源，共享同一个数据库。而数据库不能同时为版本 1 和版本 2。要执行版本 2 的更新，必须关闭对版本 1 的所有连接，包括第一个标签页中的那个。
+
+为了解决这一问题，versionchange 事件会在“过时的”数据库对象上触发。我们需要监听这个事件，关闭对旧版本数据库的连接（还应该建议访问者重新加载页面，以加载最新的代码）。
+
+如果我们不监听 versionchange 事件，也不去关闭旧连接，那么新的连接就不会建立。openRequest 对象会产生 blocked 事件，而不是 success 事件。因此第二个标签页无法正常工作。
+
+下面是能够正确处理并行升级情况的代码。它安装了 onversionchange 处理程序，如果当前数据库连接过时（数据库版本在其他位置被更新）并关闭连接，则会触发该处理程序。
+
+```javascript
+let openRequest = indexedDB.open("store", 2);
+
+openRequest.onupgradeneeded = ...;
+openRequest.onerror = ...;
+
+openRequest.onsuccess = function() {
+  let db = openRequest.result;
+
+  db.onversionchange = function() {
+    db.close();
+    alert("Database is outdated, please reload the page.")
+  };
+
+  // ……数据库已经准备好，请使用它……
+};
+
+openRequest.onblocked = function() {
+  // 如果我们正确处理了 onversionchange 事件，这个事件就不应该触发
+
+  // 这意味着还有另一个指向同一数据库的连接
+  // 并且在 db.onversionchange 被触发后，该连接没有被关闭
+};
+```
+……换句话说，在这我们做两件事：
+
+- 如果当前数据库版本过时，db.onversionchange 监听器会通知我们并行尝试更新。
+- openRequest.onblocked 监听器通知我们相反的情况：在其他地方有一个与过时的版本的连接未关闭，因此无法建立新的连接。
+
+我们可以在 db.onversionchange 中更优雅地进行处理，提示访问者在连接关闭之前保存数据等。
+
+或者，另一种方式是不在 db.onversionchange 中关闭数据库，而是使用 onblocked 处理程序（在浏览器新 tab 页中）来提醒用户，告诉他新版本无法加载，直到他们关闭浏览器其他 tab 页。
+
+这种更新冲突很少发生，但我们至少应该有一些对其进行处理的程序，至少在 onblocked 处理程序中进行处理，以防程序默默卡死而影响用户体验。
+
+#### 参考链接
+- [使用 HTTP Cookie - MDN Web Docs](https://developer.mozilla.org/zh-TW/docs/Web/HTTP/Guides/Cookies)
+- [JavaScript 核心指南 Cookie](https://tutorial.javascript.ac.cn/web-apis/javascript-cookies/)
+- [Cookie，document.cookie](https://zh.javascript.info/cookie)
