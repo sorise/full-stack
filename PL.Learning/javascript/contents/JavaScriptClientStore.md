@@ -448,6 +448,99 @@ openRequest.onblocked = function() {
 
 这种更新冲突很少发生，但我们至少应该有一些对其进行处理的程序，至少在 onblocked 处理程序中进行处理，以防程序默默卡死而影响用户体验。
 
+#### [3.3 对象库（object store）](#)
+要在 IndexedDB 中存储某些内容，我们需要一个**对象库**,几乎可以存储任何值，包括复杂的对象。IndexedDB 使用 标准序列化算法 来克隆和存储对象。类似于 JSON.stringify，不过功能更加强大，能够存储更多的数据类型。
+
+**库中的每个值都必须有唯一的键 key**。
+
+键的类型必须为数字、日期、字符串、二进制或数组。它是唯一的标识符，所以我们可以通过键来搜索/删除/更新值。
+
+但我们需要先创建一个对象库。
+创建对象库的语法：
+```javascript
+db.createObjectStore(name[, keyOptions]);
+```
+请注意，操作是同步的，不需要 await。
+
+- name 是存储区名称，例如 "books" 表示书。
+- keyOptions 是具有以下两个属性之一的可选对象：
+  - keyPath —— 对象属性的路径，IndexedDB 将以此路径作为键，例如 id。
+  - autoIncrement —— 如果为 true，则自动生成新存储的对象的键，键是一个不断递增的数字。
+
+如果我们不提供 keyOptions，那么以后需要在存储对象时，显式地提供一个键。
+
+例如，此对象库使用 id 属性作为键：
+```javascript
+db.createObjectStore('books', {keyPath: 'id'});
+
+// 创建/升级 数据库而无需版本检查
+openRequest.onupgradeneeded = function() {
+  let db = openRequest.result;
+  if (!db.objectStoreNames.contains('books')) { // 如果没有 “books” 数据
+    db.createObjectStore('books', {keyPath: 'id'}); // 创造它
+  }
+};
+```
+**删除对象库**:
+```javascript
+db.deleteObjectStore('books')
+```
+
+#### [3.4 事务（transaction）](#)
+术语“事务（transaction）”是通用的，许多数据库中都有用到。事务是一组操作，要么全部成功，要么全部失败。
+**所有数据操作都必须在 IndexedDB 中的事务内进行**。
+```
+db.transaction(store[, type]);
+```
+- store 是事务要访问的库名称，例如 "books"。如果我们要访问多个库，则是库名称的数组。
+- type – 事务类型，以下类型之一：
+  - readonly —— 只读，默认值。
+  - readwrite —— 只能读取和写入数据，而不能 创建/删除/更改 对象库。
+
+```javascript
+let openRequest = indexedDB.open("store", 3);
+let db = null;
+openRequest.onupgradeneeded = function(event) {
+    // 如果客户端没有数据库则触发
+    db = event.target.result;
+    if (!db.objectStoreNames.contains('books')) { // 如果没有 “books” 数据
+        db.createObjectStore('books', {keyPath: 'id'}); // 创造它
+    }
+};
+
+openRequest.onerror = function(event) {
+    console.error("Error", openRequest.error);
+};
+
+openRequest.onsuccess = function(event) {
+    db = openRequest.result;
+    // 继续使用 db 对象处理数据库
+
+
+    let transaction = db.transaction("books", "readwrite"); // (1)
+
+    // 获取对象库进行操作
+    let books = transaction.objectStore("books"); // (2)
+
+    let book = {
+        id: '123123',
+        price: 10,
+        created: new Date()
+    };
+
+    let request = books.add(book); // (3)
+
+    request.onsuccess = function() { // (4)
+        console.log("Book added to the store", request.result);
+    };
+
+    request.onerror = function() {
+        console.log("Error", request.error);
+    }
+};
+```
+
+
 #### 参考链接
 - [使用 HTTP Cookie - MDN Web Docs](https://developer.mozilla.org/zh-TW/docs/Web/HTTP/Guides/Cookies)
 - [JavaScript 核心指南 Cookie](https://tutorial.javascript.ac.cn/web-apis/javascript-cookies/)
