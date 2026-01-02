@@ -157,7 +157,7 @@ document.body.setAttributeNS('baz', 'foo', 'bar');
 ```
 
 | 属 性                                                                             | 说 明                                                                                                                                                              |
-|:--------------------------------------------------------------------------------|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------|
+|:---------------------------------------------------|:----------------------------------------------------|
 | target                                                                          | 被修改影响的目标节点                                                                                                                                                       |
 | type                                                                            | 字符串，表示变化的类型："attributes"、"characterData"或"childList"oldValue                                                                                                     |
 | oldValue                                                                        | 如果在 MutationObserverInit 对象中启用（attributeOldValue 或 characterData OldValue 为 true），"attributes"或"characterData"的变化事件会设置这个属性为被替代的值"childList"类型的变化始终将这个属性设置为 null。 |
@@ -170,7 +170,8 @@ document.body.setAttributeNS('baz', 'foo', 'bar');
 
 传给回调函数的第二个参数是观察变化的 MutationObserver 的实例，演示如下：
 ```javascript
-let observer = new MutationObserver((mutationRecords, mutationObserver) => console.log(mutationRecords, mutationObserver));
+let observer = new MutationObserver((mutationRecords, mutationObserver) 
+=> console.log(mutationRecords, mutationObserver));
 
 observer.observe(document.body, { attributes: true });
 document.body.className = 'foo';

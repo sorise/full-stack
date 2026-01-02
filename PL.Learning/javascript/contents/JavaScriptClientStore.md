@@ -407,7 +407,7 @@ let deleteRequest = indexedDB.deleteDatabase(name)
 ```
 
 #### [3.2 并行更新问题](#)
-提到版本控制，有一个相关的小问题。
+提到版本控制，有一个相关的小问题：
 
 举个例子：
 - 一个用户在一个浏览器标签页中打开了数据库版本为 1 的我们的网站。
@@ -629,12 +629,10 @@ objectStore.openCursor().onsuccess = (event) => {
 };
 ```
 
-
 ### [4. IndexedDB version 参数详解](#)
 在 JavaScript 的 IndexedDB API 中，`indexedDB.open(name, version)` 方法用于打开（或创建）一个数据库。其中的 `version` 参数具有非常重要的语义，它**表示你希望打开数据库时使用的版本号**。
 
 #### 4.1 version 的作用
-
 1. **控制数据库结构的演进**  
   IndexedDB 是一个结构化存储系统，它通过“对象仓库”（Object Store）来组织数据。当你需要：
   - 创建新的对象仓库
@@ -647,9 +645,7 @@ objectStore.openCursor().onsuccess = (event) => {
   - 后续如果要修改数据库结构（比如加新表），就需要传入比当前版本更大的整数（如 `2`, `3`...）。
   - 如果省略 `version` 参数，则默认使用数据库的当前版本（不会触发结构变更）。
 
-
 #### 4.2 工作流程示例
-
 ```javascript
 let request = indexedDB.open('MyDB', 2); // 尝试以版本 2 打开数据库
 
@@ -689,7 +685,6 @@ request.onsuccess = function(event) {
 - 始终显式指定 `version`，便于管理数据库演进。
 - 在 `upgradeneeded` 中根据 `oldVersion` 做**增量升级**（而不是每次都重建整个结构）。
 - 版本号应为**递增的正整数**（1, 2, 3...），不要跳太多（虽然技术上允许）。
-
 
 #### 参考链接
 - [使用 HTTP Cookie - MDN Web Docs](https://developer.mozilla.org/zh-TW/docs/Web/HTTP/Guides/Cookies)
