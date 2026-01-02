@@ -329,6 +329,16 @@ IndexedDB 是一个**事务型数据库系统**，类似于基于 SQL 的 RDBMS�
 - 通过监听正确类型的 DOM 事件以等待操作完成。
 - 对结果进行一些操作（可以在 request 对象中找到）
 
+**数据库层级结构**
+```
+Database (数据库)
+├── Object Store (对象存储空间)
+│   ├── Index (索引)
+│   └── Data Records (数据记录)
+└── Object Store (对象存储空间)
+```
+
+
 
 #### [3.1 打开数据库](#)
 要想使用 IndexedDB，首先需要 open（连接）一个数据库。
@@ -489,7 +499,7 @@ db.deleteObjectStore('books')
 #### [3.4 事务（transaction）](#)
 术语“事务（transaction）”是通用的，许多数据库中都有用到。事务是一组操作，要么全部成功，要么全部失败。
 **所有数据操作都必须在 IndexedDB 中的事务内进行**。
-```
+```javascript
 db.transaction(store[, type]);
 ```
 - store 是事务要访问的库名称，例如 "books"。如果我们要访问多个库，则是库名称的数组。
@@ -497,6 +507,19 @@ db.transaction(store[, type]);
   - readonly —— 只读，默认值。
   - readwrite —— 只能读取和写入数据，而不能 创建/删除/更改 对象库。
 
+如果不指定参数，则对数据库中所有的对象存储有只读权限
+```javascript
+let transaction = db.transaction();
+```
+指定一个对象存储。事务期间只加载对象存储的信息。
+```javascript
+let transaction = db.transaction("user");
+```
+指定多个对象存储，表示，要访问多个对象存储
+```javascript
+let transaction = db.transaction(["user", "books"], "readwrite");
+```
+例子：
 ```javascript
 let openRequest = indexedDB.open("store", 3);
 let db = null;
@@ -515,7 +538,6 @@ openRequest.onerror = function(event) {
 openRequest.onsuccess = function(event) {
     db = openRequest.result;
     // 继续使用 db 对象处理数据库
-
 
     let transaction = db.transaction("books", "readwrite"); // (1)
 
@@ -539,9 +561,76 @@ openRequest.onsuccess = function(event) {
     }
 };
 ```
+从数据库中删除数据
+```javascript
+const request = db
+  .transaction(["customers"], "readwrite")
+  .objectStore("customers")
+  .delete("444-44-4444");
+request.onsuccess = (event) => {
+  // 删除成功！
+};
+```
+从数据库中获取数据
+```javascript
+const transaction = db.transaction(["customers"]);
+const objectStore = transaction.objectStore("customers");
+const request = objectStore.get("444-44-4444");
+
+request.onerror = (event) => {
+  // 错误处理！
+};
+request.onsuccess = (event) => {
+  // 对 request.result 做些操作！
+  console.log(`SSN 444-44-4444 对应的名字是 ${request.result.name}`);
+};
+```
+更新数据库中的记录
+```javascript
+const objectStore = db
+  .transaction(["customers"], "readwrite")
+  .objectStore("customers");
+const request = objectStore.get("444-44-4444");
+request.onerror = (event) => {
+  // 错误处理！
+};
+request.onsuccess = (event) => {
+  // 获取我们想要更新的旧值
+  const data = event.target.result;
+
+  // 更新对象中你想修改的值
+  data.age = 42;
+
+  // 把更新过的对象放回数据库。
+  const requestUpdate = objectStore.put(data);
+  requestUpdate.onerror = (event) => {
+    // 对错误进行处理
+  };
+  requestUpdate.onsuccess = (event) => {
+    // 成功，数据已更新！
+  };
+};
+```
+
+#### [3.5 使用游标](#)
+使用 get() 要求你知道你想要检索哪一个键。如果你想要遍历对象存储空间中的所有值，那么你可以使用游标。看起来会像下面这样：
+```javascript
+const objectStore = db.transaction("customers").objectStore("customers");
+
+objectStore.openCursor().onsuccess = (event) => {
+  const cursor = event.target.result;
+  if (cursor) {
+    console.log(`SSN ${cursor.key} 对应的名字是 ${cursor.value.name}`);
+    cursor.continue();
+  } else {
+    console.log("没有更多记录了！");
+  }
+};
+```
 
 
 #### 参考链接
 - [使用 HTTP Cookie - MDN Web Docs](https://developer.mozilla.org/zh-TW/docs/Web/HTTP/Guides/Cookies)
 - [JavaScript 核心指南 Cookie](https://tutorial.javascript.ac.cn/web-apis/javascript-cookies/)
 - [Cookie，document.cookie](https://zh.javascript.info/cookie)
+- [IndexedDB](https://zh.javascript.info/indexeddb)
