@@ -42,6 +42,7 @@ JavaScript/ECMAScript（JS）是一种具有函数优先特性的轻量级、解
 - [JavaScript WEB API](./contents/JavaScriptWebAPI.md) MessagePort
 - [JavaScript 工作者线程 Web Worker](./contents/JavaScriptWebWorker.md) 一种在后台线程中运行的 JavaScript 脚本，JS多线程操作。
 - [JavaScript API](./contents/JavaScriptAPI.md) 现代API：Atomic与SharedArrayBuffer、
+- [JavaScript Web Component](./contents/JavaScriptWebComponent.md)  Web Components 原生组件化技术。
 
 ### [Web 3D/2D 图像](#)
 - [Canvas 教程](#) 
