@@ -106,12 +106,12 @@ var RFC5646_LANGUAGE_TAGS = {
 ```
 
 ### [3. meta 标签](#)
-<meta> 标签是 HTML 语言头部的一个辅助性标签，提供有关页面的元信息（比如：针对搜索引擎和更新频度的描述和关键词、定义页面使用的语言），使用好 <meta> 标签对 HTML 很有益。
-meta标签通常放置在 <head> 标签内，不直接显示在页面上。
+[`<meta>`](https://developer.mozilla.org/zh-CN/docs/Web/HTML/Reference/Elements/meta) 标签是 HTML 语言头部的一个辅助性标签，提供有关页面的元信息（比如：针对搜索引擎和更新频度的描述和关键词、定义页面使用的语言），使用好 <meta> 标签对 HTML 很有益。
+meta标签通常放置在 `<head>` 标签内，不直接显示在页面上。
 
-* **http-equiv** : content-type/expires/refresh/set-cookie 把 content 属性关联到 HTTP 头部，可以设置页面的行为或传递给浏览器一些控制指令，这些指令通常是通过 HTTP 响应头部传递的。
-* **name** : author/description/keywords/generator/revised/others 把 content 属性关联到一个名称。
-* **scheme**: some_text	定义用于翻译 content 属性值的格式。
+* **charset**:  该属性声明了文档的字符编码。如果存在该属性，则其值必须是字符串 "utf-8" 的不区分 ASCII 大小写的匹配，因为 UTF-8 是 HTML5 文档的唯一有效编码。声明字符编码的 `<meta>` 元素必须完全位于文档的前 1024 个字节内。
+* [**http-equiv**](https://developer.mozilla.org/zh-CN/docs/Web/HTML/Reference/Elements/meta#http-equiv) : content-type/expires/refresh/set-cookie 把 content 属性关联到 HTTP 头部，可以设置页面的行为或传递给浏览器一些控制指令，这些指令通常是通过 HTTP 响应头部传递的。
+* **name** : author/description/keywords/generator/revised/others 把 content 属性关联到一个名称, 标准元数据名称可查看 [mdn](https://developer.mozilla.org/zh-CN/docs/Web/HTML/Reference/Elements/meta/name)。
 * **content** : some_text	定义与 http-equiv 或 name 属性相关的元信息
 
 ```html
