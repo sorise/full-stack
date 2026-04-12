@@ -328,7 +328,8 @@ meta标签通常放置在 `<head>` 标签内，不直接显示在页面上。
 
 实例 4 - 每30秒刷新页面：
 <meta http-equiv="refresh" content="30">
-
+<!-- 三秒后挑战到另一个网页 -->
+<meta http-equiv="refresh" content="3;url=https://www.mozilla.org" />
 实例5 - 定义文档的编码
 <meta charset="UTF-8">
 
