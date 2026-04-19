@@ -1,5 +1,5 @@
 # [Full-Stack](https://developer.mozilla.org/zh-CN/docs/Web)
-> **介绍**: 基于Node.JS的后端`(Rear-End)`、前端`(Front-End)`学习笔记， 主要为 `JavaScript/TypeScript` 有必要单独给这一方向记录笔记！
+> **介绍**: 前端知识学习笔记、索引，即基于Node.JS的后端`(Rear-End)`、前端`Front-End: HTML、CSS3、JavaScript`学习笔记， 主要为 `JavaScript/TypeScript` 有必要单独给这一方向记录笔记！
 
 ----
 #### Node、包管理工具
