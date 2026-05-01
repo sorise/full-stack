@@ -5,9 +5,13 @@
 
 ### 笔记目录
 
-* CSS 简介
-  * [更新历史](./contents/history.md)
-  * [语法规则、变量](./contents/grammar.md)
+* 选择器
+  * [基础选择符、选择器交集和并集](./contents/selectors/element.md) 通配选择符`*`、类型选择符ID 选择符、类选择符
+  * [关系选择符](./contents/selectors/relationship.md)
+  * [属性选择符](./contents/selectors/attribute.md)
+  * [伪类选择符](./contents/selectors/pseudo-classes.md)
+  * [伪对象选择符号](./contents/selectors/pseudo-element.md)
+  * [嵌套选择器](./contents/selectors/nested-selector.md)
 * 属性
   * [定位](./contents/position.md) position、z-index、clip-path
   * [外补白 margin 内补白 padding](./contents/marginPadding.md)
@@ -35,14 +39,6 @@
   * Only IE
   * Only Firefox
   * Only Webkit
-* 选择器
-  * [元素选择符](./contents/selectors/element.md)
-  * [类选择符](https://developer.mozilla.org/zh-CN/docs/Web/CSS/Class_selectors)
-  * [关系选择符](./contents/selectors/relationship.md)
-  * [属性选择符](./contents/selectors/attribute.md)
-  * [伪类选择符](./contents/selectors/pseudo-classes.md)
-  * [伪对象选择符号](./contents/selectors/pseudo-element.md)
-  * [嵌套选择器](./contents/selectors/nested-selector.md)
 * 语法与规则
 * 优先级
 * 取值
@@ -60,6 +56,9 @@
 * 附录 Appendix
 * CSS Hack
 * 问题与经验
+* CSS 简介
+  * [更新历史](./contents/history.md)
+  * [语法规则、变量](./contents/grammar.md)
 
 ### 相关链接
 - [caniuse](https://caniuse.com/) - CSS 兼容性查询网站

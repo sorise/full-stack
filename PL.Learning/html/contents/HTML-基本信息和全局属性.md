@@ -36,7 +36,6 @@
 - [10. 标记说明](#10-标记说明)
   - [10.1 可以省略标记的元素](#101-可以省略标记的元素)
 
-
 -----
 ### [1. html5 标签](#)
 HTML 不是一种编程语言，而是一种标记语言，标记语言是一套标记标签 (markup tag)，用来来描述网页，注明文本、图片和其他内容，以便于在 Web 浏览器中显示。HTML 标记包含一些特殊“元素”如 `<head>`、`<title>`、`<body>`、`<header>`、`<footer>`、`<article>`、`<section>`、`<p>`、`<div>`、`<span>`、`<img>`、`<aside>`、`<audio>`、`<canvas>`、`<datalist>`、`<details>`、`<embed>`、`<nav>`、`<output>`等等。
