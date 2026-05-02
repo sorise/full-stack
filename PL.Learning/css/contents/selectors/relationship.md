@@ -3,12 +3,10 @@
 
 | 选择器|名称|版本|Description 简介|
 |:----|:--------------------------------------|:---|:----|
-|`E F`|	包含选择符(Descendant combinator)	|CSS1|	选择所有被E元素包含的F元素。|
-|`E>F`|	子选择符(Child combinator)	|CSS2	|选择所有作为E元素的子元素F。|
-|`E+F`|	相邻选择符(Adjacent sibling combinator)	|CSS2|	选择紧贴在E元素之后F元素。|
-|`E~F`|	兄弟选择符(General sibling combinator)	|CSS3|	选择E元素所有兄弟元素F。|
-
-
+|`E F`|包含选择符(Descendant combinator)|CSS1|选择所有被E元素包含的F元素。|
+|`E>F`|子选择符(Child combinator)|CSS2|选择所有作为E元素的子元素F。|
+|`E+F`|相邻选择符(Adjacent sibling combinator)|CSS2|选择紧贴在E元素之后F元素。|
+|`E~F`|兄弟选择符(General sibling combinator)|CSS3|选择E元素所有兄弟元素F。|
 
 ### 包含选择器
 也称为后代组合器（通常用单个空格（" "）字符表示）组合了两个选择器，如果第二个选择器匹配的元素具有与第一个选择器匹配的祖先（父母、父母的父母，父母的父母的父母等）元素，则它们将被选择。利用后代组合器的选择器称为后代选择器。
@@ -62,4 +60,46 @@ li:first-of-type + li {
 img ~ p {
   color: red;
 }
+```
+
+例如:
+
+```css
+.nav-header > ul{
+    list-style: none;
+    background-color: gray;
+}
+
+.nav-header ul li{
+    display: inline-block;
+    border: 1px solid ghostwhite;
+    padding: 2px 5px;
+    background-color: white;
+    &:hover{
+        background-color: gainsboro;
+    }
+}
+
+#first_nav_content + li{
+    color: cadetblue;
+    font-size: 16px;
+}
+
+#first_nav_content  + li ~ li{
+    color: blue;
+}
+```
+
+html文件：
+
+```html
+<section class="nav-header">
+    <ul>
+        <li id="first_nav_content">导航链接3</li>
+        <li>导航链接4</li>
+        <li>导航链接5</li>
+        <li>导航链接6</li>
+        <li>导航链接7</li>
+    </ul>
+</section>
 ```

@@ -5,40 +5,42 @@
 
 ### 笔记目录
 
-* 选择器
-  * [基础选择符、选择器交集和并集](./contents/selectors/element.md) 通配选择符`*`、类型选择符ID 选择符、类选择符
-  * [关系选择符](./contents/selectors/relationship.md)
-  * [属性选择符](./contents/selectors/attribute.md)
-  * [伪类选择符](./contents/selectors/pseudo-classes.md)
-  * [伪对象选择符号](./contents/selectors/pseudo-element.md)
-  * [嵌套选择器](./contents/selectors/nested-selector.md)
-* 属性
-  * [定位](./contents/position.md) position、z-index、clip-path
-  * [外补白 margin 内补白 padding](./contents/marginPadding.md)
-  * [尺寸](./contents/dimension.md)
-  * [布局，盒模型](./contents/boxModel.md)  display、overflow、float、clear、visibility。
-  * [边框](./contents/border.md)
-  * [背景](./contents/background.md)
-  * [颜色、透明度](./contents/colorOpacity.md)
-  * [字体](./contents/fonts.md)
-  * [文本](./contents/texts.md)
-  * [文本修饰](./contents/textDecoration.md)
-  * [书写模式](./contents/writingModes.md)
-  * [列表](./contents/list.md)
-  * [表格](./contents/table.md)
-  * [内容](./contents/content.md)
-  * [用户界面](./contents/userInterface.md)
-  * [多列](./contents/columns.md)
-  * [伸缩盒 flex 布局](./contents/flex.md)
-  * [网格布局 grid](./contents/grid.md)
-  * [变换](./contents/transform.md)
-  * [过渡](./contents/transition.md)
-  * [动画](./contents/keyframes)
-  * 打印
-  * 媒体查询
-  * Only IE
-  * Only Firefox
-  * Only Webkit
+#### 选择器
+
+* [基础选择符、选择器交集和并集](./contents/selectors/element.md) 通配选择符`*`、类型选择符ID 选择符、类选择符
+* [关系选择符](./contents/selectors/relationship.md) `> + ~`
+* [属性选择符](./contents/selectors/attribute.md) `E[attr]`
+* [伪类选择符](./contents/selectors/pseudo-classes.md) `:hover`
+* [伪对象选择符号](./contents/selectors/pseudo-element.md) `::before、::after、::first-letter、::first-line...`
+* [嵌套选择器](./contents/selectors/nested-selector.md) `&`
+#### 字体、文字样式
+* [字体](./contents/fonts.md) `font-*`
+* [文本](./contents/texts.md) `text-*`、line-height、`word-*`、`white-space`
+* [文本修饰](./contents/textDecoration.md)
+* [书写模式](./contents/writingModes.md)
+#### 定位
+* [定位](./contents/position.md) position、z-index、clip-path
+* [外补白 margin 内补白 padding](./contents/marginPadding.md)
+* [尺寸](./contents/dimension.md)
+* [布局，盒模型](./contents/boxModel.md)  display、overflow、float、clear、visibility。
+* [边框](./contents/border.md)
+* [背景](./contents/background.md)
+* [颜色、透明度](./contents/colorOpacity.md)
+* [列表](./contents/list.md)
+* [表格](./contents/table.md)
+* [内容](./contents/content.md)
+* [用户界面](./contents/userInterface.md)
+* [多列](./contents/columns.md)
+* [伸缩盒 flex 布局](./contents/flex.md)
+* [网格布局 grid](./contents/grid.md)
+* [变换](./contents/transform.md)
+* [过渡](./contents/transition.md)
+* [动画](./contents/keyframes)
+* 打印
+* 媒体查询
+* Only IE
+* Only Firefox
+* Only Webkit
 * 语法与规则
 * 优先级
 * 取值
@@ -47,6 +49,7 @@
   * [图像、渐变](./uints/imageGradient.md)
   * 数字
   * 其他
+  - [颜色](./uints/color.md)
 * 单位
   * [长度](./contents/units/width.md)
   * [角度](./contents/units/deg.md)

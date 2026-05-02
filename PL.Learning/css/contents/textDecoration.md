@@ -3,18 +3,18 @@
 
 ### [1. 属性大纲](#)
 
-| 属性                                                                                                      | 版本	     |继承性| 简介                                    |
+| 属性            | 版本	     |继承性| 简介|
 |:--------------------------------------------------------------------------------------------------------|:--------|:----|:--------------------------------------|
-| [text-decoration](https://developer.mozilla.org/zh-CN/docs/Web/CSS/text-decoration)                     | CSS 2.1 |无| 复合属性。检索或设置对象中的文本的装饰。                  |
-| [text-decoration-color](https://developer.mozilla.org/zh-CN/docs/Web/CSS/text-decoration-color)         | CSS3    |无| 检索或设置对象中的文本装饰线条的颜色。                   |
-| [text-decoration-line](https://developer.mozilla.org/zh-CN/docs/Web/CSS/text-decoration-line)           | CSS3    |无| 检索或设置对象中的文本装饰线条的位置。                   |
-| [text-decoration-style](https://developer.mozilla.org/zh-CN/docs/Web/CSS/text-decoration-style)         | CSS3    |无| 检索或设置对象中的文本装饰线条的形状。                   |
+| [text-decoration](https://developer.mozilla.org/zh-CN/docs/Web/CSS/text-decoration)   | CSS 2.1 |无| 复合属性。检索或设置对象中的文本的装饰。|
+| [text-decoration-color](https://developer.mozilla.org/zh-CN/docs/Web/CSS/text-decoration-color)         | CSS3    |无| 检索或设置对象中的文本装饰线条的颜色。 |
+| [text-decoration-line](https://developer.mozilla.org/zh-CN/docs/Web/CSS/text-decoration-line)           | CSS3    |无| 检索或设置对象中的文本装饰线条的位置。 |
+| [text-decoration-style](https://developer.mozilla.org/zh-CN/docs/Web/CSS/text-decoration-style)         | CSS3    |无| 检索或设置对象中的文本装饰线条的形状。 |
 | [text-decoration-skip](https://developer.mozilla.org/zh-CN/docs/Web/CSS/text-decoration-skip)           | CSS3    |有| 检索或设置对象中的文本装饰线条必须略过内容中的哪些部分。          |
 | [text-decoration-thickness](https://developer.mozilla.org/zh-CN/docs/Web/CSS/text-decoration-thickness) | CSS3    |有| 用于设置元素中文本所使用的装饰线笔触厚度。                 |
-| [text-underline-position](https://developer.mozilla.org/zh-CN/docs/Web/CSS/text-underline-position)     | CSS3    |有| 检索或设置对象中的下划线的位置。                      |
+| [text-underline-position](https://developer.mozilla.org/zh-CN/docs/Web/CSS/text-underline-position)     | CSS3    |有| 检索或设置对象中的下划线的位置。    |
 | [text-underline-offset](https://developer.mozilla.org/zh-CN/docs/Web/CSS/text-underline-offset)         | CSS3    |有| 设置文本装饰下划线与其原始位置的偏移距离。                 |
-| [text-shadow](https://developer.mozilla.org/zh-CN/docs/Web/CSS/text-shadow)                             | CSS3    |有| 设置或检索对象中文本的文字是否有阴影及模糊效果               |
-| [text-emphasis](https://developer.mozilla.org/zh-CN/docs/Web/CSS/text-emphasis)                         | CSS3    |有|  将强调标记应用到除去空格和控制字符的文本。 |
+| [text-shadow](https://developer.mozilla.org/zh-CN/docs/Web/CSS/text-shadow)           | CSS3    |有| 设置或检索对象中文本的文字是否有阴影及模糊效果               |
+| [text-emphasis](https://developer.mozilla.org/zh-CN/docs/Web/CSS/text-emphasis)       | CSS3    |有|  将强调标记应用到除去空格和控制字符的文本。 |
 | [text-emphasis-color](https://developer.mozilla.org/zh-CN/docs/Web/CSS/text-emphasis-color)             | CSS3    |有| 设置强调色，这个值也可以使用简写属性。 |
 | [text-emphasis-style](https://developer.mozilla.org/zh-CN/docs/Web/CSS/text-emphasis-style)             | CSS3    |有| 设置强调标记的样式|
 

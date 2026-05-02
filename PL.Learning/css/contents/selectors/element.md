@@ -210,7 +210,7 @@ p.intersection{
 <div class="intersection">一段文字</div>
 ```
 
-此时，只有同时为p标签并且class中存在test类的元素才能被选中，再比如下面这种情况：
+再比如下面这种情况，只有同时为p标签并且class中存在test类、id为p的元素才能被选中：
 
 ```css
 p.test#p {
