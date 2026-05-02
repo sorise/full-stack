@@ -18,7 +18,7 @@
 |[line-height](https://developer.mozilla.org/zh-CN/docs/Web/CSS/line-height)|CSS1|有|检索或设置对象的行高。即字体最底端与字体内部顶端之间的距离|
 |white-space|CSS1|有|设置或检索对象内空格的处理方式|
 |word-wrap|CSS3|有|请使用overflow-wrap|
-|[overflow-wrap](https://developer.mozilla.org/zh-CN/docs/Web/CSS/overflow-wrap)|CSS3|有|设置或检索当内容超过指定容器的边界时是否断行|
+|[overflow-wrap](https://developer.mozilla.org/zh-CN/docs/Web/CSS/overflow-wrap)|CSS3|有|设置或检索当内容超过指定容器(`超长单词`)的边界时是否断行|
 |[tab-size](https://developer.mozilla.org/zh-CN/docs/Web/CSS/tab-size)|CSS3|有|检索或设置对象中的制表符的长度|
 
 #### text-transform
