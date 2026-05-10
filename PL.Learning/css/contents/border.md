@@ -1,7 +1,6 @@
 ## [CSS 边框样式](#)
 > **介绍** : 边框样式、圆角边框、边框阴影、边框图像。
 
-
 ### [1. 属性大纲](#)
 关于边框的css属性。
 
@@ -27,13 +26,13 @@
 | border-left-width          |CSS1|无|设置或检索对象左边宽度|
 | border-left-style          |CSS1|无|设置或检索对象左边样式|
 | border-left-color          |CSS1|无|设置或检索对象左边颜色|
-| **border-radius**            |CSS3|无|设置或检索对象使用圆角边框|
+| **border-radius**          |CSS3|无|设置或检索对象使用圆角边框|
 | border-top-left-radius     |CSS3|无|设置或检索对象左上角圆角边框|
 | border-top-right-radius    |CSS3|无|设置或检索对象右上角圆角边框|
 | border-bottom-right-radius |CSS3|无|设置或检索对象右下角圆角边框|
 | border-bottom-left-radius  |CSS3|无|设置或检索对象左下角圆角边框|
-| **box-shadow**                 |CSS3|无|设置或检索对象阴影|
-| **border-image**               |CSS3|无|设置或检索对象的边框样式使用图像来填充|
+| **box-shadow**             |CSS3|无|设置或检索对象阴影|
+| **border-image**           |CSS3|无|设置或检索对象的边框样式使用图像来填充|
 | border-image-source        |CSS3|无|设置或检索对象的边框是否用图像定义样式或图像来源路径|
 | border-image-slice         |CSS3|无|设置或检索对象的边框背景图的分割方式|
 | border-image-width         |CSS3|无|设置或检索对象的边框厚度|
@@ -44,6 +43,7 @@
 CSS 的 border 属性是一个用于设置各种单独的边界属性的简写属性。border 可以用于设置一个或多个以下属性的值：**border-width**、**border-style**、**border-color**。
 
 **语法**：
+
 ```css
 .example{
     border：[ border-width ] || [ border-style ] || [ border-color ]

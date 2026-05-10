@@ -3,7 +3,7 @@
 
 ---
 
-### 1.. 概述
+### [1. 概述](#)
 
 #### 1.1 CSS的主要功能
 1. **控制页面布局**:设置元素的位置、大小、边距、边框等。
@@ -172,8 +172,7 @@ html body #nav .selected > a:hover  /* (0, 1, 2, 3) */
 6. 元素选择器 = 伪元素选择器
 7. 通配符选择器。
 
-**CSS权重关系图**:
-<img src="./static/image.png" width="800" height="900">
+<img src="./static/cssyxjimage.png" width="700" />
 
 ### 4. CSS样式继承
 在 css 中，每个 CSS 属性定义的概述都指出了这个属性是默认继承的 ("Inherited: Yes") 还是默认不继承的 ("Inherited: no")。这决定了当你没有为元素的属性指定值时该如何计算值。
@@ -265,5 +264,37 @@ revert 关键字将属性值重置为：
 .element {
   display: revert; /* 重置为浏览器默认的display值 */
   font-weight: revert; /* 重置为浏览器默认的字体粗细 */
+}
+```
+
+### [5. 用户代理样式](#)
+还记得我们在一开始的时候介绍到，引入CSS的方式主要有三种，分别是：
+
+- 内联样式/行内样式 （Inline CSS）直接在HTML元素的style属性中编写CSS代码。
+- 内部样式 （Internal CSS）在HTML文档的 `<head>` 标签内使用 `<style>` 标签定义CSS规则。
+- 外部样式 （External CSS）将CSS代码写在独立的.css文件中，然后通过 `<link>` 标签引入到HTML页面中。
+
+此外，在计算机发展的早期，浏览器本身为了能让一些缺少自定义CSS样式的网站有一个大致的排版，通常会有一些自己默认的样式设置。
+
+body标签在Chrome下同样具有默认外边距设置，body的默认样式实际上是来源于用户代理样式表的。
+
+虽然用户代理样式表很多情况下能够帮助一些没有CSS样式的网站更好看地显示内容，但是在有些时候，不同浏览器的用户代理样式不一样，可能会导致网页的某些元素以不一样的尺寸或边距进行展示，从而出现不同用户看到的页面样式不同的情况。因此，为了避免这个问题，我们可以引入一些用于消除不同浏览器用户代理样式差异的CSS文件，从而实现统一。
+
+这里我们使用前面提到的link标签进行引入：
+
+```html
+<link rel="stylesheet" href="css/normalize.css">
+```
+
+可以看到normalize.css将一些常见的元素样式进行了统一，从而消除不同浏览器之间的差别：
+
+```css
+html {
+  line-height: 1.15; /* 统一行高设置 */
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;  /* 统一消除了body的外边距 */
 }
 ```

@@ -17,7 +17,7 @@
 | [text-emphasis](https://developer.mozilla.org/zh-CN/docs/Web/CSS/text-emphasis)       | CSS3    |有|  将强调标记应用到除去空格和控制字符的文本。 |
 | [text-emphasis-color](https://developer.mozilla.org/zh-CN/docs/Web/CSS/text-emphasis-color)             | CSS3    |有| 设置强调色，这个值也可以使用简写属性。 |
 | [text-emphasis-style](https://developer.mozilla.org/zh-CN/docs/Web/CSS/text-emphasis-style)             | CSS3    |有| 设置强调标记的样式|
-
+|[text-emphasis-position](https://developer.mozilla.org/zh-CN/docs/Web/CSS/Reference/Properties/text-emphasis-position)|CSS3|有|设置强调标记的位置。 |
 
 #### [1.1 text-decoration](#)
 CSS 简写属性设置文本上的装饰性线条的外观。它是 text-decoration-line、text-decoration-color、text-decoration-style 和较新的 text-decoration-thickness 属性的缩写。
@@ -188,4 +188,46 @@ em {
   text-emphasis-color: green;
   text-emphasis-style: "*";
 }
+```
+
+例如：
+
+```html
+<p style="text-emphasis: none red; ">测试文字</p>
+<p style="text-emphasis: filled red">测试文字</p>
+<p style="text-emphasis: open red">测试文字</p>
+<p style="text-emphasis: dot red">测试文字</p>
+<p style="text-emphasis: circle red">测试文字</p>
+<p style="text-emphasis: triangle blueviolet">测试文字</p>
+<p style="text-emphasis: sesame green;text-emphasis-position: under left">测试文字</p>
+```
+
+<p style="text-emphasis: none red; ">测试文字</p>
+<p style="text-emphasis: filled red">测试文字</p>
+<p style="text-emphasis: open red">测试文字</p>
+<p style="text-emphasis: dot red">测试文字</p>
+<p style="text-emphasis: circle red">测试文字</p>
+<p style="text-emphasis: triangle blueviolet">测试文字</p>
+<p style="text-emphasis: sesame green;text-emphasis-position: under left">测试文字</p>
+
+#### [2.3 text-emphasis-position]
+text-emphasis-position 设置强调标记的位置。强调标记（如注音字符）在没有足够空间时，会自动增加行高。
+
+- `over` 在水平书写模式下，在文本上方绘制标记。
+- `under` 在水平书写模式下，在文本下方绘制标记。
+- `right` 在垂直书写模式下，在文本右侧绘制标记。
+- `left`  在垂直书写模式下，在文本左侧绘制标记。
+
+```css
+/* 初始值 */
+text-emphasis-position: over right;
+
+/* 关键字值 */
+text-emphasis-position: over left;
+text-emphasis-position: under right;
+text-emphasis-position: under left;
+
+text-emphasis-position: left over;
+text-emphasis-position: right under;
+text-emphasis-position: left under;
 ```

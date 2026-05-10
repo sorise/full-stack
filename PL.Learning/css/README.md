@@ -16,27 +16,30 @@
 #### 字体、文字样式
 * [字体](./contents/fonts.md) `font-*`
 * [文本](./contents/texts.md) `text-*`、line-height、`word-*`、`white-space`
-* [文本修饰](./contents/textDecoration.md)
-* [书写模式](./contents/writingModes.md)
+* [文本修饰](./contents/textDecoration.md) `text-decoration-*`、`text-shadow`、`文字强调：text-emphasis`
+* [书写模式](./contents/writingModes.md) `direction`、`writing-mode` 决定文本行的排列方向。`text-orientation` 决定单个字符在垂直行内的朝向。 可以用于古诗词纵向排列。
 #### 定位
-* [定位](./contents/position.md) position、z-index、clip-path
-* [外补白 margin 内补白 padding](./contents/marginPadding.md)
-* [尺寸](./contents/dimension.md)
-* [布局，盒模型](./contents/boxModel.md)  display、overflow、float、clear、visibility。
-* [边框](./contents/border.md)
-* [背景](./contents/background.md)
+* [定位、剪裁](./contents/position.md)  `position`、`z-index`、`clip-path`
+* [浮动布局，盒模型](./contents/boxModel.md)  `display`、`overflow`、`float`、`clear`、`visibility`。
+* [内外边距](./contents/marginPadding.md) 外补白 `margin` 内补白 `padding`
+* [尺寸](./contents/dimension.md) 长宽 `resize` `width`、`min-width`
+* [边框](./contents/border.md) `border-*`、`border-radius`、`box-shadow`、`border-image`
+* [背景](./contents/background.md) `background-*`
+#### 样式
 * [颜色、透明度](./contents/colorOpacity.md)
 * [列表](./contents/list.md)
 * [表格](./contents/table.md)
 * [内容](./contents/content.md)
 * [用户界面](./contents/userInterface.md)
 * [多列](./contents/columns.md)
+#### 布局
 * [伸缩盒 flex 布局](./contents/flex.md)
 * [网格布局 grid](./contents/grid.md)
+#### 动画
 * [变换](./contents/transform.md)
 * [过渡](./contents/transition.md)
 * [动画](./contents/keyframes)
-* 打印
+* [打印](https://developer.mozilla.org/zh-CN/docs/Web/CSS/Guides/Media_queries/Printing)
 * 媒体查询
 * Only IE
 * Only Firefox
