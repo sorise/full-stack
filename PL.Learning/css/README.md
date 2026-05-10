@@ -49,10 +49,10 @@
 * 取值
   * 文本
   * 函数
-  * [图像、渐变](./uints/imageGradient.md)
+  * [图像、渐变](./contents/uints/imageGradient.md)
   * 数字
   * 其他
-  - [颜色](./uints/color.md)
+  - [颜色](./contents/uints/color.md)
 * 单位
   * [长度](./contents/units/width.md)
   * [角度](./contents/units/deg.md)
