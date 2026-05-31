@@ -210,7 +210,7 @@ em {
 <p style="text-emphasis: triangle blueviolet">测试文字</p>
 <p style="text-emphasis: sesame green;text-emphasis-position: under left">测试文字</p>
 
-#### [2.3 text-emphasis-position]
+#### [2.3 text-emphasis-position](#)
 text-emphasis-position 设置强调标记的位置。强调标记（如注音字符）在没有足够空间时，会自动增加行高。
 
 - `over` 在水平书写模式下，在文本上方绘制标记。

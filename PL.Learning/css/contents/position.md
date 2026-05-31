@@ -7,18 +7,18 @@
 |属性|CSSVersion/值|继承性|简介|
 |:----------|:-----------------|:-----|:-------------------------|
 |position|CSS2/3|无|检索对象的定位方式|
-||static|无|静态定位|
-||relative|无|相对定位|
-||fixed|无|固定定位|
-||absolute|无|绝对定位|
-||sticky|无|粘贴定位|
+|` `|static|无|静态定位|
+|` `|relative|无|相对定位|
+|` `|fixed|无|固定定位|
+|` `|absolute|无|绝对定位|
+|` `|sticky|无|粘贴定位|
 |z-index|CSS2|无|检索或设置对象的层叠顺序|
 |top|CSS2|无|检索或设置对象参照相对物顶边界向下偏移位置。|
 |right|CSS2|无|检索或设置对象参照相对物右边界向左偏移位置。|
 |bottom|CSS2|无|检索或设置对象参照相对物底边界向上偏移位置。|
 |left|CSS2|无|检索或设置对象参照相对物左边界向右偏移位置。|
 |clip|CSS2/3，**已弃用**|无|检索或设置对象的可视区域。区域外的部分是透明的|
-|clip-path|CSS3|无|CSS的clip-path属性是clip属性的升级版，它们的作用都是对元素进行“剪裁”|
+|[clip-path](https://developer.mozilla.org/zh-CN/docs/Web/CSS/Reference/Properties/clip-path)|CSS3|无|CSS的clip-path属性是clip属性的升级版，它们的作用都是对元素进行“剪裁”|
 
 ### [2. position](#)
 **position** 属性规定应用于元素的定位方法的类型（static、relative、fixed、absolute 或 sticky）。
@@ -291,6 +291,8 @@ img
 
 #### [4.1 clip-path](#)
 CSS 的 clip-path 属性是 clip 属性的升级版，它们的作用都是对元素进行 “剪裁”，不同的是 clip 只能作用于 position 为 absolute 和 fixed 的元素且剪裁区域只能是正方形，而 clip-path 更加强大，可以以任意形状去裁剪元素，且对元素的定位方式没有要求。基于这样的特性，clip-path 常用于实现一些炫酷的动画效果。
+
+有时候需要一些特殊的形状，可以使用一些特殊工具 [CSS clip-path 生成器](https://www.jiangweishan.com/tool/clippy/)
 
 **非常高级，必须掌握**：
 - [clip-path 语法规则](https://developer.mozilla.org/zh-CN/docs/Web/CSS/clip-path)

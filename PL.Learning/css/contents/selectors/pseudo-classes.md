@@ -1,5 +1,5 @@
-## [伪类选择符](#)
->**介绍**：伪类用于选择元素的特定状态或位置，以冒号 `:` 开头。
+## [伪类选择符、伪对象选择符](#)
+>**介绍**：伪类用于选择元素的特定状态或位置，以冒号 `:` 开头；伪元素用于对某些“特殊位置”添加样式，通常以双冒号 `::` 开头（也可以单冒号兼容旧浏览器）。
 
 ### [1. 链接伪类选择器](#)
 链接伪类专门用于设置链接在不同状态下的样式。
@@ -32,7 +32,7 @@ a:visited {
 }
 ```
 
-### 2. 结构性伪类选择器
+### [2. 结构性伪类选择器](#)
 
 |选择器|版本|Description简介|
 |:-----------------------|:--------------|:------------|
@@ -107,6 +107,30 @@ h2 :not(span.foo) {
 }
 ```
 
+#### [2.1 反选not选择器](#)
+
+```html
+<!DOCTYPEhtml>
+<htmllang="zh-cn">
+<head>
+<metacharset="utf-8"/>
+<title>否定伪类选择符E:not()_CSS参考手册_web前端开发参考手册系列</title>
+<meta name="author" content="JoyDu(飘零雾雨),dooyoe@gmail.com,www.doyoe.com"/>
+<style>
+    p:not(.abc){
+        color:#f00;
+    }
+</style>
+</head>
+<body>
+    <p class="abc">否定伪类选择符E:not()</p>
+    <p id="abc">否定伪类选择符E:not()</p>
+    <p class="abcd">否定伪类选择符E:not()</p>
+    <p>否定伪类选择符E:not()</p>
+</body>
+</html>
+```
+
 ### 3. UI 伪类选择器
 
 |选择器|版本|Description简介|
@@ -140,28 +164,15 @@ h2 :not(span.foo) {
 </div>
 ```
 
+### [4. 伪对象选择器](#)
 
-#### [1.1 反选not选择器](#)
+伪元素用于对某些“特殊位置”添加样式，通常以双冒号 :: 开头（也可以单冒号兼容旧浏览器）。
 
-```html
-<!DOCTYPEhtml>
-<htmllang="zh-cn">
-<head>
-<metacharset="utf-8"/>
-<title>否定伪类选择符E:not()_CSS参考手册_web前端开发参考手册系列</title>
-<meta name="author" content="JoyDu(飘零雾雨),dooyoe@gmail.com,www.doyoe.com"/>
-<style>
-    p:not(.abc){
-        color:#f00;
-    }
-</style>
-</head>
-<body>
-    <p class="abc">否定伪类选择符E:not()</p>
-    <p id="abc">否定伪类选择符E:not()</p>
-    <p class="abcd">否定伪类选择符E:not()</p>
-    <p>否定伪类选择符E:not()</p>
-</body>
-</html>
-
-```
+|选择器|版本|Description 简介|
+|:-------------|:---------------|:---------------------|
+|E:first-letter/E::first-letter|CSS1/3|设置对象内的第一个字符的样式。                          |
+|E:first-line/E::first-line|CSS1/3|设置对象内的第一行的样式。                            |
+|E:before/E::before|CSS2/3|设置在对象前（依据对象树的逻辑结构）发生的内容。用来和content属性一起使用 |
+|E:after/E::after|CSS2/3|设置在对象后（依据对象树的逻辑结构）发生的内容。用来和content属性一起使用 |
+|E::selection|CSS3|设置对象被选择时的颜色。                             |
+|E::placeholder|CSS3| 表示 `<input>` 或 `<textarea>` 元素中的占位文本。。      |
