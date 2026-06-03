@@ -14,16 +14,16 @@
 * [嵌套选择器](./contents/selectors/nested-selector.md) `&`
 
 #### 2.字体、文字样式
-
+  
 * [字体](./contents/fonts.md) `font-*`
-* [文本](./contents/texts.md) `text-*`、line-height、`word-*`、`white-space`
+* [文本](./contents/texts.md) `text-*`、`line-height`、`word-*`、`white-space`
 * [文本修饰](./contents/textDecoration.md) `text-decoration-*`、`text-shadow`、`文字强调：text-emphasis`
 * [书写模式](./contents/writingModes.md) `direction`、`writing-mode` 决定文本行的排列方向。`text-orientation` 决定单个字符在垂直行内的朝向。 可以用于古诗词纵向排列。
 
 #### 3.定位、盒子
 
 * [定位、剪裁](./contents/position.md)  `position`、`z-index`、`clip-path`
-* [浮动布局，盒模型](./contents/boxModel.md)  `display`、`overflow`、`float`、`clear`、`visibility`。
+* [浮动布局，盒模型](./contents/boxModel.md)  `display`、`overflow`、`float`、`clear`、`visibility`、`box-sizing`。
 * [内外边距](./contents/marginPadding.md) 外补白 `margin` 内补白 `padding`
 * [尺寸](./contents/dimension.md) 长宽 `resize` `width`、`min-width`
 * [边框](./contents/border.md) `border-*`、`border-radius`、`box-shadow`、`border-image`
@@ -31,12 +31,12 @@
 
 #### 内容样式
 
-* [颜色、透明度](./contents/colorOpacity.md)
-* [列表](./contents/list.md)
-* [表格](./contents/table.md)
-* [内容](./contents/content.md)
-* [用户界面](./contents/userInterface.md)
-* [多列](./contents/columns.md)
+* [颜色、透明度](./contents/colorOpacity.md) `opacity`、`color：rgba(x,y,z,e)`
+* [列表](./contents/list.md) `list-style-*`
+* [表格](./contents/table.md) `table-layout`、`border-collapse、border-spacing、caption-side、empty-cells、vertical-align`
+* [内容](./contents/content.md) `content、counter-*`
+* [用户界面](./contents/userInterface.md) `outline-*`、`cursor`、`zoom`
+* [多列](./contents/columns.md) `column-*`
 
 #### 页面布局
 
@@ -58,7 +58,7 @@
 * 取值
   * 文本
   * 函数
-  * [图像、渐变](./contents/units/imageGradient.md)
+  * [图像、渐变](./contents/units/imageGradient.md) `linear-gradient`
   * 数字
   * 其他
   - [颜色](./contents/units/color.md)

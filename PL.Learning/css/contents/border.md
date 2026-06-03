@@ -6,9 +6,9 @@
 
 | 属性                         |CSS Version 版本|继承性|简介|
 |:---------------------------|:---|:---|:---|
-| border                     |CSS1|无|复合属性。设置对象边框的特性|
-| border-width               |CSS1|无|设置或检索对象边框宽度|
-| border-style               |CSS1|无|设置或检索对象边框样式|
+| [border](https://developer.mozilla.org/zh-CN/docs/Web/CSS/Reference/Properties/border)                     |CSS1|无|复合属性。设置对象边框的特性|
+| [border-width](https://developer.mozilla.org/zh-CN/docs/Web/CSS/Reference/Properties/border-width)               |CSS1|无|设置或检索对象边框宽度|
+| [border-style](https://developer.mozilla.org/zh-CN/docs/Web/CSS/Reference/Properties/border-style)               |CSS1|无|设置或检索对象边框样式|
 | border-color               |CSS1|无|设置或检索对象边框颜色|
 | border-top                 |CSS1|无|复合属性。设置对象顶边的特性|
 | border-top-width           |CSS1|无|设置或检索对象顶边宽度|
@@ -26,7 +26,7 @@
 | border-left-width          |CSS1|无|设置或检索对象左边宽度|
 | border-left-style          |CSS1|无|设置或检索对象左边样式|
 | border-left-color          |CSS1|无|设置或检索对象左边颜色|
-| **border-radius**          |CSS3|无|设置或检索对象使用圆角边框|
+| [**border-radius**](https://developer.mozilla.org/zh-CN/docs/Web/CSS/Reference/Properties/border-radius)          |CSS3|无|设置或检索对象使用圆角边框|
 | border-top-left-radius     |CSS3|无|设置或检索对象左上角圆角边框|
 | border-top-right-radius    |CSS3|无|设置或检索对象右上角圆角边框|
 | border-bottom-right-radius |CSS3|无|设置或检索对象右下角圆角边框|

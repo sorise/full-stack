@@ -9,24 +9,24 @@
 | 属性          | CSS Version/ 值 | 继承性	 | 简介                       |
 |:------------|:---------------|:-----|:-------------------------|
 | [display](https://developer.mozilla.org/zh-CN/docs/Web/CSS/display) | CSS2/3	        | 无    |设置或检索对象是否及如何显示|
-| float       | CSS1           | 无    |该属性的值指出了对象是否及如何浮动。请参阅clear属性|
-| clear       | CSS1           | 无    |该属性的值指出了不允许有浮动对象的边。请参阅float属性|
-| visibility  | CSS2           | 有    |设置或检索是否显示对象。与display属性不同，此属性为隐藏的对象保留其占据的物理空间|
-| overflow    | CSS2/3         | 无    |复合属性。检索或设置对象处理溢出内容的方式。|
+| [float](https://developer.mozilla.org/zh-CN/docs/Web/CSS/Reference/Properties/float)       | CSS1           | 无    |该属性的值指出了对象是否及如何浮动。请参阅clear属性|
+| [clear](https://developer.mozilla.org/zh-CN/docs/Web/CSS/Reference/Properties/clear)       | CSS1           | 无    |该属性的值指出了不允许有浮动对象的边。请参阅float属性|
+| [visibility](https://developer.mozilla.org/zh-CN/docs/Web/CSS/Reference/Properties/visibility)  | CSS2           | 有    |设置或检索是否显示对象。与display属性不同，此属性为隐藏的对象保留其占据的物理空间|
+| [overflow](https://developer.mozilla.org/zh-CN/docs/Web/CSS/Reference/Properties/overflow)    | CSS2/3         | 无    |复合属性。检索或设置对象处理溢出内容的方式。|
 | overflow-x  | CSS2/3         | 无    |检索或设置对象处理横向溢出内容的方式。|
 | overflow-y  | CSS2/3         | 无    |检索或设置对象处理纵向溢出内容的方式。|
-| box-sizing  | CSS3           |  无  |   于定义文档如何计算一个元素的总宽度和总高度。  |
-
+| [box-sizing](https://developer.mozilla.org/zh-CN/docs/Web/CSS/Reference/Properties/box-sizing)  | CSS3           |  无  |   于定义文档如何计算一个元素的总宽度和总高度。  |
 
 #### [1.1 display](#)
+
 CSS display 属性设置元素是否被视为块级或行级盒子以及用于子元素的布局，例如流式布局、网格布局或弹性布局。
 
-
-* **block** 该元素生成一个块级盒子，在正常的流中，该元素之前和之后产生换行。
-* **inline** 该元素生成一个或多个行级盒子，它们之前或者之后并不会产生换行。在正常的流中，如果有空间，下一个元素将会在同一行上。
-* **flow** 该元素使用流式布局（块向和行向布局）来排布它的内容。
-* **flex** 该元素的行为类似块级元素并且根据弹性盒模型布局它的内容。
-* **grid** 该元素的行为类似块级元素并且根据网格模型布局它的内容。
+- **block** 该元素生成一个块级盒子，在正常的流中，该元素之前和之后产生换行。
+- **inline** 该元素生成一个或多个行级盒子，它们之前或者之后并不会产生换行。在正常的流中，如果有空间，下一个元素将会在同一行上。
+- **flow** 该元素使用流式布局（块向和行向布局）来排布它的内容。
+- **flex** 该元素的行为类似块级元素并且根据弹性盒模型布局它的内容。
+- **grid** 该元素的行为类似块级元素并且根据网格模型布局它的内容。
+- **none** 使元素不再显示，其对布局不会有影响（文档渲染得好像这个元素并不存在）。所有的后代元素也不会再显示。为了使元素占据一个它通常占据的空间，但实际上没有渲染任何东西，应该使用 visibility 属性。
 
 ```
 /* 预组合值 */

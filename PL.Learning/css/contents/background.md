@@ -7,7 +7,7 @@
 的透明部分显示出来。右侧元素中的圆角使用 border-radius 属性创建。使用单个 box-shadow 声明设置所有阴影，包括
 内阴影和外阴影。
 
-| 属性                                                                                              | 版本	     |Inherit From Parent 继承性|	Description 简介|
+| 属性                                                                                              | 版本	     |Inherit 继承性|	Description 简介|
 |:------------------------------------------------------------------------------------------------|:--------|:----|:----|
 | background	                                                                                     | CSS 2.1 |无|复合属性。设置或检索对象的背景特性|
 | background-color                                                                                | CSS 2.1 |无|设置或检索对象的背景颜色|
@@ -19,7 +19,7 @@
 | [background-clip](https://developer.mozilla.org/zh-CN/docs/Web/CSS/background-clip)             | CSS3    |无|检索或设置对象的背景向外裁剪的区域|
 | [background-size](https://developer.mozilla.org/zh-CN/docs/Web/CSS/background-size)             | CSS3    |无|检索或设置对象的背景图像的尺寸大小|
 | [background-blend-mode](https://developer.mozilla.org/zh-CN/docs/Web/CSS/background-blend-mode) | CSS3    |无|定义该元素的背景图片，以及背景色如何混合。|
-
+|[mix-blend-mode](https://developer.mozilla.org/zh-CN/docs/Web/CSS/Reference/Properties/mix-blend-mode)|CSS3||元素的内容应该与元素的直系父元素的内容和元素的背景如何混合 |
 
 #### [1.1 background](#)
 background 是一种 CSS 简写属性，用于一次性集中定义各种背景属性，包括 color, image, origin 与 size, repeat 方式等等。
