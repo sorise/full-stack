@@ -40,7 +40,7 @@
 
 #### 页面布局
 
-* [伸缩盒 flex 布局](./contents/flex.md)
+* [伸缩盒 flex 布局](./contents/flex.md) `flex-*`、`align-*`、`order`、`justify-content`
 * [网格布局 grid](./contents/grid.md)
 
 #### 动画
