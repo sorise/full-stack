@@ -1,7 +1,7 @@
 ## [弹性布局 flex](#)
 >
 > **介绍**：必须掌握的布局技巧,Flexbox 布局也叫 Flex 布局，弹性盒子布局。。
-
+但是由于其采用`flex-direction`控制主轴、交叉轴方向，其本质为 **一维布局**.
 -----
 
 ### [1. 伸缩盒 Flexible Box Layout](#)
@@ -64,16 +64,13 @@ Flex 项目沿着主轴排列，其大小和位置受到主轴方向的影响。
 - [align-content](https://developer.mozilla.org/zh-CN/docs/Web/CSS/align-content) 交叉轴上多行子元素的对齐方式。
 
 
-CSS 属性 align-self 会对齐当前 grid 或 flex 行中的元素，并覆盖已有的 align-items 的值。
-- [align-self](https://developer.mozilla.org/zh-CN/docs/Web/CSS/align-self) 允许单个 flex 元素有与其他元素不同的对齐方式。
-
-
 `以下属性设置在子元素上:`
-
 - [flex-grow](https://developer.mozilla.org/zh-CN/docs/Web/CSS/Reference/Properties/flex-grow)    设置flex项主尺寸的flex增长系数。
 - [flex-shrink](https://developer.mozilla.org/zh-CN/docs/Web/CSS/Reference/Properties/flex-shrink) flex 元素仅在默认宽度之和大于容器的时候才会发生收缩，其收缩的大小是依据 flex-shrink 的值。
 - [flex-basis](https://developer.mozilla.org/zh-CN/docs/Web/CSS/Reference/Properties/flex-basis)  指定了 flex 元素在主轴方向上的初始大小。如果不使用 box-sizing 改变盒模型的话，那么这个属性就决定了 flex 元素的内容盒（content-box）的尺寸。
 - [order](https://developer.mozilla.org/zh-CN/docs/Web/CSS/Reference/Properties/order) 用于设置弹性或网格容器中项的布局顺序。容器中的项按 order 值升序排列，然后按它们的源代码顺序排列。未明确指定 order 值的项会被赋予默认值 0。
+- [align-self](https://developer.mozilla.org/zh-CN/docs/Web/CSS/align-self) 允许单个 flex 元素有与其他元素不同的对齐方式。CSS 属性 align-self 会对齐当前 grid 或 flex 行中的元素，并覆盖已有的 align-items 的值。
+
 
 #### [1.3 flex-direction](#)
 
@@ -135,6 +132,8 @@ flex-flow: column-reverse wrap-reverse;
 |safe|如果元素溢出对齐容器，则元素将按照对齐模式为 start 进行对齐。所期望的对齐将不会被实现。|
 |unsafe|即使元素溢出对齐容器，也会实现所需的对齐方式。与 safe 不同，safe 会忽略所要求的对齐方式以防止溢出。|
 
+<img src="./static/awe4sad5a2image.png" alt="image" style="width: 750px;">
+
 ```
 /* Positional alignment */
 justify-content: center; /* 居中排列 */
@@ -172,7 +171,7 @@ justify-content: unset;
 
 #### [1.7 align-items](#)
 
-align-items 属性设置了所有直接子元素的 align-self 值作为一个 **组** 。在 Flexbox 中，它控制子元素在交叉轴上的对齐。
+**单行模式下的属性（flex-wrap: nowrap）** align-items 属性设置了所有直接子元素的 align-self 值作为一个 **组** 。在 Flexbox 中，它控制子元素在 **交叉轴** 上的对齐。
 
 默认值：**normal**
 这个关键字的效果取决于我们处在什么布局模式中：
@@ -193,9 +192,12 @@ align-items 属性设置了所有直接子元素的 align-self 值作为一个 *
 |end|将元素与容器的主轴末端或交叉轴末端对齐。|
 |stretch| （默认值） 如果项目未设置高度或设为auto，将占满整个容器的高度|
 
+<img src="./static/flexitessss132dsaimage.png" alt="image" style="width: 850px;">
+
+
 #### [1.8 align-content](#)
 
-控制多行 Flex 项目在交叉轴上的对齐方式。
+**多行模式下的属性（flex-wrap: wrap|wrap-reverse）** 控制多行 Flex 项目在交叉轴上的对齐方式。
 
 > **说明** 该属性对单行弹性盒子模型无效。（即：带有 flex-wrap: nowrap）。
 
@@ -216,7 +218,7 @@ align-items 属性设置了所有直接子元素的 align-self 值作为一个 *
 
 以下属性设置在项目上。
 
-- **order** : 属性用来定义项目的排列顺序。数值越小，排列越靠前，默认为 0 。使用形式如下:
+- **order** : 属性用来定义项目的排列顺序。数值越小，排列越靠前，默认为 0 。**注意：order只改变识别，不改变DOM顺序**。
 - **flex-grow**: 属性定义项目的放大比例，默认为 0 ，即如果存在剩余空间，也不放大。
 - **flex-shrink**: 属性定义了项目的缩小比例，默认为 1 ，即如果空间不足，该项目将缩小。
 - **flex-basis** 属性定义了在分配多余空间之前，项目占据的主轴空间（main size）。
