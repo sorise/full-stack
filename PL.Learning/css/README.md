@@ -40,13 +40,13 @@
 
 #### 页面布局
 
-* [伸缩盒 flex 布局](./contents/flex.md) `flex-*`、`align-*`、`order`、`justify-content`
-* [网格布局 grid](./contents/grid.md)
+* [伸缩盒 flex 布局](./contents/flex.md) `flex-*`、`align-*`、`order`、`justify-content`  `gap`
+* [网格布局 grid](./contents/grid.md) `grid-template-*` `grid-row-*、grid-column-*` `gap` `grid-template-areas、grid-areas`
 
 #### 动画
 
-* [变换](./contents/transform.md)
 * [过渡](./contents/transition.md)
+* [变换](./contents/transform.md)
 * [动画](./contents/keyframes)
 * [打印](https://developer.mozilla.org/zh-CN/docs/Web/CSS/Guides/Media_queries/Printing)
 * 媒体查询

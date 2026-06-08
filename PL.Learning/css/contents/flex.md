@@ -1,5 +1,5 @@
 ## [弹性布局 flex](#)
->
+
 > **介绍**：必须掌握的布局技巧,Flexbox 布局也叫 Flex 布局，弹性盒子布局。。
 但是由于其采用`flex-direction`控制主轴、交叉轴方向，其本质为 **一维布局**.
 -----
@@ -132,7 +132,7 @@ flex-flow: column-reverse wrap-reverse;
 |safe|如果元素溢出对齐容器，则元素将按照对齐模式为 start 进行对齐。所期望的对齐将不会被实现。|
 |unsafe|即使元素溢出对齐容器，也会实现所需的对齐方式。与 safe 不同，safe 会忽略所要求的对齐方式以防止溢出。|
 
-<img src="./static/awe4sad5a2image.png" alt="image" style="width: 750px;">
+<img src="./static/sflexspacevenrlybetoww48.png" alt="image" style="width: 750px;">
 
 ```
 /* Positional alignment */

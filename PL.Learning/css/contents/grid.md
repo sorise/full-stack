@@ -41,6 +41,7 @@ Flexbox的强项
 - **一维布局**: 沿单轴排列元素
 - **空间分配**:灵活的对齐和空间控制
 - **响应式友好**:自动折行和伸缩
+
 遇到的挑战
 - 二维矩阵布局:仪表盘、图库
 - 精确定位需求:圣杯布局、复杂表格
@@ -405,6 +406,8 @@ grid-area: grid-row-start/grid-column-start/grid-row-end/grid-column-end。
 |grid-area| **指定网格元素的名称**，**或者**也可以是 grid-row-start, grid-column-start, grid-row-end等的简写属性|
 |grid-template-areas|指定如何显示行和列，使用命名的网格元素|
 
+通过使用grid-area属性指定子元素具体在父容器的位置，`.` (句号)表示空的单元格。
+
 ```css
 .container {
   grid-template-areas: 
@@ -654,7 +657,8 @@ grid-area: grid-row-start/grid-column-start/grid-row-end/grid-column-end。
 <img src="./static/griditemlessgridcellimage.png" alt="image" style="width: 400px;">
 
 
-justify-items 与 align-items 用于**控制所有栅格内元素的对齐方式**。
+`justify-items` 与 `align-items` 用于**控制所有栅格内元素的对齐方式**。
+`place-content` 属性是 `align-content` 和 `justify-content` 的简写。使用这两个属性的值可以用于任何的布局情况。
 
 **justify-items** 用于控制元素的水平对齐方式，可用的属性值如下
 
