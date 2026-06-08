@@ -7,7 +7,7 @@
 
 #### 1.选择器
 
-* [基础选择符、选择器交集和并集](./contents/selectors/element.md) 通配选择符`*`、类型选择符ID 选择符、类选择符
+* [基础选择符、选择器交集和并集](./contents/selectors/element.md) 通配选择符`*`、`类型选择符 div span` `ID 选择符 #id`、`. 类选择符`
 * [关系选择符](./contents/selectors/relationship.md) `> + ~`
 * [属性选择符](./contents/selectors/attribute.md) `E[attr]`
 * [伪类选择符、伪对象选择符](./contents/selectors/pseudo-classes.md) `链接伪类:hover`、`结构性伪类:not`、`UI 伪类:checked、:disabled、:enabled` `::before、::after、::first-letter、::first-line...`
@@ -45,11 +45,12 @@
 
 #### 动画
 
-* [过渡](./contents/transition.md)
-* [变换](./contents/transform.md)
-* [动画](./contents/keyframes)
+* [过渡](./contents/transition.md) `transition-*`
+* [变换](./contents/transform.md) `transform-*  scale rotate translate skew`
+* [动画](./contents/keyframes) `@keyframes animation`、`animation-*`
 * [打印](https://developer.mozilla.org/zh-CN/docs/Web/CSS/Guides/Media_queries/Printing)
-* 媒体查询
+* [媒体查询](./contents/cssmedia.md) `@media query`
+* [@规则](./contents/at-rules.md)
 * Only IE
 * Only Firefox
 * Only Webkit
@@ -57,7 +58,7 @@
 * 优先级
 * 取值
   * 文本
-  * 函数
+  * [函数](https://developer.mozilla.org/zh-CN/docs/Web/CSS/Reference/Values/Functions)
   * [图像、渐变](./contents/units/imageGradient.md) `linear-gradient`
   * 数字
   * 其他
