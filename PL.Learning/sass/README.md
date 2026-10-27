@@ -96,3 +96,18 @@ npm install -D sass  // 项目安装
  /*编译过后样式*/
  .box{width:300px;height:400px}.box-title{height:30px;line-height:30px}
 ```
+
+```css
+// 全局变量 / globalVar.scss
+$font-size-normal: 32px;
+
+$bg-color: #1989fa;
+
+// 全局mixin / globalMixin.scss
+@mixin box-shadow($bulr: 20px, $color: #1989fa7a) {
+    -webkit-box-shadow: 0px 0px $bulr $color;
+    -moz-box-shadow: 0px 0px $bulr $color;
+    box-shadow: 0px 0px $bulr $color;
+}
+
+```
